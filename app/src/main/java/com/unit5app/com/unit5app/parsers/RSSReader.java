@@ -12,8 +12,10 @@ import java.util.List;
 
 /**
  * Created by Andrew on 2/11/2016.
+ * Reads the Xml from an rss.
  */
 public class RSSReader {
+
     private String TAG = "Unit5Reader";
 
     private static List<String> titles, links, descriptions, pubDates;
@@ -36,7 +38,7 @@ public class RSSReader {
             pubDates = new ArrayList<>();
             doneParsing = false;
         } catch (Exception e) {
-            Log.e(TAG, e.getStackTrace().toString());
+            Log.e(TAG, e.getMessage());
         }
     }
 
@@ -65,6 +67,8 @@ public class RSSReader {
         } catch (Exception e) {
             Log.d(TAG, e.getMessage());
         }
+
+        doneParsing = true;
     }
 
     /*
@@ -90,7 +94,7 @@ public class RSSReader {
                         break;
 
                     case XmlPullParser.END_TAG:
-                        if(text != null) {
+                        if(text != null) { //i decided to use if else instead of switch statements b/c some tagsmay be different depending on the rss your reading.
                             if (name.equals("title")) {
                                 Log.d(TAG, text);
                                 titles.add(text);
@@ -107,28 +111,15 @@ public class RSSReader {
 
                 event = myParser.next();
             }
-
-            doneParsing = false;
         }
 
         catch (Exception e) {
             e.printStackTrace();
         }
-
-        parseHTML();
-    }
-
-    /**
-     * parses the html from the document after it has been parsed by the xml.
-     * This includes html Entities like &nbsp; which is a
-     */
-    private void parseHTML() {
-        doneParsing = true;
-        Log.d(TAG, "Done Parsing!");
     }
 
     public List<String> getTitles() {
-        while(!doneParsing) {
+        while(!doneParsing) { //it should be done parsing by the time these get methods are called, but just in case.
             try {
                 this.wait(100);
             } catch (Exception e) {
@@ -158,6 +149,20 @@ public class RSSReader {
             }
         }
         return links;
+    }
+
+    /*
+    returns the dates of which articles/items were published.
+     */
+    public List<String> getPubDates() {
+        while(!doneParsing) {
+            try {
+                this.wait(100);
+            } catch (Exception e) {
+
+            }
+        }
+        return pubDates;
     }
 
 
