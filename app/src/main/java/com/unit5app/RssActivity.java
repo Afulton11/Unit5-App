@@ -12,6 +12,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.CalendarView;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.unit5app.com.unit5app.parsers.RSSReader;
 import com.unit5app.com.unit5app.parsers.WestNewsReader;
@@ -67,7 +68,10 @@ public class RssActivity  extends ListActivity {
         getListView().setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                if(!links_loaded) return;
+                if(!links_loaded) {
+                    Toast.makeText(getApplicationContext(), "Still loading...", Toast.LENGTH_SHORT);
+                    return;
+                }
                 try {
                     ArticleActivity.setTitle(titles[position]);
                     ArticleActivity.setBody(descriptions[position]);
@@ -99,6 +103,7 @@ public class RssActivity  extends ListActivity {
                 descriptions[i] = westNews.getDescriptions().get(i);
             }
             links_loaded = true;
+            Toast.makeText(getApplicationContext(), "Done loading!", Toast.LENGTH_SHORT);
         }
     }
 

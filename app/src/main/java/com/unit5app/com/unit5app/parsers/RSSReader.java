@@ -114,8 +114,9 @@ public class RSSReader {
 
                 event = myParser.next();
             }
+            titles.remove(0); //remove the 'homepage' thing.. for unit5 websites
+            links.remove(0); //removes the homepage link.. for unit5 websites
         }
-
         catch (Exception e) {
             e.printStackTrace();
         }
