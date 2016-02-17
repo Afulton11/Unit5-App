@@ -4,12 +4,17 @@ import android.app.ListActivity;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.text.Html;
+import android.text.Spanned;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.CalendarView;
 import android.widget.ListView;
 
 import com.unit5app.com.unit5app.parsers.RSSReader;
+import com.unit5app.com.unit5app.parsers.WestNewsReader;
 
 /**
  * Created by Andrew on 2/11/2016.
@@ -21,26 +26,40 @@ public class RssActivity  extends ListActivity {
 
     private String TAG = "unit5ActivityRSS";
 
-    private ListView list;
+    private CalendarView calendar;
 
     private RSSReader rssReader;
+    private WestNewsReader westNews;
 
-    private String[] loading = new String[] {"loading...", "loading...", "loading...", "loading..."};
+    private static String[] loading = new String[] {"loading...", "loading...", "loading...", "loading..."};
+    private static String[] titles, descriptions;
+
+    private boolean links_loaded;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.rss_layout);
+        links_loaded = false;
+
+        /**
+         * the calendar to hold all the data from the unit5.org calendar rss feed.
+         */
+        calendar = (CalendarView) findViewById(R.id.calendarView);
+
+
         /**
          * unit5 homepage article rss feed.
          */
         rssReader = new RSSReader("http://www.unit5.org/site/RSS.aspx?DomainID=4&ModuleInstanceID=4&PageID=1");
+        westNews = new WestNewsReader("http://unit5.org/site/RSS.aspx?DomainID=30&ModuleInstanceID=1852&PageID=53"); // TODO: retrieve information from the links b/c west doesn't give the information directly for some reason.
 
         /**
          * retrieves the feed from the rssReader.
          */
-        new readFeedTask().execute();
+        new ReadFeedTask(westNews, getListView()).execute();
+        new LinkTask().execute();
 
         /**
          * what to do for each click on an item in the listview.
@@ -48,8 +67,13 @@ public class RssActivity  extends ListActivity {
         getListView().setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                ArticleActivity.setTitle(rssReader.getTitles().get(position));
-                ArticleActivity.setBody(rssReader.getDescriptions().get(position));
+                if(!links_loaded) return;
+                try {
+                    ArticleActivity.setTitle(titles[position]);
+                    ArticleActivity.setBody(descriptions[position]);
+                } catch (ArrayIndexOutOfBoundsException e) {
+                    Log.d(TAG, "Index out of bounds for either descriptions[position] or titles[position]!");
+                }
                 startActivity(new Intent(RssActivity.this, ArticleActivity.class));
             }
         });
@@ -57,32 +81,69 @@ public class RssActivity  extends ListActivity {
     }
 
     /**
-     * reads the feed from the rssReader titled 'rssReader' and sets the article titles seperate items in list view.
-     * TODO: add param for RssReader so that this will work for any RssReader
-     * TODO: add param for ListView so that this will work for any ListView.
+     * loads in the descriptions for a westNewsReader. (parses HTML to get an article from the normal west website)
      */
-    private class readFeedTask extends AsyncTask<Void, Void, Void> {
+    private class LinkTask extends AsyncTask<Void, Void, Void> {
+
+        @Override
+        protected Void doInBackground(Void... params) {
+            westNews.loadLinks();
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            super.onPostExecute(aVoid);
+            descriptions = new String[westNews.getDescriptions().size()];
+            for (int i = 0; i < descriptions.length; i++) {
+                descriptions[i] = westNews.getDescriptions().get(i);
+            }
+            links_loaded = true;
+        }
+    }
+
+    /**
+     * reads the feed from the rssReader titled 'rssReader' and sets the article titles seperate items in list view
+     */
+    public static class ReadFeedTask extends AsyncTask<Void, Void, Void> {
+
+        private WestNewsReader reader;
+        private ListView list;
+
+        public ReadFeedTask(WestNewsReader reader, ListView list) {
+            this.reader = reader;
+            this.list = list;
+        }
+
         @Override
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
             //when finished parsing do the following:
-            getListView().setAdapter(null);
-            ArrayAdapter<String> adapterLoaded =  new ArrayAdapter<>(getListView().getContext(), android.R.layout.simple_list_item_1, rssReader.getTitles());
-            adapterLoaded.notifyDataSetChanged();
-            getListView().setAdapter(adapterLoaded);
+            if(list != null) {
+                titles = new String[reader.getTitles().size()];
+                for (int i = 0; i < titles.length; i++) {
+                    Spanned resultTitle = Html.fromHtml(reader.getTitles().get(i));
+                    titles[i] = ArticleActivity.toTitleCase(resultTitle.toString().toLowerCase());
+                }
+
+                list.setAdapter(null);
+                ArrayAdapter<String> adapterLoaded = new ArrayAdapter<String>(list.getContext(), android.R.layout.simple_list_item_1, titles);
+                adapterLoaded.notifyDataSetChanged();
+                list.setAdapter(adapterLoaded);
+            }
         }
 
         @Override
         protected Void doInBackground(Void... params) {
-            rssReader.loadXml();
+            reader.loadXml();
             return null;
         }
 
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            ArrayAdapter<String> adapter = new ArrayAdapter<>(getListView().getContext(), android.R.layout.simple_list_item_1, loading);
-            getListView().setAdapter(adapter);
+            ArrayAdapter<String> adapter = new ArrayAdapter<String>(list.getContext(), android.R.layout.simple_list_item_1, loading);
+            list.setAdapter(adapter);
         }
     }
 }

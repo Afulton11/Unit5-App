@@ -27,18 +27,20 @@ public class RSSReader {
     public volatile boolean doneParsing = false;
 
     /**
-     * creates a new RSSReader from the specified Rss url address.
+     * creates a new RSSReader from the specified Rss url address, unless the url is null.
      */
     public RSSReader (String rssURL) {
-        try {
-            this.rssUrl = rssURL;
-            titles = new ArrayList<>();
-            links = new ArrayList<>();
-            descriptions = new ArrayList<>();
-            pubDates = new ArrayList<>();
-            doneParsing = false;
-        } catch (Exception e) {
-            Log.e(TAG, e.getMessage());
+        if(rssURL != null) {
+            try {
+                this.rssUrl = rssURL;
+                titles = new ArrayList<>();
+                links = new ArrayList<>();
+                descriptions = new ArrayList<>();
+                pubDates = new ArrayList<>();
+                doneParsing = false;
+            } catch (Exception e) {
+                Log.e(TAG, e.getMessage());
+            }
         }
     }
 
@@ -65,6 +67,7 @@ public class RSSReader {
             stream.close();
 
         } catch (Exception e) {
+            e.printStackTrace();
             Log.d(TAG, e.getMessage());
         }
 
@@ -75,7 +78,7 @@ public class RSSReader {
      * parses the xml from the document such as <title></title> and <description></description>
      * This also calls parseHTML() when it completes parsing the xml.
      */
-    public void parse(XmlPullParser myParser) {
+    protected void parse(XmlPullParser myParser) {
         int event;
         String text=null;
 

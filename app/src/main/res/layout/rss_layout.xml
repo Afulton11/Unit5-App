@@ -6,7 +6,13 @@
 
     <ListView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="286dp"
         android:id="@android:id/list"
+        android:layout_gravity="center_horizontal" />
+
+    <CalendarView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/calendarView"
         android:layout_gravity="center_horizontal" />
 </LinearLayout>

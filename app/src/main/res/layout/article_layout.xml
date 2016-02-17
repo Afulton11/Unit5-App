@@ -9,6 +9,8 @@
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:layout_gravity="center"
         android:text="Title"
+        android:maxLines="500"
+        android:scrollbars="vertical"
         android:id="@+id/article_title"
         android:textSize="32sp"
         android:layout_margin="10dp"/>
@@ -19,6 +21,8 @@
         android:textAppearance="?android:attr/textAppearanceSmall"
         android:text="Body paragraph"
         android:id="@+id/article_body"
+        android:maxLines="10000000"
+        android:scrollbars="vertical"
         android:layout_marginLeft="15dp"
         android:layout_marginRight="15dp"
         android:layout_marginBottom="15dp"/>
