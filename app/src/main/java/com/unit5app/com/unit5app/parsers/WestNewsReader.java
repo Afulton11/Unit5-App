@@ -44,10 +44,10 @@ public class WestNewsReader extends RSSReader{
         descriptions = new ArrayList<>();
         titles = new ArrayList<>();
         Log.d(TAG, "Loading Links...");
-        for(int i = 1; i < getLinks().size(); i++) { //start at 1 to skip the 'homepage' thing.
+        for(int i =1; i < getLinks().size(); i++) { //start at 1 to skip the 'homepage' thing.
             addLink(getLinks().get(i));
-            Connection connection = Jsoup.connect(htmlFreeLinks.get(i)); //JSoup is used to retrieve a websites html source.
-            Log.d(TAG, "Connected to link : " + htmlFreeLinks.get(i));
+            Connection connection = Jsoup.connect(htmlFreeLinks.get(i - 1)); //JSoup is used to retrieve a websites html source.
+            Log.d(TAG, "Connected to link : " + htmlFreeLinks.get(i - 1));
             try {
                 Document doc = connection.get();
                 doc.normalise();
@@ -75,7 +75,7 @@ public class WestNewsReader extends RSSReader{
                 Log.d(TAG, fullBody);
                 descriptions.add(fullBody);
             } catch (Exception e) {
-                Log.d(TAG, "Unable to load link: " + htmlFreeLinks.get(i));
+                Log.d(TAG, "Unable to load link: " + htmlFreeLinks.get(i - 1));
             }
         }
         doneRetrieving = true;
