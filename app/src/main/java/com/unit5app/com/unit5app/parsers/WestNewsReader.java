@@ -44,20 +44,20 @@ public class WestNewsReader extends RSSReader{
         descriptions = new ArrayList<>();
         titles = new ArrayList<>();
         Log.d(TAG, "Loading Links...");
-        for(int i =1; i < getLinks().size(); i++) { //start at 1 to skip the 'homepage' thing.
+        for(int i = 0; i < getLinks().size(); i++) { //start at 1 to skip the 'homepage' thing.
             addLink(getLinks().get(i));
-            Connection connection = Jsoup.connect(htmlFreeLinks.get(i - 1)); //JSoup is used to retrieve a websites html source.
-            Log.d(TAG, "Connected to link : " + htmlFreeLinks.get(i - 1));
+            Connection connection = Jsoup.connect(htmlFreeLinks.get(i)); //JSoup is used to retrieve a websites html source.
+            Log.d(TAG, "Connected to link : " + htmlFreeLinks.get(i));
             try {
                 Document doc = connection.get();
                 doc.normalise();
-                Element Article = doc.body().getElementById("module-content-1852"); //module-content-1852 is the id of a div that contains the article.
+                Element article = doc.body().getElementById("module-content-1852"); //module-content-1852 is the id of a div that contains the article.
 
-                String title = Article.getElementsByTag("h1").get(0).toString();
+                String title = article.getElementsByTag("h1").get(0).toString();
                 Log.d(TAG, title);
                 titles.add(title);
 
-                List<Element> element_paragraphs = Article.getElementsByTag("span");
+                List<Element> element_paragraphs = article.getElementsByTag("span");
                 element_paragraphs.remove(0); //gets rid of the 'Return to Headlines' span.
                 element_paragraphs.remove(0); //gets rid of the title span.
 
@@ -75,7 +75,7 @@ public class WestNewsReader extends RSSReader{
                 Log.d(TAG, fullBody);
                 descriptions.add(fullBody);
             } catch (Exception e) {
-                Log.d(TAG, "Unable to load link: " + htmlFreeLinks.get(i - 1));
+                Log.d(TAG, "Unable to load link: " + htmlFreeLinks.get(i));
             }
         }
         doneRetrieving = true;
