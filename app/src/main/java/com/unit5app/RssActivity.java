@@ -24,6 +24,7 @@ import com.unit5app.com.unit5app.parsers.WestNewsReader;
  */
 public class RssActivity  extends ListActivity {
 
+    public static boolean useWestNews = false;
 
     private String TAG = "unit5ActivityRSS";
 
@@ -54,13 +55,17 @@ public class RssActivity  extends ListActivity {
          * unit5 homepage article rss feed.
          */
         rssReader = new RSSReader("http://www.unit5.org/site/RSS.aspx?DomainID=4&ModuleInstanceID=4&PageID=1");
-        westNews = new WestNewsReader("http://unit5.org/site/RSS.aspx?DomainID=30&ModuleInstanceID=1852&PageID=53"); // TODO: retrieve information from the links b/c west doesn't give the information directly for some reason.
+        westNews = new WestNewsReader("http://www.unit5.org/site/RSS.aspx?DomainID=30&ModuleInstanceID=1852&PageID=53"); // TODO: retrieve information from the links b/c west doesn't give the information directly for some reason.
 
         /**
          * retrieves the feed from the rssReader.
          */
-        new ReadFeedTask(westNews, getListView()).execute();
-        new LinkTask().execute();
+        if(useWestNews) {
+            new ReadFeedTask(westNews, getListView()).execute();
+            new LinkTask().execute();
+        } else {
+            new ReadFeedTask(rssReader, getListView()).execute();
+        }
 
         /**
          * what to do for each click on an item in the listview.
@@ -68,17 +73,17 @@ public class RssActivity  extends ListActivity {
         getListView().setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                if(!links_loaded) {
+                if(!links_loaded && useWestNews) {
                     Toast.makeText(getApplicationContext(), "Still loading...", Toast.LENGTH_SHORT);
-                    return;
+                } else {
+                    try {
+                        ArticleActivity.setTitle(titles[position]);
+                        ArticleActivity.setBody(descriptions[position]);
+                    } catch (ArrayIndexOutOfBoundsException e) {
+                        Log.d(TAG, "Index out of bounds for either descriptions[position] or titles[position]!");
+                    }
+                    startActivity(new Intent(RssActivity.this, ArticleActivity.class));
                 }
-                try {
-                    ArticleActivity.setTitle(titles[position]);
-                    ArticleActivity.setBody(descriptions[position]);
-                } catch (ArrayIndexOutOfBoundsException e) {
-                    Log.d(TAG, "Index out of bounds for either descriptions[position] or titles[position]!");
-                }
-                startActivity(new Intent(RssActivity.this, ArticleActivity.class));
             }
         });
 
@@ -112,10 +117,10 @@ public class RssActivity  extends ListActivity {
      */
     public static class ReadFeedTask extends AsyncTask<Void, Void, Void> {
 
-        private WestNewsReader reader;
+        private RSSReader reader;
         private ListView list;
 
-        public ReadFeedTask(WestNewsReader reader, ListView list) {
+        public ReadFeedTask(RSSReader reader, ListView list) {
             this.reader = reader;
             this.list = list;
         }
@@ -124,11 +129,17 @@ public class RssActivity  extends ListActivity {
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
             //when finished parsing do the following:
-            if(list != null) {
+            if (list != null) {
                 titles = new String[reader.getTitles().size()];
                 for (int i = 0; i < titles.length; i++) {
                     Spanned resultTitle = Html.fromHtml(reader.getTitles().get(i));
                     titles[i] = ArticleActivity.toTitleCase(resultTitle.toString().toLowerCase());
+                }
+                if(!useWestNews) {
+                    descriptions = new String[reader.getDescriptions().size() - 1];
+                    for(int i = 1; i < descriptions.length; i++) {
+                        descriptions[i - 1] = reader.getDescriptions().get(i);
+                    }
                 }
 
                 list.setAdapter(null);

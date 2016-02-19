@@ -53,6 +53,7 @@ public class WestNewsReader extends RSSReader{
             try {
                 Document doc = connection.get();
                 doc.normalise();
+
                 Element article = doc.body().getElementById("module-content-1852"); //module-content-1852 is the id of a div that contains the article.
 
                 String title = article.getElementsByTag("h1").get(0).toString();
@@ -65,8 +66,8 @@ public class WestNewsReader extends RSSReader{
 
                 //removing the very last 3 spans as they are used for the author's information, However: west seems to never give an author name/email/phone.
                 element_paragraphs.remove(element_paragraphs.size() - 1);
-                element_paragraphs.remove(element_paragraphs.size() - 2);
-                element_paragraphs.remove(element_paragraphs.size() - 3);
+                element_paragraphs.remove(element_paragraphs.size() - 1);
+                element_paragraphs.remove(element_paragraphs.size() - 1);
 
                 StringBuffer buffer_body = new StringBuffer();
                 for (Element e : element_paragraphs) {

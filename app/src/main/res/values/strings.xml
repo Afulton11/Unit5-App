@@ -3,4 +3,5 @@
     <string name="action_settings">Settings</string>
     <string name="Article">Article Activity</string>
     <string name="RSSActivity">Title List</string>
+    <string name="AnnouncementActivity">Announcements</string>
 </resources>

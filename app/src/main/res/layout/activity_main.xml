@@ -31,4 +31,24 @@
         android:layout_margin="@dimen/fab_margin"
         android:src="@android:drawable/ic_dialog_email" />
 
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Test Pdf loading announcements"
+        android:textSize="16sp"
+        android:layout_marginRight="16dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="96dp"
+        android:id="@+id/btn_testPdf"/>
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Test West News Reader"
+        android:textSize="16sp"
+        android:layout_marginRight="16dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="144dp"
+        android:id="@+id/btn_testWestNews"/>
+
 </android.support.design.widget.CoordinatorLayout>

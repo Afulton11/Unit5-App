@@ -8,8 +8,20 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
+
+    /**
+     * the two all_ lists will hold all the tiles and descriptions for the 'search' method that kyree mentioned.
+     */
+    public static List<String> all_titles = new ArrayList<>();
+    public  static List<String> all_descriptions = new ArrayList<>();
+
+    private Button testpdf, testWestNews;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -18,12 +30,31 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        testpdf = (Button) findViewById(R.id.btn_testPdf);
+        testWestNews = (Button) findViewById(R.id.btn_testWestNews);
+
+        testWestNews.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                RssActivity.useWestNews = true;
+                startActivity(new Intent(MainActivity.this, RssActivity.class));
+            }
+        });
+
+        testpdf.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(MainActivity.this, AnnouncementActivity.class));
+            }
+        });
+
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 //                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
 //                        .setAction("Action", null).show();
+                RssActivity.useWestNews = false;
                 startActivity(new Intent(MainActivity.this, RssActivity.class));
             }
         });
