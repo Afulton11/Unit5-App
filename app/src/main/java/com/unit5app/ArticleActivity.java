@@ -78,7 +78,7 @@ public class ArticleActivity extends Activity {
                                 else
                                     Log.e(TAG, "IOException", ioe);
                             }
-                            Log.d(TAG, "Succesfully loaded image!");
+                            Log.d(TAG, "Successfully loaded image!");
                             return image;
                         }
                     }, null);

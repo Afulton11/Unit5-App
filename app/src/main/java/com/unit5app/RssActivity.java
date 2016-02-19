@@ -32,7 +32,7 @@ public class RssActivity  extends ListActivity {
     private RSSReader rssReader;
     private WestNewsReader westNews;
 
-    private static String[] loading = new String[] {"loading...", "loading...", "loading...", "loading..."};
+    private static String[] loading = new String[] {"loading..."};
     private static String[] titles, descriptions;
 
     private boolean links_loaded;
@@ -54,7 +54,7 @@ public class RssActivity  extends ListActivity {
          * unit5 homepage article rss feed.
          */
         rssReader = new RSSReader("http://www.unit5.org/site/RSS.aspx?DomainID=4&ModuleInstanceID=4&PageID=1");
-        westNews = new WestNewsReader("http://unit5.org/site/RSS.aspx?DomainID=30&ModuleInstanceID=1852&PageID=53"); // TODO: retrieve information from the links b/c west doesn't give the information directly for some reason.
+        westNews = new WestNewsReader("http://www.unit5.org/site/RSS.aspx?DomainID=30&ModuleInstanceID=1852&PageID=53"); // TODO: retrieve information from the links b/c west doesn't give the information directly for some reason.
 
         /**
          * retrieves the feed from the rssReader.
