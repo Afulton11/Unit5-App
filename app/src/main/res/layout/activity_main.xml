@@ -51,4 +51,14 @@
         android:layout_marginTop="144dp"
         android:id="@+id/btn_testWestNews"/>
 
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Test Reading a Calendar"
+        android:textSize="16sp"
+        android:layout_marginRight="16dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="192dp"
+        android:id="@+id/btn_testCalendarReading"/>
+
 </android.support.design.widget.CoordinatorLayout>

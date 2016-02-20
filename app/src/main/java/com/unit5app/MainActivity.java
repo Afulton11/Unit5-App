@@ -21,7 +21,7 @@ public class MainActivity extends AppCompatActivity {
     public static List<String> all_titles = new ArrayList<>();
     public  static List<String> all_descriptions = new ArrayList<>();
 
-    private Button testpdf, testWestNews;
+    private Button testpdf, testWestNews, testCalendarReading;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,6 +32,17 @@ public class MainActivity extends AppCompatActivity {
 
         testpdf = (Button) findViewById(R.id.btn_testPdf);
         testWestNews = (Button) findViewById(R.id.btn_testWestNews);
+        testCalendarReading = (Button) findViewById(R.id.btn_testCalendarReading);
+
+        testCalendarReading.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                RssActivity.useWestNews = false;
+                RssActivity.useCalendarReader = true;
+
+                startActivity(new Intent(MainActivity.this, RssActivity.class));
+            }
+        });
 
         testWestNews.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -57,7 +68,7 @@ public class MainActivity extends AppCompatActivity {
 //                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
 //                        .setAction("Action", null).show();
                 RssActivity.useWestNews = false;
-                RssActivity.useCalendarReader = true;
+                RssActivity.useCalendarReader = false;
                 startActivity(new Intent(MainActivity.this, RssActivity.class));
             }
         });

@@ -1,6 +1,7 @@
 package com.unit5app;
 
-import android.util.Log;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Created by Andrew on 2/19/2016.
@@ -10,16 +11,25 @@ public class Utils {
 
     /**
      * returns the index location of a character after finding it n times in the string
-     * @param ordinal - the amount of occurences before returning the indexed position in the string.
-     * @param c - the character of which to search for
-     * @param string - the string to search for the char.
+     * @param occurrence - the amount of occurences before returning the indexed position in the string.
+     * @param needle - the character of which to search for, or pattern, or string of characters
+     * @param str - the string to search for the char.
      * @return
+     *
+     *      Credit to John Giotta on stackOverflow <a href="http://stackoverflow.com/questions/5678152/find-the-nth-occurence-of-a-substring-in-a-string-in-java">Source</a>
      */
-    public static int getOrdinalIndexOfChar(int ordinal, char c, String string) {
-       int pos = string.indexOf(c);
-        for(int i = ordinal; i > 0 || pos != -1; ordinal--)
-            pos = string.indexOf(c, pos + 1);
-        Log.d("CalendarEvent", "Pos of space: " + pos);
-        return pos;
+    public static int findNthIndexOf (String str, String needle, int occurrence)
+            throws IndexOutOfBoundsException {
+        int index = -1;
+        Pattern p = Pattern.compile(needle, Pattern.MULTILINE);
+        Matcher m = p.matcher(str);
+        while(m.find()) {
+            if (occurrence-- == 0) {
+                index = m.start();
+                break;
+            }
+        }
+        if (index < 0) throw new IndexOutOfBoundsException();
+        return index;
     }
 }

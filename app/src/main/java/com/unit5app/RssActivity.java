@@ -63,12 +63,11 @@ public class RssActivity  extends ListActivity {
          * retrieves the feed from the rssReader.
          */
         if(useWestNews) {
-            new ReadFeedTask(westNews, getListView()).execute();
-            new LinkTask().execute();
+            new ReadFeedTask(westNews, getListView(), this).execute();
         } else if(useCalendarReader) {
-            new ReadFeedTask(rssCalendarReader, getListView()).execute();
+            new ReadFeedTask(rssCalendarReader, getListView(), this).execute();
         } else {
-            new ReadFeedTask(rssReader, getListView()).execute();
+            new ReadFeedTask(rssReader, getListView(), this).execute();
         }
 
         /**
@@ -91,6 +90,10 @@ public class RssActivity  extends ListActivity {
             }
         });
 
+    }
+
+    public void executeLinkTask() {
+        new LinkTask().execute();
     }
 
     /**
@@ -123,10 +126,12 @@ public class RssActivity  extends ListActivity {
 
         private RSSReader reader;
         private ListView list;
+        private RssActivity activity;
 
-        public ReadFeedTask(RSSReader reader, ListView list) {
+        public ReadFeedTask(RSSReader reader, ListView list, RssActivity activity) {
             this.reader = reader;
             this.list = list;
+            this.activity = activity;
         }
 
         @Override
@@ -150,6 +155,9 @@ public class RssActivity  extends ListActivity {
                 ArrayAdapter<String> adapterLoaded = new ArrayAdapter<String>(list.getContext(), android.R.layout.simple_list_item_1, titles);
                 adapterLoaded.notifyDataSetChanged();
                 list.setAdapter(adapterLoaded);
+                if(useWestNews) {
+                    activity.executeLinkTask();
+                }
             }
         }
 
