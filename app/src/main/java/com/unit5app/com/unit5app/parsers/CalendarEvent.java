@@ -16,7 +16,7 @@ public class CalendarEvent {
     private String date, timeOccurring, title;
     private EventType type;
 
-    private enum EventType {regular, holiday, lateStart, noSchool, lastDayBeforeBreak, endOf};
+    private enum EventType {regular, holiday, lateStart, noSchool, lastDayBeforeBreak, endOf, meeting};
 
     /**
      * creates a new calendar event.
@@ -51,7 +51,7 @@ public class CalendarEvent {
                 useSpaceNum = 0;
                 Log.d(TAG, "\tNo time for calendar event found.");
             } finally {
-                String title = fullTitle.substring(Utils.getOrdinalIndexOfChar(useSpaceNum, ' ', fullTitle) + 1); // the rest of the title tag should be the name of the event.
+                String title = fullTitle.substring(Utils.findNthIndexOf(fullTitle," ", useSpaceNum) + 1); // the rest of the title tag should be the name of the event.
                 this.title = title;
                 parseEventType();
                 logEvent();
@@ -65,7 +65,7 @@ public class CalendarEvent {
      */
     private void parseEventType() {
         String tempTitle = this.title;
-        tempTitle.toLowerCase();
+        tempTitle = tempTitle.toLowerCase();
         if(tempTitle.contains("no school") || tempTitle.contains("teacher's institute") || tempTitle.contains("teacher's work day") || tempTitle.contains("snow day")) { //example: no school
             this.type = EventType.noSchool;
         } else if(tempTitle.contains("late start")) {//example: late start wednesday
@@ -74,6 +74,8 @@ public class CalendarEvent {
             this.type = EventType.lastDayBeforeBreak;
         } else if(tempTitle.contains("end of")) { //example: end of first semester
             this.type = EventType.endOf;
+        } else if(tempTitle.contains("meeting")) {
+            this.type = EventType.meeting;
         } else {
             this.type = EventType.regular;
         }
