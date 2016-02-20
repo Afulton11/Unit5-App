@@ -32,6 +32,10 @@
             android:name=".AnnouncementActivity"
             android:label="@string/AnnouncementActivity">
         </activity>
+        <activity
+            android:name=".UpcomingEventsActivity"
+            android:label="@string/UpcomingEventsActivity">
+        </activity>
     </application>
 
 </manifest>

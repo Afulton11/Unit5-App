@@ -28,7 +28,7 @@ public class RSSReader {
     public volatile boolean doneParsing = false;
 
     /*
-    whether or not the xml the reader is retrieving is from a calendar or not, true = it is a calendar.
+     * whether or not the xml the reader is retrieving is from a calendar or not, true = it is a calendar.
      */
     public boolean isCalendar = false;
 

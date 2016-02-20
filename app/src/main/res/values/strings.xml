@@ -4,4 +4,5 @@
     <string name="Article">Article Activity</string>
     <string name="RSSActivity">Title List</string>
     <string name="AnnouncementActivity">Announcements</string>
+    <string name="UpcomingEventsActivity">Upcoming Events</string>
 </resources>

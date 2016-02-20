@@ -37,10 +37,8 @@ public class MainActivity extends AppCompatActivity {
         testCalendarReading.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                RssActivity.useWestNews = false;
-                RssActivity.useCalendarReader = true;
 
-                startActivity(new Intent(MainActivity.this, RssActivity.class));
+                startActivity(new Intent(MainActivity.this, UpcomingEventsActivity.class));
             }
         });
 
@@ -48,8 +46,6 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 RssActivity.useWestNews = true;
-                RssActivity.useCalendarReader = false;
-
                 startActivity(new Intent(MainActivity.this, RssActivity.class));
             }
         });
@@ -68,7 +64,6 @@ public class MainActivity extends AppCompatActivity {
 //                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
 //                        .setAction("Action", null).show();
                 RssActivity.useWestNews = false;
-                RssActivity.useCalendarReader = false;
                 startActivity(new Intent(MainActivity.this, RssActivity.class));
             }
         });

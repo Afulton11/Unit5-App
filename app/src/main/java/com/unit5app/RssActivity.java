@@ -10,7 +10,6 @@ import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.CalendarView;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -24,13 +23,11 @@ import com.unit5app.com.unit5app.parsers.WestNewsReader;
  */
 public class RssActivity  extends ListActivity {
 
-    public static boolean useWestNews = false, useCalendarReader = false;
+    public static boolean useWestNews = false;
 
     private String TAG = "unit5ActivityRSS";
 
-    private CalendarView calendar;
-
-    private RSSReader rssReader, rssCalendarReader;
+    private RSSReader rssReader;
     private WestNewsReader westNews;
 
     private static String[] loading = new String[] {"loading..."};
@@ -46,17 +43,9 @@ public class RssActivity  extends ListActivity {
         links_loaded = false;
 
         /**
-         * the calendar to hold all the data from the unit5.org calendar rss feed.
-         */
-        calendar = (CalendarView) findViewById(R.id.calendarView);
-
-
-        /**
          * unit5 homepage article rss feed.
          */
         rssReader = new RSSReader("http://www.unit5.org/site/RSS.aspx?DomainID=4&ModuleInstanceID=4&PageID=1");
-        rssCalendarReader = new RSSReader("http://www.unit5.org/site/RSS.aspx?DomainID=4&ModuleInstanceID=1&PageID=2");
-        rssCalendarReader.isCalendar = true;
         westNews = new WestNewsReader("http://www.unit5.org/site/RSS.aspx?DomainID=30&ModuleInstanceID=1852&PageID=53");
 
         /**
@@ -64,8 +53,6 @@ public class RssActivity  extends ListActivity {
          */
         if(useWestNews) {
             new ReadFeedTask(westNews, getListView(), this).execute();
-        } else if(useCalendarReader) {
-            new ReadFeedTask(rssCalendarReader, getListView(), this).execute();
         } else {
             new ReadFeedTask(rssReader, getListView(), this).execute();
         }
