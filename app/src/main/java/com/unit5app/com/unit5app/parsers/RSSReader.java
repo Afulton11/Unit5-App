@@ -19,12 +19,18 @@ public class RSSReader {
     private String TAG = "Unit5Reader";
 
     private static List<String> titles, links, descriptions, pubDates;
+    private List<CalendarEvent> calendarEvents;
 
     private XmlPullParserFactory xmlFactory;
 
     private String rssUrl;
 
     public volatile boolean doneParsing = false;
+
+    /*
+    whether or not the xml the reader is retrieving is from a calendar or not, true = it is a calendar.
+     */
+    public boolean isCalendar = false;
 
     /**
      * creates a new RSSReader from the specified Rss url address, unless the url is null.
@@ -37,6 +43,7 @@ public class RSSReader {
                 links = new ArrayList<>();
                 descriptions = new ArrayList<>();
                 pubDates = new ArrayList<>();
+                calendarEvents = new ArrayList<>();
                 doneParsing = false;
             } catch (Exception e) {
                 Log.e(TAG, e.getMessage());
@@ -86,9 +93,10 @@ public class RSSReader {
             event = myParser.getEventType();
 
             while (event != XmlPullParser.END_DOCUMENT) {
-                String name=myParser.getName();
+                String name = myParser.getName();
 
                 switch (event){
+
                     case XmlPullParser.START_TAG:
                         break;
 
@@ -98,24 +106,31 @@ public class RSSReader {
 
                     case XmlPullParser.END_TAG:
                         if(text != null) { //i decided to use if else instead of switch statements b/c some tagsmay be different depending on the rss your reading.
-                            if (name.equals("title")) {
-                                Log.d(TAG, text);
-                                titles.add(text);
-                            } else if (name.equals("link")) {
-                                links.add(text);
-                            } else if (name.equals("description")) {
-                                descriptions.add(text);
-                            } else if (name.equals("pubDate")) {
-                                pubDates.add(text);
+                            if(isCalendar) {
+                                if(name.equals("title")) { //making sure the text != "Calendar" gets rid of the first titleon a unit5 calendar which is used to name the calendar itself.
+                                    calendarEvents.add(new CalendarEvent(text));
+                                }
+                            } else {
+                                if (name.equals("title")) {
+                                    Log.d(TAG, text);
+                                    titles.add(text);
+                                } else if (name.equals("link")) {
+                                    links.add(text);
+                                } else if (name.equals("description")) {
+                                    descriptions.add(text);
+                                } else if (name.equals("pubDate")) {
+                                    pubDates.add(text);
+                                }
                             }
                         }
                         break;
                 }
-
                 event = myParser.next();
             }
-            titles.remove(0); //remove the 'homepage' thing.. for unit5 websites
-            links.remove(0); //removes the homepage link.. for unit5 websites
+            if(!isCalendar) {
+                titles.remove(0); //remove the 'homepage' thing.. for unit5 websites
+                links.remove(0); //removes the homepage link.. for unit5 websites
+            }
         }
         catch (Exception e) {
             e.printStackTrace();
@@ -167,6 +182,14 @@ public class RSSReader {
             }
         }
         return pubDates;
+    }
+
+    /*
+    returns all the calendarEvents found if the RssReader is retrieving from a calendar event.
+     */
+    public List<CalendarEvent> getCalendarEvents() {
+        calendarEvents.remove(0); //remove the calendar's title, the title for the calendar itself.
+        return calendarEvents;
     }
 
 

@@ -24,13 +24,13 @@ import com.unit5app.com.unit5app.parsers.WestNewsReader;
  */
 public class RssActivity  extends ListActivity {
 
-    public static boolean useWestNews = false;
+    public static boolean useWestNews = false, useCalendarReader = false;
 
     private String TAG = "unit5ActivityRSS";
 
     private CalendarView calendar;
 
-    private RSSReader rssReader;
+    private RSSReader rssReader, rssCalendarReader;
     private WestNewsReader westNews;
 
     private static String[] loading = new String[] {"loading..."};
@@ -55,7 +55,9 @@ public class RssActivity  extends ListActivity {
          * unit5 homepage article rss feed.
          */
         rssReader = new RSSReader("http://www.unit5.org/site/RSS.aspx?DomainID=4&ModuleInstanceID=4&PageID=1");
-        westNews = new WestNewsReader("http://www.unit5.org/site/RSS.aspx?DomainID=30&ModuleInstanceID=1852&PageID=53"); // TODO: retrieve information from the links b/c west doesn't give the information directly for some reason.
+        rssCalendarReader = new RSSReader("http://www.unit5.org/site/RSS.aspx?DomainID=4&ModuleInstanceID=1&PageID=2");
+        rssCalendarReader.isCalendar = true;
+        westNews = new WestNewsReader("http://www.unit5.org/site/RSS.aspx?DomainID=30&ModuleInstanceID=1852&PageID=53");
 
         /**
          * retrieves the feed from the rssReader.
@@ -63,6 +65,8 @@ public class RssActivity  extends ListActivity {
         if(useWestNews) {
             new ReadFeedTask(westNews, getListView()).execute();
             new LinkTask().execute();
+        } else if(useCalendarReader) {
+            new ReadFeedTask(rssCalendarReader, getListView()).execute();
         } else {
             new ReadFeedTask(rssReader, getListView()).execute();
         }
@@ -129,7 +133,7 @@ public class RssActivity  extends ListActivity {
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
             //when finished parsing do the following:
-            if (list != null) {
+            if (list != null && !reader.isCalendar) {
                 titles = new String[reader.getTitles().size()];
                 for (int i = 0; i < titles.length; i++) {
                     Spanned resultTitle = Html.fromHtml(reader.getTitles().get(i));

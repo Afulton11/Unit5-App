@@ -7,6 +7,8 @@ import android.webkit.WebViewClient;
 
 /**
  * Created by Andrew on 2/18/2016.
+ *
+ * If we want to parse the pdf instead of load it through a webView we can use this source: <a href="http://www.ehow.com/how_6582916_read-pdf-file-java.html">source</a>
  */
 public class AnnouncementActivity extends Activity {
 
@@ -22,7 +24,6 @@ public class AnnouncementActivity extends Activity {
 
         pdfView.getSettings().setJavaScriptEnabled(true);
         pdfView.setWebViewClient(new Callback());
-
         pdfView.loadUrl("http://docs.google.com/gview?embedded=true&url=" + pdfUrl);
 
     }
