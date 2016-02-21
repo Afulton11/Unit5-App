@@ -32,6 +32,10 @@ public class RSSReader {
      */
     public boolean isCalendar = false;
 
+    public boolean doneParsing() {
+        return doneParsing;
+    }
+
     /**
      * creates a new RSSReader from the specified Rss url address, unless the url is null.
      */

@@ -46,7 +46,7 @@ public class EndOfHourHandler {
                 StringBuffer buffer;
                 @Override
                 public void run() {
-                    Utils.getTodaysDate();
+                    Utils.getCurrentDate();
                     if( isSchoolInSession() && (!Utils.hadInternetOnLastCheck || UpcomingEventsActivity.rssCalendarReader.isDoneParsing())) { //we make sure the calendar reader is done parsing because if it isn't, we may get some null pointer exceptions when checking things about today's date.
                         buffer = new StringBuffer(startBufferText);
 
@@ -67,6 +67,10 @@ public class EndOfHourHandler {
 
                         view.setText(formatted); //sets the text of the textView after doing any html formatting to the text.
 
+                        /**
+                         * My attempt at reloading the calendar to be used by the clock when the user is reconnected to the internet
+                         * Not sure if this works yet.
+                         */
                        if(!Utils.hadInternetOnLastCheck && Utils.isInternetConnected(context)) {
                            UpcomingEventsActivity.loadCalendar();
                        }
@@ -87,7 +91,7 @@ public class EndOfHourHandler {
     }
 
     private void setCurrentPeriodAndEndTime() {
-        String currentTime = Utils.getCurrent24HHMM();
+        String currentTime = Utils.getCurrentTime("HH:mm");
         int currentHours = Integer.parseInt(currentTime.substring(0, 2));
         int currentMinutes = Integer.parseInt(currentTime.substring(3, 5));
         if (currentTime.contains("PM")) {
@@ -119,7 +123,7 @@ public class EndOfHourHandler {
     Whether or not school is currently in session.
      */
     public boolean isSchoolInSession() {
-        String currentTime = Utils.getCurrent24HHMM();
+        String currentTime = Utils.getCurrentTime("HH:mm");
 
         int currentHours = Integer.parseInt(currentTime.substring(0, 2));
         int currentMinutes = Integer.parseInt(currentTime.substring(3, 5));
