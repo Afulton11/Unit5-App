@@ -11,10 +11,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by Andrew on 2/11/2016.
- * Reads the Xml from an rss.
+ * @author Andrew
+ * @version 2/21/2016.
+ * Reads, then parses XML grabbed from an RSS feed.
  */
 public class RSSReader {
+    /* TODO: Implementation that's not hardcoded to differentiate between Calendars and other XML */
 
     private String TAG = "Unit5Reader";
 
@@ -73,7 +75,6 @@ public class RSSReader {
             xmlParser.setFeature(XmlPullParser.FEATURE_PROCESS_NAMESPACES, false);
             xmlParser.setInput(stream, null);
 
-            Log.d(TAG, "Starting parse of XML!");
             parse(xmlParser);
             stream.close();
             doneParsing = true;
@@ -89,28 +90,35 @@ public class RSSReader {
      * This also calls parseHTML() when it completes parsing the xml.
      */
     protected void parse(XmlPullParser myParser) {
+        Log.d(TAG, "Starting parse of XML!");
+
         int event;
         String text=null;
 
         try {
             event = myParser.getEventType();
 
+            /* While not at end of XML document */
             while (event != XmlPullParser.END_DOCUMENT) {
                 String name = myParser.getName();
 
-                switch (event){
-
+                switch (event) {
+                    /* If <tag> */
                     case XmlPullParser.START_TAG:
-                        break;
+                        break; /* Do nothing */
 
+                    /* If <tag> content </tag> */
                     case XmlPullParser.TEXT:
-                        text = myParser.getText();
+                        text = myParser.getText(); /* Capture it */
                         break;
 
                     case XmlPullParser.END_TAG:
-                        if(text != null) { //i decided to use if else instead of switch statements b/c some tagsmay be different depending on the rss your reading.
-                            if(isCalendar) {
-                                if(name.equals("title")) { //making sure the text != "Calendar" gets rid of the first titleon a unit5 calendar which is used to name the calendar itself.
+                        /* If we got some text out of it */
+                        if(text != null) { /* Use if-else instead of switch statements b/c some tags
+                                              may be different depending on the rss you read. */
+                            if(isCalendar) { /* NOTE: not sure if instance variable best solution */
+                                /* If is a title tag */
+                                if(name.equals("title")) { // making sure the text != "Calendar" gets rid of the first titleon a unit5 calendar which is used to name the calendar itself.
                                     calendarEvents.add(new CalendarEvent(text));
                                 }
                             } else {
@@ -140,36 +148,30 @@ public class RSSReader {
         }
     }
 
-    public List<String> getTitles() {
-        while(!doneParsing) { //it should be done parsing by the time these get methods are called, but just in case.
+    private void waitForDoneParsing() {
+        /* DRY principle: If you have to say the same thing two times or more, wrap it
+         * into its own method. */
+        while(!doneParsing) {
             try {
                 this.wait(100);
             } catch (Exception e) {
-
+                // Intentionally blank!
             }
         }
+    }
+
+    public List<String> getTitles() {
+        waitForDoneParsing();
         return titles;
     }
 
     public List<String> getDescriptions() {
-        while(!doneParsing) {
-            try {
-                this.wait(100);
-            } catch (Exception e) {
-
-            }
-        }
+        waitForDoneParsing();
         return descriptions;
     }
 
     public List<String> getLinks() {
-        while(!doneParsing) {
-            try {
-                this.wait(100);
-            } catch (Exception e) {
-
-            }
-        }
+        waitForDoneParsing();
         return links;
     }
 
@@ -177,13 +179,7 @@ public class RSSReader {
     returns the dates of which articles/items were published.
      */
     public List<String> getPubDates() {
-        while(!doneParsing) {
-            try {
-                this.wait(100);
-            } catch (Exception e) {
-
-            }
-        }
+        waitForDoneParsing();
         return pubDates;
     }
 
