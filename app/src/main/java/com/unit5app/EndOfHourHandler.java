@@ -42,7 +42,7 @@ public class EndOfHourHandler {
                 StringBuffer buffer;
                 @Override
                 public void run() {
-                    Utils.getTodaysDate();
+                    Utils.getCurrentDate();
                     if(/*isSchoolInSession() && */UpcomingEventsActivity.rssCalendarReader.isDoneParsing()) { //we make sure the calendar reader is done parsing because if it isn't, we may get some null pointer exceptions when checking things about today's date.
                         buffer = new StringBuffer(startBufferText);
 
@@ -78,7 +78,7 @@ public class EndOfHourHandler {
     }
 
     private void setCurrentPeriodAndEndTime() {
-        String currentTime = Utils.getCurrent24HHMM();
+        String currentTime = Utils.getCurrentTime("HH:mm");
         int currentHours = Integer.parseInt(currentTime.substring(0, 2));
         int currentMinutes = Integer.parseInt(currentTime.substring(3, 5));
         if (currentTime.contains("PM")) {
@@ -121,7 +121,7 @@ public class EndOfHourHandler {
     Whether or not school is currently in session.
      */
     public boolean isSchoolInSession() {
-        String currentTime = Utils.getCurrent24HHMM();
+        String currentTime = Utils.getCurrentTime("HH:mm");
 
         int currentHours = Integer.parseInt(currentTime.substring(0, 2));
         int currentMinutes = Integer.parseInt(currentTime.substring(3, 5));
