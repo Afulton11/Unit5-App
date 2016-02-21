@@ -16,8 +16,6 @@ public class CalendarEvent {
     private String date, timeOccurring, title;
     private EventType type;
 
-    private enum EventType {regular, holiday, lateStart, noSchool, lastDayBeforeBreak, endOf, meeting};
-
     /**
      * creates a new calendar event.
      * @param title

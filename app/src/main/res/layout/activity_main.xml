@@ -61,4 +61,16 @@
         android:layout_marginTop="192dp"
         android:id="@+id/btn_testCalendarReading"/>
 
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Loading Data..."
+        android:textSize="52sp"
+        android:textStyle="bold"
+        android:id="@+id/clock_end_of_hour"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="240dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"/>
+
 </android.support.design.widget.CoordinatorLayout>

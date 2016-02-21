@@ -9,6 +9,9 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
+
+import com.unit5app.com.unit5app.parsers.RSSReader;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,6 +25,9 @@ public class MainActivity extends AppCompatActivity {
     public  static List<String> all_descriptions = new ArrayList<>();
 
     private Button testpdf, testWestNews, testCalendarReading;
+    private TextView endOfHourTime;
+
+    private RSSReader rssCalendarReader;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,6 +39,15 @@ public class MainActivity extends AppCompatActivity {
         testpdf = (Button) findViewById(R.id.btn_testPdf);
         testWestNews = (Button) findViewById(R.id.btn_testWestNews);
         testCalendarReading = (Button) findViewById(R.id.btn_testCalendarReading);
+
+
+        endOfHourTime = (TextView) findViewById(R.id.clock_end_of_hour);
+        /*
+        The calendar reader is loaded up in here so that we will know what is happening on the day the app is opened. It may be a late start day.
+         */
+        UpcomingEventsActivity.loadCalendar();
+        new EndOfHourHandler(endOfHourTime).start();
+
 
         testCalendarReading.setOnClickListener(new View.OnClickListener() {
             @Override

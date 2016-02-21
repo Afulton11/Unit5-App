@@ -20,21 +20,22 @@ public class UpcomingEventsActivity extends Activity {
 
     private TextView textView_calendarEvents;
 
-    private RSSReader rssCalendarReader;
+    public static RSSReader rssCalendarReader;
+
+    public static Spanned calendarEventsString = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.calendar_layout);
-
+        loadCalendar();
         textView_calendarEvents = (TextView) findViewById(R.id.upcomingEvents_EventText);
         textView_calendarEvents.setText("loading calendar events...");
         textView_calendarEvents.setMovementMethod(new ScrollingMovementMethod());
-
-        rssCalendarReader = new RSSReader("http://www.unit5.org/site/RSS.aspx?DomainID=4&ModuleInstanceID=1&PageID=2");
-        rssCalendarReader.isCalendar = true;
-
-        new ReadCalendarTask(rssCalendarReader, this).execute();
+        if(calendarEventsString != null)
+         textView_calendarEvents.setText(calendarEventsString);
+        else
+            textView_calendarEvents.setText("Error Loading Upcoming Events.");
 
     }
 
@@ -43,16 +44,24 @@ public class UpcomingEventsActivity extends Activity {
     }
 
     /**
+     * loads the main unit5 calendar through xml.
+     */
+    public static void loadCalendar() {
+        rssCalendarReader = new RSSReader("http://www.unit5.org/site/RSS.aspx?DomainID=4&ModuleInstanceID=1&PageID=2");
+        rssCalendarReader.isCalendar = true;
+
+        new UpcomingEventsActivity.ReadCalendarTask(rssCalendarReader).execute();
+    }
+
+    /**
      * reads the feed from the rssReader titled 'rssReader' and sets the article titles seperate items in list view
      */
     public static class ReadCalendarTask extends AsyncTask<Void, Void, Void> {
 
         private RSSReader reader;
-        private UpcomingEventsActivity activity;
 
-        public ReadCalendarTask(RSSReader reader, UpcomingEventsActivity activity) {
+        public ReadCalendarTask(RSSReader reader) {
             this.reader = reader;
-            this.activity = activity;
         }
 
         @Override
@@ -71,8 +80,7 @@ public class UpcomingEventsActivity extends Activity {
                         "</br><br>&nbsp;&nbsp;&nbsp;&nbsp;Type (debug): " + event.getType() + "</br><br></br>");
             }
 
-            Spanned html_parsed = Html.fromHtml(html_styling_buffer.toString());
-            activity.setTextView_calendarEvents(html_parsed.toString());
+            UpcomingEventsActivity.calendarEventsString = Html.fromHtml(html_styling_buffer.toString());
         }
 
         @Override
