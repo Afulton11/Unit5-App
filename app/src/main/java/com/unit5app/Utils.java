@@ -115,7 +115,7 @@ public class Utils {
      * @return
      */
     public static boolean isTodayLateStart() {
-        if(UpcomingEventsActivity.rssCalendarReader.doneParsing) {
+        if(UpcomingEventsActivity.rssCalendarReader.isDoneParsing()) {
             List<CalendarEvent> calendarEvents = UpcomingEventsActivity.rssCalendarReader.getCalendarEvents(); //gets all the calendar events from the rssCalendarReader.
 
             for (CalendarEvent event : calendarEvents) {
