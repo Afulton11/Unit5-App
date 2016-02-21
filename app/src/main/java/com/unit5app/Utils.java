@@ -56,11 +56,24 @@ public class Utils {
 
         int hours = Integer.parseInt(time.substring(0, 2));
 
-        if(time.contains("PM")) {
+        if(time.contains("PM") && hours != 12) {
             hours -= 12; //we -= 12 because we don't want to use a 24 hour clock.
         }
 
         time = new String(hours + time.substring(2, time.length()));
+        return time;
+    }
+
+    /**
+     * returns the current time based on a 24 hour clock. ex: 13:05 = 1:05pm.
+     * @return
+     */
+
+    public static String getCurrent24HHMM() {
+        Date date = new Date();
+
+        String strDateFormat = "HH:mm";
+        SimpleDateFormat sdf = new SimpleDateFormat(strDateFormat);
 
         return sdf.format(date);
     }

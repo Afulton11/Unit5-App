@@ -25,7 +25,7 @@ public class RSSReader {
 
     private String rssUrl;
 
-    public volatile boolean doneParsing = false;
+    public boolean doneParsing;
 
     /*
      * whether or not the xml the reader is retrieving is from a calendar or not, true = it is a calendar.
@@ -72,13 +72,12 @@ public class RSSReader {
             Log.d(TAG, "Starting parse of XML!");
             parse(xmlParser);
             stream.close();
+            doneParsing = true;
 
         } catch (Exception e) {
             e.printStackTrace();
             Log.d(TAG, e.getMessage());
         }
-
-        doneParsing = true;
     }
 
     /*
