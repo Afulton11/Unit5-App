@@ -103,7 +103,7 @@ public class Utils {
      */
     public static String getCurrentDate(String format) {
         Date today = new Date(); /* Instantiation gets current time to nearest millisecond. */
-        DateFormat sdf = new SimpleDateFormat("MM/dd/yy"); /* http://docs.oracle.com/javase/7/docs/
+        DateFormat sdf = new SimpleDateFormat(format); /* http://docs.oracle.com/javase/7/docs/
                                                             api/java/text/SimpleDateFormat.html */
         String formattedDate = sdf.format(today);
         StringBuffer buf = new StringBuffer();
@@ -142,7 +142,7 @@ public class Utils {
 
             for (CalendarEvent event : calendarEvents) {
                 if (event.getType().toString().equals(EventType.lateStart.toString()) &&
-                        event.getDate().equals(getCurrentDate())) {
+                        event.getDate().equals(getCurrentDate("MM/dd/yy"))) {
                     return true;
                 }
             }

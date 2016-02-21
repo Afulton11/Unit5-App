@@ -46,7 +46,7 @@ public class EndOfHourHandler {
                 StringBuffer buffer;
                 @Override
                 public void run() {
-                    Utils.getCurrentDate();
+                    Utils.getCurrentDate("MM/dd/yy");
                     if( isSchoolInSession() && (!Utils.hadInternetOnLastCheck || UpcomingEventsActivity.rssCalendarReader.isDoneParsing())) { //we make sure the calendar reader is done parsing because if it isn't, we may get some null pointer exceptions when checking things about today's date.
                         buffer = new StringBuffer(startBufferText);
 
