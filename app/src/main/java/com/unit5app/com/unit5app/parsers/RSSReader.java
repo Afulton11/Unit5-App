@@ -72,7 +72,7 @@ public class RSSReader {
             Log.d(TAG, "Starting parse of XML!");
             parse(xmlParser);
             stream.close();
-            doneParsing = true;
+//            doneParsing = true;
 
         } catch (Exception e) {
             e.printStackTrace();
