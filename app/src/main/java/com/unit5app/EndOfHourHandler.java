@@ -1,5 +1,6 @@
 package com.unit5app;
 
+import android.content.Context;
 import android.text.Html;
 import android.text.Spanned;
 import android.util.Log;
@@ -13,6 +14,7 @@ public class EndOfHourHandler {
     private static final String TAG = "EndOfHourHandler";
 
     private TextView view;
+    private Context context;
 
     private String[] periods = new String[] {"0<sup><small>th</small></sup>", "1<sup><small>st</small></sup>", "2<sup><small>nd</small></sup>", "3<sup><small>rd</small></sup>", "4<sup><small>th</small></sup>",
             "5<sup><small>th</small></sup>", "6<sup><small>th</small></sup>", "7<sup><small>th</small></sup>", "8<sup><small>th</small></sup>"};
@@ -27,10 +29,12 @@ public class EndOfHourHandler {
      * creates a new EndOfHourHandler for the specified TextView. This dynamically changes the text of the view to display when the next period will end.
      * It Updates the view every 10 seconds.
      * @param view
+     * @param context - the context of the same activity the view is on.
      * TODO: add support for late starts/weekends/holidays/etc..
      */
-    public EndOfHourHandler(TextView view) {
+    public EndOfHourHandler(TextView view, Context context) {
         this.view = view;
+        this.context = context;
     }
 
     public void start(){
@@ -43,7 +47,7 @@ public class EndOfHourHandler {
                 @Override
                 public void run() {
                     Utils.getTodaysDate();
-                    if(isSchoolInSession() && UpcomingEventsActivity.rssCalendarReader.doneParsing) { //we make sure the calendar reader is done parsing because if it isn't, we may get some null pointer exceptions when checking things about today's date.
+                    if( isSchoolInSession() && (!Utils.hadInternetOnLastCheck || UpcomingEventsActivity.rssCalendarReader.isDoneParsing())) { //we make sure the calendar reader is done parsing because if it isn't, we may get some null pointer exceptions when checking things about today's date.
                         buffer = new StringBuffer(startBufferText);
 
                         setCurrentPeriodAndEndTime();
@@ -62,6 +66,11 @@ public class EndOfHourHandler {
                         Spanned formatted = Html.fromHtml(buffer.toString());
 
                         view.setText(formatted); //sets the text of the textView after doing any html formatting to the text.
+
+                       if(!Utils.hadInternetOnLastCheck && Utils.isInternetConnected(context)) {
+                           UpcomingEventsActivity.loadCalendar();
+                       }
+
                     } else {
                         view.setText("School is not currently in session.");
                     }
@@ -103,17 +112,6 @@ public class EndOfHourHandler {
             }
 
             lastMinutesEnd = minutesEnd;
-
-//            if (currentHours > hoursEnd - 1) {
-//                if (i > 0) currentPeriod = i - 1;
-//                else currentPeriod = i; //if the current time is less than any hour time, it must be before school has started. Therefore, this should return the 0th hour.
-//            } else if (currentHours == hoursEnd && currentMinutes <= minutesEnd) {
-//                currentPeriod = i;
-//            } else if (currentHours == hoursEnd - 1 && currentMinutes >= minutesEnd) {
-//                currentPeriod = i;
-//            } else {
-//                currentPeriod = i;
-//            }
         }
     }
 

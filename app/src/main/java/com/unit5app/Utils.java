@@ -1,5 +1,9 @@
 package com.unit5app;
 
+import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
+
 import com.unit5app.com.unit5app.parsers.CalendarEvent;
 import com.unit5app.com.unit5app.parsers.EventType;
 
@@ -15,6 +19,8 @@ import java.util.regex.Pattern;
  * The main Utils Class for our unit5 app. This is where we store methods that are 'utility' methods that can be used in any class.
  */
 public class Utils {
+
+    public static boolean hadInternetOnLastCheck = false;
 
     private static final String TAG = "Utils";
 
@@ -115,7 +121,7 @@ public class Utils {
      * @return
      */
     public static boolean isTodayLateStart() {
-        if(UpcomingEventsActivity.rssCalendarReader.doneParsing) {
+        if(UpcomingEventsActivity.rssCalendarReader.isDoneParsing()) {
             List<CalendarEvent> calendarEvents = UpcomingEventsActivity.rssCalendarReader.getCalendarEvents(); //gets all the calendar events from the rssCalendarReader.
 
             for (CalendarEvent event : calendarEvents) {
@@ -126,6 +132,20 @@ public class Utils {
             }
         }
         return false;
+    }
+
+    /**
+     * Returns true if the user is connected to the internet in some way.
+     * @param context - context of an Acivity
+     * @return
+     *
+     *      Author: Silvio Delgado from StackOverFlow at <a href="http://stackoverflow.com/questions/28168867/check-internet-status-from-the-main-activity">link</a>
+     */
+    public static boolean isInternetConnected(Context context) {
+        ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
+
+        return activeNetwork != null && activeNetwork.isConnectedOrConnecting();
     }
 
 }

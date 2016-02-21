@@ -1,6 +1,9 @@
 package com.unit5app;
 
+import android.content.Context;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
@@ -45,9 +48,13 @@ public class MainActivity extends AppCompatActivity {
         /*
         The calendar reader is loaded up in here so that we will know what is happening on the day the app is opened. It may be a late start day.
          */
-        UpcomingEventsActivity.loadCalendar();
-        new EndOfHourHandler(endOfHourTime).start();
+        if(Utils.isInternetConnected(getApplicationContext())) {
+            UpcomingEventsActivity.loadCalendar();
+        } else {
+            Utils.hadInternetOnLastCheck = false;
+        }
 
+        new EndOfHourHandler(endOfHourTime, getApplicationContext()).start();
 
         testCalendarReading.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -104,5 +111,24 @@ public class MainActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    /**
+     * returns true if the user has an internet connection currently.
+     * @return
+     */
+    public boolean hasInternetConnection() {
+        ConnectivityManager connectivity = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+
+        if (connectivity != null) {
+            NetworkInfo[] inf = connectivity.getAllNetworkInfo();
+            if (inf != null)
+                for (int i = 0; i < inf.length; i++)
+                    if (inf[i].getState() == NetworkInfo.State.CONNECTED) {
+                        return true;
+                    }
+
+        }
+        return false;
     }
 }

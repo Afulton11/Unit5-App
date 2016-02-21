@@ -25,7 +25,7 @@ public class RSSReader {
 
     private String rssUrl;
 
-    public boolean doneParsing;
+    private boolean doneParsing;
 
     /*
      * whether or not the xml the reader is retrieving is from a calendar or not, true = it is a calendar.
@@ -185,10 +185,21 @@ public class RSSReader {
 
     /*
     returns all the calendarEvents found if the RssReader is retrieving from a calendar event.
+    If the reader is not done parsing, or is not a calendar, it will return a blank calendar that has only one day on it.
      */
     public List<CalendarEvent> getCalendarEvents() {
-        calendarEvents.remove(0); //remove the calendar's title, the title for the calendar itself.
-        return calendarEvents;
+        if(doneParsing && isCalendar) {
+            calendarEvents.remove(0); //remove the calendar's title, the title for the calendar itself.
+            return calendarEvents;
+        } else {
+            List<CalendarEvent> blankList = new ArrayList<>();
+            blankList.add(new CalendarEvent("", "", "", EventType.regular));
+            return blankList;
+        }
+    }
+
+    public boolean isDoneParsing() {
+        return doneParsing;
     }
 
 
