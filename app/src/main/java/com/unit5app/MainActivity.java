@@ -47,18 +47,18 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        /* Define the buttons by how they're defined in Resources file */
+        /* Load the buttons by how they're defined in Resources file */
         testpdf = (Button) findViewById(R.id.btn_testPdf);
         testWestNews = (Button) findViewById(R.id.btn_testWestNews);
         testCalendarReading = (Button) findViewById(R.id.btn_testCalendarReading);
 
-        /* Define text by how they're defined in Resources file */
+        /* Load text by how they're defined in Resources file */
         endOfHourTime = (TextView) findViewById(R.id.clock_end_of_hour);
 
         /* Check if we have internet access. */
         Utils.hadInternetOnLastCheck = Utils.isInternetConnected(getApplicationContext());
 
-        /* If not, complain. */
+        /* If not, complain to the user. */
         if(!Utils.hadInternetOnLastCheck) {
             Toast toast = Toast.makeText(getApplicationContext(),
                     "You are not connected to the internet. Most features will not work.",
@@ -77,8 +77,11 @@ public class MainActivity extends AppCompatActivity {
 
         }
 
+        /* Begin testing to see if it's the end of the hour. The text will update accordingly. */
         new EndOfHourHandler(endOfHourTime).start();
 
+        /* Define button click actions. */
+        /* For testing the calendar: */
         testCalendarReading.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -87,6 +90,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        /* For testing checking NCWHS news feed: */
         testWestNews.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -95,6 +99,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        /* For testing how PDFs are displayed: */
         testpdf.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -102,6 +107,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        /* A button to take you to regular Unit5 news. */
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -114,6 +120,7 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+    /* Button to take you to settings panel. */
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -121,6 +128,7 @@ public class MainActivity extends AppCompatActivity {
         return true;
     }
 
+    /* Function to handle when you click something in the action bar */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here. The action bar will
@@ -138,8 +146,10 @@ public class MainActivity extends AppCompatActivity {
 
     /**
      * returns true if the user has an internet connection currently.
+     * NOTE: (ben) Replaced by function in Utils.java? Andrew please verify if needed
      * @return
      */
+    /*
     public boolean hasInternetConnection() {
         ConnectivityManager connectivity = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
 
@@ -153,5 +163,5 @@ public class MainActivity extends AppCompatActivity {
 
         }
         return false;
-    }
+    } */
 }

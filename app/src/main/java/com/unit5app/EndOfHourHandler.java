@@ -9,6 +9,7 @@ import android.widget.TextView;
 /**
  * @author Andrew
  * @version 2/21/2016.
+ * TODO: Integrate with internal calendar as opposed to checking the internet again.
  */
 public class EndOfHourHandler {
 
