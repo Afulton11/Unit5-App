@@ -6,6 +6,9 @@ import android.text.Spanned;
 import android.util.Log;
 import android.widget.TextView;
 
+import com.unit5app.utils.Time;
+import com.unit5app.utils.Utils;
+
 /**
  * @author Andrew
  * @version 2/21/2016.
@@ -101,7 +104,7 @@ public class EndOfHourHandler {
     }
 
     private void setCurrentPeriodAndEndTime() {
-        String currentTime = Utils.getCurrentTime("HH:mm");
+        String currentTime = Time.getCurrentTime("HH:mm");
         int currentHours = Integer.parseInt(currentTime.substring(0, 2));
         int currentMinutes = Integer.parseInt(currentTime.substring(3, 5));
         if (currentTime.contains("PM")) {
@@ -134,10 +137,10 @@ public class EndOfHourHandler {
      */
     public boolean isSchoolInSession() {
         /* TODO: Account for the current date, as well. */
-        String currentTime = Utils.getCurrentTime("HH:mm");
+        String currentTime = Time.getCurrentTime("HH:mm");
 //        String currentDate = Utils.getCurrentDate("MM/dd/yy");
 
-        if(!Utils.isWeekend()) {
+        if(!Time.isWeekend()) {
             int currentHours = Integer.parseInt(currentTime.substring(0, 2));
             int currentMinutes = Integer.parseInt(currentTime.substring(3, 5));
 

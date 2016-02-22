@@ -1,9 +1,6 @@
 package com.unit5app;
 
-import android.content.Context;
 import android.content.Intent;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
@@ -15,7 +12,7 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.unit5app.com.unit5app.parsers.RSSReader;
+import com.unit5app.utils.Utils;
 
 import java.util.ArrayList;
 import java.util.List;

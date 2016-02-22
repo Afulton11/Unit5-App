@@ -3,7 +3,7 @@ package com.unit5app.com.unit5app.parsers;
 
 import android.util.Log;
 
-import com.unit5app.Utils;
+import com.unit5app.utils.Utils;
 
 /**
  * Created by Andrew on 2/18/2016.
