@@ -13,45 +13,68 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.unit5app.com.unit5app.parsers.RSSReader;
 
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Class to handle the activity the User sees upon opening the App to its main page.
+ * @version 2/21/16
+ */
 public class MainActivity extends AppCompatActivity {
 
-    /**
-     * the two all_ lists will hold all the tiles and descriptions for the 'search' method that kyree mentioned.
-     */
+    /* Lists to hold the titles and descriptions for a future search function */
     public static List<String> all_titles = new ArrayList<>();
     public  static List<String> all_descriptions = new ArrayList<>();
 
+    /* Buttons to be pressed */
     private Button testpdf, testWestNews, testCalendarReading;
+
+    /* Text displayed on the screen */
     private TextView endOfHourTime;
 
-    private RSSReader rssCalendarReader;
+    // private RSSReader rssCalendarReader; /* Unnecessary b/c Calendar Reader is its own thing?
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        /* Load object placement as defined in Resources file */
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        /* Define the buttons by how they're defined in Resources file */
         testpdf = (Button) findViewById(R.id.btn_testPdf);
         testWestNews = (Button) findViewById(R.id.btn_testWestNews);
         testCalendarReading = (Button) findViewById(R.id.btn_testCalendarReading);
 
-
+        /* Define text by how they're defined in Resources file */
         endOfHourTime = (TextView) findViewById(R.id.clock_end_of_hour);
+
+        /* Check if we have internet access. */
+        Utils.hadInternetOnLastCheck = Utils.isInternetConnected(getApplicationContext());
+
+        /* If not, complain. */
+        if(!Utils.hadInternetOnLastCheck) {
+            Toast toast = Toast.makeText(getApplicationContext(),
+                    "You are not connected to the internet. Most features will not work.",
+                    Toast.LENGTH_LONG);
+            toast.show();
+        }
+
+        /* TODO: Launch internal calendar builder to get latest info on events, etc... */
         /*
         The calendar reader is loaded up in here so that we will know what is happening on the day the app is opened. It may be a late start day.
          */
         if(Utils.isInternetConnected(getApplicationContext())) {
             UpcomingEventsActivity.loadCalendar();
-        } else {
-            Utils.hadInternetOnLastCheck = false;
+        }
+        else {
+
         }
 
         new EndOfHourHandler(endOfHourTime).start();
