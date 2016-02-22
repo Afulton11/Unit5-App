@@ -134,21 +134,23 @@ public class EndOfHourHandler {
     public boolean isSchoolInSession() {
         /* TODO: Account for the current date, as well. */
         String currentTime = Utils.getCurrentTime("HH:mm");
-        //String currentDate = Utils.getCurrentDate("MM/dd/yy");
+//        String currentDate = Utils.getCurrentDate("MM/dd/yy");
 
-        int currentHours = Integer.parseInt(currentTime.substring(0, 2));
-        int currentMinutes = Integer.parseInt(currentTime.substring(3, 5));
+        if(!Utils.isWeekend()) {
+            int currentHours = Integer.parseInt(currentTime.substring(0, 2));
+            int currentMinutes = Integer.parseInt(currentTime.substring(3, 5));
 
-        int startHours = Integer.parseInt(endOfHourTimes[0].substring(0, 2));
-        int endHours = Integer.parseInt(endOfHourTimes[8].substring(0, 2)) + 12;// we add 12 to convert the hours back to a 12 hour clock.
+            int startHours = Integer.parseInt(endOfHourTimes[0].substring(0, 2));
+            int endHours = Integer.parseInt(endOfHourTimes[8].substring(0, 2)) + 12;// we add 12 to convert the hours back to a 12 hour clock.
 
-        int startMinutes = Integer.parseInt(endOfHourTimes[0].substring(3,5));
-        int endMinutes = Integer.parseInt(endOfHourTimes[8].substring(3, 5));
+            int startMinutes = Integer.parseInt(endOfHourTimes[0].substring(3, 5));
+            int endMinutes = Integer.parseInt(endOfHourTimes[8].substring(3, 5));
 
-        if(currentHours < endHours && currentHours > startHours ||
-                (currentHours == startHours && currentMinutes >= startMinutes) ||
-                (currentHours == endHours && currentMinutes <= endMinutes)) {
-            return true;
+            if (currentHours < endHours && currentHours > startHours ||
+                    (currentHours == startHours && currentMinutes >= startMinutes) ||
+                    (currentHours == endHours && currentMinutes <= endMinutes)) {
+                return true;
+            }
         }
         return false;
     }

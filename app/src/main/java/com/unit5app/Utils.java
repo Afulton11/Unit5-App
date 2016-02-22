@@ -128,6 +128,9 @@ public class Utils {
      * @return a String representing that Date's day of the week.
      */
     public static String getDOTW(Date date) {
+        /*
+        Get rid of the parameter and make it just return new SimpleDateFormat("E").format(new Date()).toString();?
+         */
         return new SimpleDateFormat("E").format(date).toString();
     }
 
@@ -154,6 +157,18 @@ public class Utils {
                     return true;
                 }
             }
+        }
+        return false;
+    }
+
+    /**
+     * checks to see if today is currently the weekend (Saturday, or Sunday).
+     * @return true if today is Saturday or Sunday.
+     */
+    public static boolean isWeekend() {
+        String DOTW = getDOTW(new Date());
+        if(DOTW.equalsIgnoreCase("Sat") || DOTW.equalsIgnoreCase("Sun")) {
+            return true;
         }
         return false;
     }
