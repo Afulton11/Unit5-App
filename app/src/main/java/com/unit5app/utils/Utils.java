@@ -4,14 +4,6 @@ import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 
-import com.unit5app.UpcomingEventsActivity;
-import com.unit5app.com.unit5app.parsers.CalendarEvent;
-import com.unit5app.com.unit5app.parsers.EventType;
-
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -56,19 +48,21 @@ public abstract class Utils {
         return index;
     }
 
-
-
     /**
      * Returns true if the user is connected to the internet in some way.
      * @param context - context of an Acivity
      * @return
      *
      *      Author: Silvio Delgado from StackOverFlow at <a href="http://stackoverflow.com/questions/28168867/check-internet-status-from-the-main-activity">link</a>
+     *
+     *      (Andrew) I believe we need this method in here because we may want to use this for other classes in the future e.g. 'The updater class.' Mainly because the user may be traveling or randomly lose internet
+     *      access whilst using the app, which could cause a crash when updating the Calendar without internet.
      */
     public static boolean isInternetConnected(Context context) {
         ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
 
-        return activeNetwork != null && activeNetwork.isConnectedOrConnecting();
+        hadInternetOnLastCheck = activeNetwork != null && activeNetwork.isConnectedOrConnecting();
+        return hadInternetOnLastCheck;
     }
 }

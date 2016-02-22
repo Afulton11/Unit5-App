@@ -34,8 +34,7 @@ public abstract class Time {
             if(time.contains("PM") && hours != 12) {
                 hours -= 12; /* -= 12 converts 24-hour time to 12-hour */
             }
-
-            time = new String(hours + time.substring(2, time.length()));
+            time = hours + time.substring(2, time.length());
         }
         return time;
     }
@@ -65,7 +64,7 @@ public abstract class Time {
         DateFormat sdf = new SimpleDateFormat(format); /* http://docs.oracle.com/javase/7/docs/
                                                             api/java/text/SimpleDateFormat.html */
         String formattedDate = sdf.format(today);
-        StringBuffer buf = new StringBuffer();
+        StringBuilder buf = new StringBuilder();
         char lastChar = ' ';
 
         /* Remove unnecessary 0s from date. 04/01/10 becomes 4/1/10. */
@@ -88,9 +87,9 @@ public abstract class Time {
      */
     public static String getDOTW(Date date) {
         /*
-        Get rid of the parameter and make it just return new SimpleDateFormat("E").format(new Date()).toString();?
+        (Andrew) should we get rid of the parameter and make it just return new SimpleDateFormat("E").format(new Date()).toString();? Or is their applications where inputting a Date is useful?
          */
-        return new SimpleDateFormat("E").format(date).toString();
+        return new SimpleDateFormat("E").format(date);
     }
 
     public static int getCurrentHour() {
@@ -125,10 +124,8 @@ public abstract class Time {
      * @return true if today is Saturday or Sunday.
      */
     public static boolean isWeekend() {
-        String DOTW = getDOTW(new Date());
-        if(DOTW.equalsIgnoreCase("Sat") || DOTW.equalsIgnoreCase("Sun")) {
-            return true;
-        }
-        return false;
+        return (getDOTW(new Date()).matches("Sat|Sun"));
+        /*(Andrew) the | operation is like saying or in the middle of the string. the | represents a bitwise inclusive OR statement. However
+        it doesn't short-circuit like a normal || OR statement. You can switch it back to the regular || if you would like.*/
     }
 }

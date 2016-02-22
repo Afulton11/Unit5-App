@@ -53,7 +53,7 @@ public class MainActivity extends AppCompatActivity {
         endOfHourTime = (TextView) findViewById(R.id.clock_end_of_hour);
 
         /* Check if we have internet access. */
-        Utils.hadInternetOnLastCheck = Utils.isInternetConnected(getApplicationContext());
+        Utils.isInternetConnected(getApplicationContext());
 
         /* If not, complain to the user. */
         if(!Utils.hadInternetOnLastCheck) {
@@ -69,9 +69,6 @@ public class MainActivity extends AppCompatActivity {
          */
         if(Utils.isInternetConnected(getApplicationContext())) {
             UpcomingEventsActivity.loadCalendar();
-        }
-        else {
-
         }
 
         /* Begin testing to see if it's the end of the hour. The text will update accordingly. */
@@ -140,25 +137,4 @@ public class MainActivity extends AppCompatActivity {
 
         return super.onOptionsItemSelected(item);
     }
-
-    /**
-     * returns true if the user has an internet connection currently.
-     * NOTE: (ben) Replaced by function in Utils.java? Andrew please verify if needed
-     * @return
-     */
-    /*
-    public boolean hasInternetConnection() {
-        ConnectivityManager connectivity = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
-
-        if (connectivity != null) {
-            NetworkInfo[] inf = connectivity.getAllNetworkInfo();
-            if (inf != null)
-                for (int i = 0; i < inf.length; i++)
-                    if (inf[i].getState() == NetworkInfo.State.CONNECTED) {
-                        return true;
-                    }
-
-        }
-        return false;
-    } */
 }
