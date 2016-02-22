@@ -54,7 +54,7 @@ public class MainActivity extends AppCompatActivity {
             Utils.hadInternetOnLastCheck = false;
         }
 
-        new EndOfHourHandler(endOfHourTime, getApplicationContext()).start();
+        new EndOfHourHandler(endOfHourTime).start();
 
         testCalendarReading.setOnClickListener(new View.OnClickListener() {
             @Override

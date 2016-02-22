@@ -131,6 +131,14 @@ public class Utils {
         return new SimpleDateFormat("E").format(date).toString();
     }
 
+    public static int getCurrentHour() {
+        return Integer.parseInt(getCurrentTime("HH:mm").substring(0, 2));
+    }
+
+    public static int getCurrentMinute() {
+        return Integer.parseInt(getCurrentTime("HH:mm").substring(3, 5));
+    }
+
     /**
      * Checks to see if today is a Late Start Wednesday.
      * @return true if today is a Late Start, false otherwise.

@@ -148,7 +148,7 @@ public class RSSReader {
         }
     }
 
-    private void waitForDoneParsing() {
+    private void waitUntilDoneParsing() {
         /* DRY principle: If you have to say the same thing two times or more, wrap it
          * into its own method. */
         while(!doneParsing) {
@@ -161,17 +161,17 @@ public class RSSReader {
     }
 
     public List<String> getTitles() {
-        waitForDoneParsing();
+        waitUntilDoneParsing();
         return titles;
     }
 
     public List<String> getDescriptions() {
-        waitForDoneParsing();
+        waitUntilDoneParsing();
         return descriptions;
     }
 
     public List<String> getLinks() {
-        waitForDoneParsing();
+        waitUntilDoneParsing();
         return links;
     }
 
@@ -179,7 +179,7 @@ public class RSSReader {
     returns the dates of which articles/items were published.
      */
     public List<String> getPubDates() {
-        waitForDoneParsing();
+        waitUntilDoneParsing();
         return pubDates;
     }
 

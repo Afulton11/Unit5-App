@@ -7,7 +7,8 @@ import android.util.Log;
 import android.widget.TextView;
 
 /**
- * Created by Andrew on 2/20/2016.
+ * @author Andrew
+ * @version 2/21/2016.
  */
 public class EndOfHourHandler {
 
@@ -16,37 +17,33 @@ public class EndOfHourHandler {
     private TextView view;
     private Context context;
 
-    private String[] periods = new String[] {"0<sup><small>th</small></sup>", "1<sup><small>st</small></sup>", "2<sup><small>nd</small></sup>", "3<sup><small>rd</small></sup>", "4<sup><small>th</small></sup>",
-            "5<sup><small>th</small></sup>", "6<sup><small>th</small></sup>", "7<sup><small>th</small></sup>", "8<sup><small>th</small></sup>"};
-    private String[] endOfHourTimes = new String[] {"07:10 AM", "08:05 AM", "09:00 AM", "09:55 AM", "10:50 AM", "11:45 AM", "12:40 PM", "01:35 PM", "02:30 PM"}; //sorted from earliest to latest.
+    /* NOTE: Having multiple arrays with indexes that match up is behavior similar to objects.
+     * Should we just create a new "Period.java" class? */
 
-    /*
-    currentPeriod represents the indexes for the current period or endTime for the current time.
-     */
+    /* Hour names ("1st, 2nd, 3rd, etc...") */
+    private String[] periods = new String[] {"0<sup><small>th</small></sup>",
+            "1<sup><small>st</small></sup>", "2<sup><small>nd</small></sup>",
+            "3<sup><small>rd</small></sup>", "4<sup><small>th</small></sup>",
+            "5<sup><small>th</small></sup>", "6<sup><small>th</small></sup>",
+            "7<sup><small>th</small></sup>", "8<sup><small>th</small></sup>"};
+    /* Period ending times (earliest to latest) in format HH:mm a with leading 0s left. */
+    private String[] endOfHourTimes = new String[] {"07:10 AM", "08:05 AM", "09:00 AM",
+                                                    "09:55 AM", "10:50 AM", "11:45 AM",
+                                                    "12:40 PM", "01:35 PM", "02:30 PM"};
+
+    /* Index representing the current period and its ending time */
     private int currentPeriod = 0;
 
-    /**
-     * creates a new EndOfHourHandler for the specified TextView. This dynamically changes the text of the view to display when the next period will end.
-     * It Updates the view every 10 seconds.
-     * @param view
-     * @param context - the context of the same activity the view is on.
-     * TODO: add support for late starts/weekends/holidays/etc..
-     */
-    public EndOfHourHandler(TextView view, Context context) {
-        this.view = view;
-        this.context = context;
-    }
+    public void start() {
+        final long initialDelayTime = 2235; //the time to wait before starting the entire loop that uses delayTime.
+        final long delayTime = 10000; //the amount of time to wait before checking the time again in milliseconds. 1000 ms = 1 second.
+        final String startBufferText = "# hour ends at [TIME-HERE].";
 
-    public void start(){
         try {
-            final long initalDelayTime = 2235; //the time to wait before starting the entire loop that uses delayTime.
-            final long delayTime = 10000; //the amount of time to wait before checking the time again in milliseconds. 1000 ms = 1 second.
-            final String startBufferText = "# hour ends at [TIME-HERE].";
             Runnable timerTask = new Runnable() { //used to check the time and update the textView every 30 seconds.
                 StringBuffer buffer;
                 @Override
                 public void run() {
-                    Utils.getCurrentDate("MM/dd/yy");
                     if( isSchoolInSession() && (!Utils.hadInternetOnLastCheck || UpcomingEventsActivity.rssCalendarReader.isDoneParsing())) { //we make sure the calendar reader is done parsing because if it isn't, we may get some null pointer exceptions when checking things about today's date.
                         buffer = new StringBuffer(startBufferText);
 
@@ -71,9 +68,9 @@ public class EndOfHourHandler {
                          * My attempt at reloading the calendar to be used by the clock when the user is reconnected to the internet
                          * Not sure if this works yet.
                          */
-                       if(!Utils.hadInternetOnLastCheck && Utils.isInternetConnected(context)) {
-                           UpcomingEventsActivity.loadCalendar();
-                       }
+                        if(!Utils.hadInternetOnLastCheck && Utils.isInternetConnected(context)) {
+                            UpcomingEventsActivity.loadCalendar();
+                        }
 
                     } else {
                         view.setText("School is not currently in session.");
@@ -83,11 +80,23 @@ public class EndOfHourHandler {
                     view.postDelayed(this, delayTime);//this will run this runnable (timerTask) after every delayTime (30,000) millisecond
                 }
             };
-            view.postDelayed(timerTask, initalDelayTime);
+            view.postDelayed(timerTask, initialDelayTime);
 
         } catch (IllegalStateException e){
             Log.e(TAG, "starting end of hour error");
         }
+    }
+
+    /**
+     * Creates a new EndOfHourHandler for the specified TextView. The text in the TextView is
+     * dynamically changed to reflect the current school period and when it ends. Updates the view
+     * every ten seconds.
+     * @param view - TextView to draw the current period and end time onto.
+     * TODO: add support for late starts/weekends/holidays/etc..
+     */
+    public EndOfHourHandler(TextView view) {
+        this.view = view;
+        context = view.getContext();
     }
 
     private void setCurrentPeriodAndEndTime() {
@@ -123,7 +132,9 @@ public class EndOfHourHandler {
     Whether or not school is currently in session.
      */
     public boolean isSchoolInSession() {
+        /* TODO: Account for the current date, as well. */
         String currentTime = Utils.getCurrentTime("HH:mm");
+        //String currentDate = Utils.getCurrentDate("MM/dd/yy");
 
         int currentHours = Integer.parseInt(currentTime.substring(0, 2));
         int currentMinutes = Integer.parseInt(currentTime.substring(3, 5));
