@@ -4,6 +4,8 @@ import android.text.Html;
 import android.text.Spanned;
 import android.util.Log;
 
+import com.unit5app.Article;
+
 import org.jsoup.Connection;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -13,28 +15,29 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by Andrew on 2/16/2016.
+ * @author Andrew
+ * @version  2/16/16
  * This class reads the news from the west website by first checking out the links on the homepage.
  */
 public class WestNewsReader extends RSSReader{
 
     private static final String USER_AGENT = "Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36";
 
-    private String TAG = "WestNews";
+    private final String TAG = "WestNews";
 
     private List<String> htmlFreeLinks;
 
-    private List<String> descriptions, titles;
+    private List<Article> articles;
 
-    private boolean doneRetrieving = false;
+    private volatile boolean doneRetrieving;
 
     /*
     @param url - the url of the normalwest homepage.
      */
     public WestNewsReader(String url) {
         super(url);
-        Log.d(TAG, "West started!");
         htmlFreeLinks = new ArrayList<>();
+        articles = new ArrayList<>();
     }
 
     /**
@@ -43,10 +46,9 @@ public class WestNewsReader extends RSSReader{
      */
     public void loadLinks() {
         doneRetrieving = false;
-        descriptions = new ArrayList<>();
-        titles = new ArrayList<>();
         Log.d(TAG, "Loading Links...");
         for(int i = 0; i < getLinks().size(); i++) { //start at 1 to skip the 'homepage' thing.
+            Article article = new Article();
             addLink(getLinks().get(i));
             Connection connection = Jsoup.connect(htmlFreeLinks.get(i)).userAgent(USER_AGENT); //JSoup is used to retrieve a websites html source.
             Log.d(TAG, "Connected to link : " + htmlFreeLinks.get(i));
@@ -54,13 +56,13 @@ public class WestNewsReader extends RSSReader{
                 Document doc = connection.get();
                 doc.normalise();
 
-                Element article = doc.body().getElementById("module-content-1852"); //module-content-1852 is the id of a div that contains the article.
+                Element article_element = doc.body().getElementById("module-content-1852"); //module-content-1852 is the id of a div that contains the article_element.
 
-                String title = article.getElementsByTag("h1").get(0).toString();
+                String title = article_element.getElementsByTag("h1").get(0).toString();
                 Log.d(TAG, title);
-                titles.add(title);
+                article.setTitle(title);
 
-                List<Element> element_paragraphs = article.getElementsByTag("span");
+                List<Element> element_paragraphs = article_element.getElementsByTag("span");
                 element_paragraphs.remove(0); //gets rid of the 'Return to Headlines' span.
                 element_paragraphs.remove(0); //gets rid of the title span.
 
@@ -71,18 +73,32 @@ public class WestNewsReader extends RSSReader{
 
                 StringBuffer buffer_body = new StringBuffer();
                 for (Element e : element_paragraphs) {
-                    buffer_body.append(e.toString());
+                    StringBuilder e_string = new StringBuilder(e.toString());
+                    if(e.toString().startsWith("<a href=\"/")) {
+                        Log.d(TAG, "Replacing a link!");
+                        Log.d(TAG, e.toString());
+                        int replaceIndex = e_string.indexOf("<a href=\"/");
+                        e_string.replace(replaceIndex, replaceIndex + 1, "http://www.unit5.org/"); //TODO: make this properly add the www.unit5.org to the front of a link if the link starts with something like /cms/../...
+                        Log.d(TAG, "Replaced a link!");
+                    }
+
+                    buffer_body.append(e_string.toString());
                 }
 
                 String fullBody = buffer_body.toString();
                 Log.d(TAG, fullBody);
-                descriptions.add(fullBody);
+                article.setDescription(fullBody);
+
+                if(article.isArticleFull()) articles.add(article);
+
             } catch (Exception e) {
                 Log.d(TAG, "Unable to load link: " + htmlFreeLinks.get(i));
+                e.printStackTrace();
             }
         }
         doneRetrieving = true;
-        Log.d(TAG, "Loaded links successfully!");
+
+        Log.d(TAG, "Loaded links!");
     }
 
     /*
@@ -90,7 +106,7 @@ public class WestNewsReader extends RSSReader{
      */
     private void addLink(String url) {
         Spanned resultLink = Html.fromHtml(url);
-        htmlFreeLinks.add(resultLink.toString());
+        htmlFreeLinks.add(resultLink.toString().trim());
     }
 
     /*
@@ -102,16 +118,14 @@ public class WestNewsReader extends RSSReader{
 
     /**
      * returns the body of all the articles from the westNewsReader's given url.
-     * -----This doesn't return an htmlFree version of the body.
-     * @return
+     * @return - the list of articles or a blank Article if the reader is not yet done retrieving.
      */
-    public List<String> getDescriptions() {
-        if(doneRetrieving) {
-            return descriptions;
+    public List<Article> getArticles() {
+        if(doneRetrieving && articles != null) {
+            return articles;
         }
-        List<String> test = new ArrayList<>();
-        test.add("Not loading properly....");
-        test.add("NotLoadin THE THINGS.");
+        List<Article> test = new ArrayList<>();
+        test.add(new Article("Not Loading Properly...", "Unable to Load Article."));
         return test;
     }
 }

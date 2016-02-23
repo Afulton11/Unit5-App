@@ -2,9 +2,13 @@ package com.unit5app.com.unit5app.parsers;
 
 import android.util.Log;
 
+import com.unit5app.Article;
+
 import org.xmlpull.v1.XmlPullParser;
+import org.xmlpull.v1.XmlPullParserException;
 import org.xmlpull.v1.XmlPullParserFactory;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.util.ArrayList;
@@ -20,23 +24,23 @@ public class RSSReader {
 
     private String TAG = "Unit5Reader";
 
-    private static List<String> titles, links, descriptions, pubDates;
+    private List<Article> articles;
+    /*
+    All the links in the given xml url.
+     */
+    private List<String> links;
     private List<CalendarEvent> calendarEvents;
 
     private XmlPullParserFactory xmlFactory;
 
     private String rssUrl;
 
-    private boolean doneParsing;
+    private volatile boolean doneParsing;
 
     /*
      * whether or not the xml the reader is retrieving is from a calendar or not, true = it is a calendar.
      */
     public boolean isCalendar = false;
-
-    public boolean doneParsing() {
-        return doneParsing;
-    }
 
     /**
      * creates a new RSSReader from the specified Rss url address, unless the url is null.
@@ -45,10 +49,8 @@ public class RSSReader {
         if(rssURL != null) {
             try {
                 this.rssUrl = rssURL;
-                titles = new ArrayList<>();
+                articles = new ArrayList<>();
                 links = new ArrayList<>();
-                descriptions = new ArrayList<>();
-                pubDates = new ArrayList<>();
                 calendarEvents = new ArrayList<>();
                 doneParsing = false;
             } catch (Exception e) {
@@ -58,16 +60,19 @@ public class RSSReader {
     }
 
     /**
-     * loads the xml onto this rssReader's titles and descriptions, and etc...
+     * loads the xml onto this rssReader's articles, links, etc...
      */
     public void loadXml() {
         try {
             doneParsing = false;
+            articles.clear();
+            links.clear();
+            calendarEvents.clear();
             URL url = new URL(rssUrl);
-            Log.d(TAG, "Requesting rss URL");
+            Log.d(TAG, "Requesting URL stream!");
             InputStream stream = url.openStream();
+            Log.d(TAG, "Connected to url stream!");
 
-            Log.d(TAG, "Connected to url!");
 
             xmlFactory = XmlPullParserFactory.newInstance();
             XmlPullParser xmlParser = xmlFactory.newPullParser();
@@ -78,6 +83,7 @@ public class RSSReader {
             parse(xmlParser);
             stream.close();
             doneParsing = true;
+            Log.d(TAG, "done parsing XML!");
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -105,7 +111,13 @@ public class RSSReader {
                 switch (event) {
                     /* If <tag> */
                     case XmlPullParser.START_TAG:
-                        break; /* Do nothing */
+                        if(name.equals("item")) {
+                            Log.d(TAG, "Item found!");
+                            Article articleToAdd = readArticle(myParser);
+                            if (articleToAdd.isArticleFull()) articles.add(articleToAdd);
+                            Log.d(TAG, "SIZE: " + articles.size());
+                        }
+                        break;
 
                     /* If <tag> content </tag> */
                     case XmlPullParser.TEXT:
@@ -118,19 +130,8 @@ public class RSSReader {
                                               may be different depending on the rss you read. */
                             if(isCalendar) { /* NOTE: not sure if instance variable best solution */
                                 /* If is a title tag */
-                                if(name.equals("title")) { // making sure the text != "Calendar" gets rid of the first titleon a unit5 calendar which is used to name the calendar itself.
+                                if(name.equals("title") && !text.equals("Calendar")) { // making sure the text != "Calendar" gets rid of the first title on a unit5 calendar which is used to name the calendar itself.
                                     calendarEvents.add(new CalendarEvent(text));
-                                }
-                            } else {
-                                if (name.equals("title")) {
-                                    Log.d(TAG, text);
-                                    titles.add(text);
-                                } else if (name.equals("link")) {
-                                    links.add(text);
-                                } else if (name.equals("description")) {
-                                    descriptions.add(text);
-                                } else if (name.equals("pubDate")) {
-                                    pubDates.add(text);
                                 }
                             }
                         }
@@ -138,49 +139,101 @@ public class RSSReader {
                 }
                 event = myParser.next();
             }
-            if(!isCalendar) {
-                titles.remove(0); //remove the 'homepage' thing.. for unit5 websites
-                links.remove(0); //removes the homepage link.. for unit5 websites
-            }
         }
         catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    private void waitUntilDoneParsing() {
-        /* DRY principle: If you have to say the same thing two times or more, wrap it
-         * into its own method. */
-        while(!doneParsing) {
-            try {
-                this.wait(100);
-            } catch (Exception e) {
-                // Intentionally blank!
+    private Article readArticle(XmlPullParser parser) throws IOException, XmlPullParserException {
+        Article currentArticle = new Article();
+        parser.require(XmlPullParser.START_TAG, null, "item");
+        boolean linkSet = false;
+        while(parser.next() != XmlPullParser.END_TAG) {
+            if(parser.getEventType() != XmlPullParser.START_TAG) continue;
+
+            String name = parser.getName();
+            Log.d(TAG, name);
+            if(name.equals("title")){
+                currentArticle.setTitle(readText(parser));
+                Log.d(TAG, currentArticle.getTitle());
+            } else if(name.equals("description")) {
+                currentArticle.setDescription(readDescription(parser));
+                Log.d(TAG, currentArticle.getDescription());
+            } else if(name.equals("pubDate")) {
+                currentArticle.setPubDate(readPubDate(parser));
+                Log.d(TAG, currentArticle.getPubDate());
+            } else if(name.equals("link")) {
+                links.add(readText(parser));
+            } else {
+                skip(parser);
+            }
+        }
+
+        return currentArticle;
+    }
+
+    private String readTitle(XmlPullParser parser) throws IOException, XmlPullParserException {
+        parser.require(XmlPullParser.START_TAG, null, "title");
+        String title = readText(parser);
+        parser.require(XmlPullParser.END_TAG, null, "title");
+        return title;
+    }
+
+    private String readPubDate(XmlPullParser parser) throws IOException, XmlPullParserException {
+        parser.require(XmlPullParser.START_TAG, null, "pubDate");
+        String pubDate = readText(parser);
+        parser.require(XmlPullParser.END_TAG, null, "pubDate");
+        return pubDate;
+    }
+
+    private String readDescription(XmlPullParser parser) throws IOException, XmlPullParserException {
+        parser.require(XmlPullParser.START_TAG, null, "description");
+        String description = readText(parser);
+        parser.require(XmlPullParser.END_TAG, null, "description");
+        return description;
+    }
+
+    private String readText(XmlPullParser parser) throws IOException, XmlPullParserException {
+        String result = "";
+        if (parser.next() == XmlPullParser.TEXT) {
+            result = parser.getText();
+            parser.nextTag();
+        }
+        return result;
+    }
+
+    private void skip(XmlPullParser parser) throws XmlPullParserException, IOException {
+        if (parser.getEventType() != XmlPullParser.START_TAG) {
+            throw new IllegalStateException();
+        }
+        int depth = 1;
+        while (depth != 0) {
+            switch (parser.next()) {
+                case XmlPullParser.END_TAG:
+                    depth--;
+                    break;
+                case XmlPullParser.START_TAG:
+                    depth++;
+                    break;
             }
         }
     }
 
-    public List<String> getTitles() {
-        waitUntilDoneParsing();
-        return titles;
-    }
-
-    public List<String> getDescriptions() {
-        waitUntilDoneParsing();
-        return descriptions;
-    }
-
-    public List<String> getLinks() {
-        waitUntilDoneParsing();
-        return links;
-    }
-
-    /*
-    returns the dates of which articles/items were published.
+    /**
+     * returns a list of articles that the reader has retrieved from the inputted xml url of the reader.
+     * @return - a list of articles
      */
-    public List<String> getPubDates() {
-        waitUntilDoneParsing();
-        return pubDates;
+    public List<Article> getArticles() {
+        return articles;
+    }
+
+    /**
+     * returns a list of all the links found in the given reader xml url.
+     * @return - a list of Strings that contain unparsed html links.
+     */
+    public List<String> getLinks() {
+        return links;
     }
 
     /*
@@ -189,7 +242,6 @@ public class RSSReader {
      */
     public List<CalendarEvent> getCalendarEvents() {
         if(doneParsing && isCalendar) {
-            calendarEvents.remove(0); //remove the calendar's title, the title for the calendar itself.
             return calendarEvents;
         } else {
             List<CalendarEvent> blankList = new ArrayList<>();
@@ -198,7 +250,7 @@ public class RSSReader {
         }
     }
 
-    public boolean isDoneParsing() {
+    public boolean doneParsing() {
         return doneParsing;
     }
 

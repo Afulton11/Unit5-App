@@ -48,7 +48,7 @@ public class EndOfHourHandler {
                 StringBuffer buffer;
                 @Override
                 public void run() {
-                    if( isSchoolInSession() && (!Utils.hadInternetOnLastCheck || UpcomingEventsActivity.rssCalendarReader.isDoneParsing())) { //we make sure the calendar reader is done parsing because if it isn't, we may get some null pointer exceptions when checking things about today's date.
+                    if( isSchoolInSession() && (!Utils.hadInternetOnLastCheck || UpcomingEventsActivity.rssCalendarReader.doneParsing())) { //we make sure the calendar reader is done parsing because if it isn't, we may get some null pointer exceptions when checking things about today's date.
                         buffer = new StringBuffer(startBufferText);
 
                         setCurrentPeriodAndEndTime();
@@ -116,7 +116,7 @@ public class EndOfHourHandler {
             int colLoc = endHourTime.indexOf(':');
             int hoursEnd = Integer.parseInt(endHourTime.substring(0, colLoc));
             int minutesEnd = Integer.parseInt(endHourTime.substring(colLoc + 1, colLoc + 3));
-            if (endHourTime.contains("PM")) {
+            if (endHourTime.contains("PM") && hoursEnd != 12) {
                 hoursEnd += 12;
             }
 

@@ -31,7 +31,7 @@ public class RssActivity  extends ListActivity {
     private WestNewsReader westNews;
 
     private static String[] loading = new String[] {"loading..."};
-    private static String[] titles, descriptions;
+    private static Article[] articles;
 
     private boolean links_loaded;
 
@@ -46,7 +46,8 @@ public class RssActivity  extends ListActivity {
          * unit5 homepage article rss feed.
          */
         rssReader = new RSSReader("http://www.unit5.org/site/RSS.aspx?DomainID=4&ModuleInstanceID=4&PageID=1");
-        westNews = new WestNewsReader("http://www.unit5.org/site/RSS.aspx?DomainID=30&ModuleInstanceID=1852&PageID=53");
+        if(useWestNews)
+            westNews = new WestNewsReader("http://www.unit5.org/site/RSS.aspx?DomainID=30&ModuleInstanceID=1852&PageID=53");
 
         /**
          * retrieves the feed from the rssReader.
@@ -67,10 +68,10 @@ public class RssActivity  extends ListActivity {
                     Toast.makeText(getApplicationContext(), "Still loading...", Toast.LENGTH_SHORT);
                 } else {
                     try {
-                        ArticleActivity.setTitle(titles[position]);
-                        ArticleActivity.setBody(descriptions[position]);
+                        Log.d(TAG, "Position of list item: " + position);
+                        ArticleActivity.setArticle(articles[position]);
                     } catch (ArrayIndexOutOfBoundsException e) {
-                        Log.d(TAG, "Index out of bounds for either descriptions[position] or titles[position]!");
+                        Log.d(TAG, "Index out of bounds for articles[position]!");
                     }
                     startActivity(new Intent(RssActivity.this, ArticleActivity.class));
                 }
@@ -97,11 +98,19 @@ public class RssActivity  extends ListActivity {
         @Override
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
-            descriptions = new String[westNews.getDescriptions().size()];
-            for (int i = 0; i < descriptions.length; i++) {
-                descriptions[i] = westNews.getDescriptions().get(i);
+            if(westNews.getArticles().size() > 0) {
+                articles = new Article[westNews.getArticles().size()];
+                String[] titles = new String[articles.length];
+                for (int i = 0; i < articles.length; i++) {
+                    articles[i] = westNews.getArticles().get(i);
+                    titles[i] = ArticleActivity.toTitleCase(Html.fromHtml(articles[i].getTitle()).toString().toLowerCase());
+                }
+                getListView().setAdapter(null);
+                ArrayAdapter<String> adapterLoaded = new ArrayAdapter<>(getListView().getContext(), android.R.layout.simple_list_item_1, titles);
+                adapterLoaded.notifyDataSetChanged();
+                getListView().setAdapter(adapterLoaded);
+                links_loaded = true;
             }
-            links_loaded = true;
             Toast.makeText(getApplicationContext(), "Done loading!", Toast.LENGTH_SHORT);
         }
     }
@@ -126,23 +135,23 @@ public class RssActivity  extends ListActivity {
             super.onPostExecute(aVoid);
             //when finished parsing do the following:
             if (list != null && !reader.isCalendar) {
-                titles = new String[reader.getTitles().size()];
-                for (int i = 0; i < titles.length; i++) {
-                    Spanned resultTitle = Html.fromHtml(reader.getTitles().get(i));
-                    titles[i] = ArticleActivity.toTitleCase(resultTitle.toString().toLowerCase());
-                }
-                if(!useWestNews) {
-                    descriptions = new String[reader.getDescriptions().size() - 1];
-                    for(int i = 1; i < descriptions.length; i++) {
-                        descriptions[i - 1] = reader.getDescriptions().get(i);
-                    }
-                }
+                if(!(reader instanceof WestNewsReader)) {
+                    ArrayAdapter<String> adapterLoaded = new ArrayAdapter<>(list.getContext(), android.R.layout.simple_list_item_1, new String[] {"Error Whilst Loading the Articles!"});
+                    if(reader.getArticles().size() > 0) {
+                        articles = new Article[reader.getArticles().size()];
+                        String[] titles = new String[reader.getArticles().size()];
+                        for (int i = 0; i < titles.length; i++) {
+                            Spanned resultTitle = Html.fromHtml(reader.getArticles().get(i).getTitle());
+                            articles[i] = reader.getArticles().get(i);
+                            titles[i] = ArticleActivity.toTitleCase(resultTitle.toString().toLowerCase());
+                        }
+                        list.setAdapter(null);
+                        adapterLoaded = new ArrayAdapter<>(list.getContext(), android.R.layout.simple_list_item_1, titles);
 
-                list.setAdapter(null);
-                ArrayAdapter<String> adapterLoaded = new ArrayAdapter<String>(list.getContext(), android.R.layout.simple_list_item_1, titles);
-                adapterLoaded.notifyDataSetChanged();
-                list.setAdapter(adapterLoaded);
-                if(useWestNews) {
+                    }
+                    adapterLoaded.notifyDataSetChanged();
+                    list.setAdapter(adapterLoaded);
+                } else  {
                     activity.executeLinkTask();
                 }
             }
@@ -157,7 +166,7 @@ public class RssActivity  extends ListActivity {
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            ArrayAdapter<String> adapter = new ArrayAdapter<String>(list.getContext(), android.R.layout.simple_list_item_1, loading);
+            ArrayAdapter<String> adapter = new ArrayAdapter<>(list.getContext(), android.R.layout.simple_list_item_1, loading);
             list.setAdapter(adapter);
         }
     }

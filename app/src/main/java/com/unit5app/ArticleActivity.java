@@ -23,8 +23,7 @@ public class ArticleActivity extends Activity {
 
     private static final String TAG = "ArticleActivity";
 
-    private static String title = "";
-    private static String body = "";
+    private static Article article;
 
     private TextView Heading, Body;
 
@@ -36,43 +35,37 @@ public class ArticleActivity extends Activity {
         Heading = (TextView) findViewById(R.id.article_title);
         Body = (TextView) findViewById(R.id.article_body);
 
-        if(title != null) {
-            Heading.setText(title);
-            Heading.setMovementMethod(new ScrollingMovementMethod());
-        }
-        if(body != null) {
+        Heading.setText(toTitleCase(Html.fromHtml(article.getTitle()).toString()));
+        Heading.setMovementMethod(new ScrollingMovementMethod());
+        //we need a new task/thread because android doesn't allow connecting to a network on the main thread.
+        AsyncTask loadBody = new AsyncTask<Object, Void, Void>() {
+            Spanned resultBody;
+            Drawable image;
 
-            //we need a new task/thread because android doesn't allow connecting to a network on the main thread.
-            AsyncTask loadBody = new AsyncTask<Object, Void, Void>() {
-
-                Spanned resultBody;
-                Drawable image;
-
-                @Override
-                protected void onPostExecute(Void aVoid) {
-                    super.onPostExecute(aVoid);
-                    Body.setText(resultBody);
-                    Body.setMovementMethod(new ScrollingMovementMethod());
-                    Body.setHorizontalScrollBarEnabled(true);
-                    Body.setLinksClickable(true);
-                }
-
-                @Override
-                protected Void doInBackground(Object... params) {
-                    resultBody = Html.fromHtml(body, new Html.ImageGetter() {
-                        @Override
-                        public Drawable getDrawable(String source) { //retrieve any images from unit5
-                            String[] splitSource = source.split("/");
-                            String sourceName = splitSource[splitSource.length - 1];
-                            image = null;
-                            try {
-                                InputStream input = (InputStream) new URL("http://www.unit5.org" + source).getContent();
-                                image = Drawable.createFromStream(input, sourceName);
-                                image.setBounds(0, 0, image.getIntrinsicWidth() * 4, image.getIntrinsicHeight() * 4); //TODO: figure out why the image loads so small when not muliplied by 4?
-                            } catch (MalformedURLException e) {
-                                if (e.getMessage() != null) Log.e(TAG, e.getMessage(), e);
-                                else
-                                    Log.e(TAG, "Exception", e);
+            @Override
+            protected void onPostExecute(Void aVoid) {
+                super.onPostExecute(aVoid);
+                Body.setText(resultBody);
+                Body.setMovementMethod(new ScrollingMovementMethod());
+                Body.setHorizontalScrollBarEnabled(true);
+                Body.setLinksClickable(true);
+            }
+            @Override
+            protected Void doInBackground(Object... params) {
+                resultBody = Html.fromHtml(article.getDescription(), new Html.ImageGetter() {
+                    @Override
+                    public Drawable getDrawable(String source) { //retrieve any images from unit5
+                        String[] splitSource = source.split("/");
+                        String sourceName = splitSource[splitSource.length - 1];
+                        image = null;
+                        try {
+                            InputStream input = (InputStream) new URL("http://www.unit5.org" + source).getContent();
+                            image = Drawable.createFromStream(input, sourceName);
+                            image.setBounds(0, 0, image.getIntrinsicWidth() * 4, image.getIntrinsicHeight() * 4); //TODO: figure out why the image loads so small when not muliplied by 4?
+                        } catch (MalformedURLException e) {
+                            if (e.getMessage() != null) Log.e(TAG, e.getMessage(), e);
+                            else
+                                Log.e(TAG, "Exception", e);
                             } catch (IOException ioe) {
                                 if (ioe.getMessage() != null) Log.e(TAG, ioe.getMessage(), ioe);
                                 else
@@ -82,12 +75,10 @@ public class ArticleActivity extends Activity {
                             return image;
                         }
                     }, null);
-                    return null;
-                }
-            };
-            loadBody.execute();
-
-        }
+                return null;
+            }
+        };
+        loadBody.execute();
     }
 
     /*
@@ -108,6 +99,9 @@ public class ArticleActivity extends Activity {
         return sb.toString();
     }
 
-    public static void setTitle(String setTitle) { title = setTitle; }
-    public static void setBody(String setBody) {body = setBody; }
+    /**
+     * sets the article of the ArticleActivity - the article that is displayed on the activity.
+     * @param set_article - sets the Article of the Activity
+     */
+    public static void setArticle(Article set_article) { article = set_article; }
 }
