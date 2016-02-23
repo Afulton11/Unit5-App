@@ -47,9 +47,12 @@ public class WestNewsReader extends RSSReader{
     public void loadLinks() {
         doneRetrieving = false;
         Log.d(TAG, "Loading Links...");
-        for(int i = 0; i < getLinks().size(); i++) { //start at 1 to skip the 'homepage' thing.
+        for(int i = 0; i < getLinks().size(); i++) {
             Article article = new Article();
             addLink(getLinks().get(i));
+            if(getArticles().get(i).hasPubDate()) {
+                article.setPubDate(getArticles().get(i).getPubDate());
+            }
             Connection connection = Jsoup.connect(htmlFreeLinks.get(i)).userAgent(USER_AGENT); //JSoup is used to retrieve a websites html source.
             Log.d(TAG, "Connected to link : " + htmlFreeLinks.get(i));
             try {
@@ -71,7 +74,7 @@ public class WestNewsReader extends RSSReader{
                 element_paragraphs.remove(element_paragraphs.size() - 1);
                 element_paragraphs.remove(element_paragraphs.size() - 1);
 
-                StringBuffer buffer_body = new StringBuffer();
+                StringBuilder builder = new StringBuilder();
                 for (Element e : element_paragraphs) {
                     StringBuilder e_string = new StringBuilder(e.toString());
                     if(e.toString().startsWith("<a href=\"/")) {
@@ -82,10 +85,10 @@ public class WestNewsReader extends RSSReader{
                         Log.d(TAG, "Replaced a link!");
                     }
 
-                    buffer_body.append(e_string.toString());
+                    builder.append(e_string.toString());
                 }
 
-                String fullBody = buffer_body.toString();
+                String fullBody = builder.toString();
                 Log.d(TAG, fullBody);
                 article.setDescription(fullBody);
 
@@ -120,7 +123,7 @@ public class WestNewsReader extends RSSReader{
      * returns the body of all the articles from the westNewsReader's given url.
      * @return - the list of articles or a blank Article if the reader is not yet done retrieving.
      */
-    public List<Article> getArticles() {
+    public List<Article> getNewsArticles() {
         if(doneRetrieving && articles != null) {
             return articles;
         }

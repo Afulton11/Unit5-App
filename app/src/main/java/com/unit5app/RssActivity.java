@@ -98,11 +98,11 @@ public class RssActivity  extends ListActivity {
         @Override
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
-            if(westNews.getArticles().size() > 0) {
-                articles = new Article[westNews.getArticles().size()];
+            if(westNews.getNewsArticles().size() > 0) {
+                articles = new Article[westNews.getNewsArticles().size()];
                 String[] titles = new String[articles.length];
                 for (int i = 0; i < articles.length; i++) {
-                    articles[i] = westNews.getArticles().get(i);
+                    articles[i] = westNews.getNewsArticles().get(i);
                     titles[i] = ArticleActivity.toTitleCase(Html.fromHtml(articles[i].getTitle()).toString().toLowerCase());
                 }
                 getListView().setAdapter(null);

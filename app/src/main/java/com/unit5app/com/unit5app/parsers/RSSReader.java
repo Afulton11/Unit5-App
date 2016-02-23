@@ -268,18 +268,6 @@ public class RSSReader {
     }
 
     /**
-     * returns a list of all the article pub dates found while the reader read the xml.
-     * @return - List(String) dates --> the date each article was published.
-     */
-    public List<String> getArticlePubDates() {
-        List<String> dates = new ArrayList<>();
-        for (Article article : articles) {
-            if(article.hasPubDate()) dates.add(article.getPubDate());
-        }
-        return dates;
-    }
-
-    /**
      * returns a list of all the links found in the given reader xml url.
      * @return - a list of Strings that contain unparsed html links.
      */
