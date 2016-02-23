@@ -31,8 +31,6 @@ public class RSSReader {
     private List<String> links;
     private List<CalendarEvent> calendarEvents;
 
-    private XmlPullParserFactory xmlFactory;
-
     private String rssUrl;
 
     private volatile boolean doneParsing;
@@ -74,7 +72,7 @@ public class RSSReader {
             Log.d(TAG, "Connected to url stream!");
 
 
-            xmlFactory = XmlPullParserFactory.newInstance();
+            XmlPullParserFactory xmlFactory = XmlPullParserFactory.newInstance();
             XmlPullParser xmlParser = xmlFactory.newPullParser();
 
             xmlParser.setFeature(XmlPullParser.FEATURE_PROCESS_NAMESPACES, false);
@@ -94,6 +92,7 @@ public class RSSReader {
     /*
      * parses the xml from the document such as <title></title> and <description></description>
      * This also calls parseHTML() when it completes parsing the xml.
+     * @param XmlPullParser - the parser that is streaming xml.
      */
     protected void parse(XmlPullParser myParser) {
         Log.d(TAG, "Starting parse of XML!");
@@ -111,7 +110,7 @@ public class RSSReader {
                 switch (event) {
                     /* If <tag> */
                     case XmlPullParser.START_TAG:
-                        if(name.equals("item")) {
+                        if(name.equals("item") && !isCalendar) {
                             Log.d(TAG, "Item found!");
                             Article articleToAdd = readArticle(myParser);
                             if (articleToAdd.isArticleFull()) articles.add(articleToAdd);
@@ -145,10 +144,16 @@ public class RSSReader {
         }
     }
 
+    /**
+     * reads an Article, or item tag, from the parser.
+     * @param parser - the XmlPullParser that is reading the xml.
+     * @return an Article from the xmlPullParser
+     * @throws IOException
+     * @throws XmlPullParserException
+     */
     private Article readArticle(XmlPullParser parser) throws IOException, XmlPullParserException {
         Article currentArticle = new Article();
         parser.require(XmlPullParser.START_TAG, null, "item");
-        boolean linkSet = false;
         while(parser.next() != XmlPullParser.END_TAG) {
             if(parser.getEventType() != XmlPullParser.START_TAG) continue;
 
@@ -173,6 +178,13 @@ public class RSSReader {
         return currentArticle;
     }
 
+    /**
+     * reads the title tag in the parser.
+     * @param parser - the XmlPullParser that is reading the xml.
+     * @return text of title tag.
+     * @throws IOException
+     * @throws XmlPullParserException
+     */
     private String readTitle(XmlPullParser parser) throws IOException, XmlPullParserException {
         parser.require(XmlPullParser.START_TAG, null, "title");
         String title = readText(parser);
@@ -180,6 +192,13 @@ public class RSSReader {
         return title;
     }
 
+    /**
+     * reads the pubDate tag from the parser.
+     * @param parser - the XmlPullParser that is reading the xml.
+     * @return - pubDate tag text
+     * @throws IOException
+     * @throws XmlPullParserException
+     */
     private String readPubDate(XmlPullParser parser) throws IOException, XmlPullParserException {
         parser.require(XmlPullParser.START_TAG, null, "pubDate");
         String pubDate = readText(parser);
@@ -187,6 +206,13 @@ public class RSSReader {
         return pubDate;
     }
 
+    /**
+     * reads the description tag from the xmlPullParser
+     * @param parser - the XmlPullParser that is reading the xml.
+     * @return - text inside the description.
+     * @throws IOException
+     * @throws XmlPullParserException
+     */
     private String readDescription(XmlPullParser parser) throws IOException, XmlPullParserException {
         parser.require(XmlPullParser.START_TAG, null, "description");
         String description = readText(parser);
@@ -194,6 +220,13 @@ public class RSSReader {
         return description;
     }
 
+    /**
+     * reads the text inside the current tag the parser is reading.
+     * @param parser - the XmlPullParser that is reading the xml.
+     * @return - text inside the current tag
+     * @throws IOException
+     * @throws XmlPullParserException
+     */
     private String readText(XmlPullParser parser) throws IOException, XmlPullParserException {
         String result = "";
         if (parser.next() == XmlPullParser.TEXT) {
@@ -203,6 +236,12 @@ public class RSSReader {
         return result;
     }
 
+    /**
+     * Skips the tag the xmlPullParser is currently on.
+     * @param parser - the XmlPullParser that is reading the xml.
+     * @throws XmlPullParserException
+     * @throws IOException
+     */
     private void skip(XmlPullParser parser) throws XmlPullParserException, IOException {
         if (parser.getEventType() != XmlPullParser.START_TAG) {
             throw new IllegalStateException();
@@ -226,6 +265,18 @@ public class RSSReader {
      */
     public List<Article> getArticles() {
         return articles;
+    }
+
+    /**
+     * returns a list of all the article pub dates found while the reader read the xml.
+     * @return - List(String) dates --> the date each article was published.
+     */
+    public List<String> getArticlePubDates() {
+        List<String> dates = new ArrayList<>();
+        for (Article article : articles) {
+            if(article.hasPubDate()) dates.add(article.getPubDate());
+        }
+        return dates;
     }
 
     /**
