@@ -12,8 +12,7 @@ import android.webkit.WebViewClient;
  */
 public class AnnouncementActivity extends Activity {
 
-    private String pdfUrl = "http://www.unit5.org/cms/lib03/IL01905100/Centricity/Domain/1084/2%2012%2016.pdf"; //test url for now.
-
+    private String pdfUrl = "http://www.unit5.org/cms/lib03/IL01905100/Centricity/Domain/55/2016%20Feb%20Sr%20High%20Lunch.pdf"; //changed to the lunch menu because I want to know what is for lunch before lunch
     private WebView pdfView;
 
     @Override

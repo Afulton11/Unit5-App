@@ -159,19 +159,22 @@ public class RSSReader {
 
             String name = parser.getName();
             Log.d(TAG, name);
-            if(name.equals("title")){
-                currentArticle.setTitle(readText(parser));
-                Log.d(TAG, currentArticle.getTitle());
-            } else if(name.equals("description")) {
-                currentArticle.setDescription(readDescription(parser));
-                Log.d(TAG, currentArticle.getDescription());
-            } else if(name.equals("pubDate")) {
-                currentArticle.setPubDate(readPubDate(parser));
-                Log.d(TAG, currentArticle.getPubDate());
-            } else if(name.equals("link")) {
-                links.add(readText(parser));
-            } else {
-                skip(parser);
+            switch(name) {
+                case "title":
+                    currentArticle.setTitle(readText(parser));
+                    break;
+                case "description":
+                    currentArticle.setDescription(readDescription(parser));
+                    break;
+                case "pubDate":
+                    currentArticle.setPubDate(readPubDate(parser));
+                    break;
+                case "link":
+                    links.add(readText(parser));
+                    break;
+                default:
+                    skip(parser);
+                    break;
             }
         }
 
