@@ -12,11 +12,12 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.unit5app.com.unit5app.parsers.PDFReader;
+import com.unit5app.com.unit5app.parsers.PDFGrabberTask;
 import com.unit5app.utils.Utils;
 
 import org.apache.pdfbox.pdmodel.PDDocument;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -67,8 +68,6 @@ public class MainActivity extends AppCompatActivity {
         }
 
         /* TODO: Launch internal calendar builder to get latest info on events, etc... */
-        /* TEST CODE, PROOF OF CONCEPT */
-        PDDocument doc = PDFReader.pullPDF("http://www.unit5.org/cms/lib03/IL01905100/Centricity/Domain/55/2016%20Feb%20Sr%20High%20Lunch.pdf");
 
         /* The calendar reader is loaded up in here so that we will know what is happening on the day the app is opened. It may be a late start day.
          */
@@ -116,6 +115,16 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(new Intent(MainActivity.this, RssActivity.class));
             }
         });
+
+        /* TEST CODE, PROOF OF CONCEPT */
+        PDFGrabberTask pdfGrabberTask = new PDFGrabberTask("http://www.unit5.org/cms/lib03/IL01905100/Centricity/Domain/55/2016%20Feb%20Sr%20High%20Lunch.pdf");
+        PDDocument doc = pdfGrabberTask.getPdf();
+        try {
+            doc.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        /* END TEST CODE */
     }
 
     /* Button to take you to settings panel. */
