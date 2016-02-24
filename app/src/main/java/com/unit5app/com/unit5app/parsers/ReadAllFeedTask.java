@@ -2,6 +2,7 @@ package com.unit5app.com.unit5app.parsers;
 
 import android.os.AsyncTask;
 import android.text.Html;
+import android.util.Log;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
@@ -31,20 +32,30 @@ public class ReadAllFeedTask extends AsyncTask<Void, Void, Void> {
     public ReadAllFeedTask(ListView list, RSSReader... readers) {
         this.list = list;
         this.readers = readers;
+        articles = new ArrayList<>();
+        all_titles = new ArrayList<>();
+        all_readers_executing = new ArrayList<>();
+    }
+
+    public ReadAllFeedTask() {
+        articles = new ArrayList<>();
+        all_titles = new ArrayList<>();
+        all_readers_executing = new ArrayList<>();
     }
 
     @Override
     protected void onPostExecute(Void aVoid) {
         super.onPostExecute(aVoid);
         for(RSSReader reader : readers) {
-            if(reader instanceof WestNewsReader) {
+            if (reader instanceof WestNewsReader) {
                 readLinkOnPost((WestNewsReader) reader);
-            } else {
+            } else if(!(reader instanceof CalendarRssReader)) {
                 readerPostExecute(reader);
             }
             all_readers_executing.remove(reader);
         }
-        Collections.sort(articles, Utils.articlePubDateSorter);
+        if(articles.size() > 0)
+            Collections.sort(articles, Utils.articlePubDateSorter);
 
         if(list != null) {
             all_titles.clear();
@@ -58,14 +69,16 @@ public class ReadAllFeedTask extends AsyncTask<Void, Void, Void> {
             list.setAdapter(adapterLoaded);
             Toast.makeText(list.getContext(), "Done loading!", Toast.LENGTH_SHORT);
         }
+        Log.d("Unit5Utils", "done loading...");
+        Utils.unlockWaiter();
     }
 
     @Override
     protected Void doInBackground(Void... params) {
         for(RSSReader reader : readers) {
-            reader.loadXml();
+            readerInBackground(reader);
             if(reader instanceof WestNewsReader) {
-                ((WestNewsReader) reader).loadLinks();
+                readLinkInBackground((WestNewsReader) reader);
             }
         }
         return null;
@@ -78,12 +91,8 @@ public class ReadAllFeedTask extends AsyncTask<Void, Void, Void> {
             ArrayAdapter<String> adapter = new ArrayAdapter<>(list.getContext(), android.R.layout.simple_list_item_1, loading);
             list.setAdapter(adapter);
         }
-        articles = new ArrayList<>();
-        all_titles = new ArrayList<>();
-        all_readers_executing = new ArrayList<>();
         Collections.addAll(all_readers_executing, readers);
     }
-
 
     private void readLinkOnPost(WestNewsReader reader) {
         if(reader.getNewsArticles().size() > 0) {
@@ -99,10 +108,11 @@ public class ReadAllFeedTask extends AsyncTask<Void, Void, Void> {
 
     private void readerInBackground(RSSReader reader) {
         reader.loadXml();
+        Utils.unlockWaiter();
     }
 
     private void readerPostExecute(RSSReader reader) {
-        if (list != null && !reader.isCalendar) {
+        if (!(reader instanceof CalendarRssReader)) {
             if(reader.getArticles().size() > 0) {
                 for (int i = 0; i < reader.getArticles().size(); i++) {
                     articles.add(reader.getArticles().get(i));
@@ -112,10 +122,21 @@ public class ReadAllFeedTask extends AsyncTask<Void, Void, Void> {
     }
 
     public boolean isLoaded() {
-        for(RSSReader reader : all_readers_executing) {
-            if(!reader.doneParsing()) return false;
+        if(all_readers_executing != null) {
+            for (RSSReader reader : all_readers_executing) {
+                if (!reader.doneParsing()) return false;
+            }
+            return true;
         }
-        return true;
+        return false;
+    }
+
+    public void setReaders(RSSReader... readers) {
+        this.readers = readers;
+    }
+
+    public void setList(ListView list) {
+        this.list = list;
     }
 
     public List<RSSReader> getCurrentExecutingReaders() {
@@ -130,7 +151,15 @@ public class ReadAllFeedTask extends AsyncTask<Void, Void, Void> {
         return articles;
     }
 
-    public Article getArticleAt(int index) {
+    public Article getNewsArticleAt(int index) {
         return articles.get(index);
+    }
+
+    public String[] getNewsArticleTitlesForList() {
+        String[] titles = new String[articles.size()];
+        for(int i = 0; i < titles.length; i++) {
+            titles[i] = Utils.toTitleCase(Html.fromHtml(getNewsArticleAt(i).getTitle()).toString());
+        }
+        return titles;
     }
 }

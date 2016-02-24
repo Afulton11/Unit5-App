@@ -3,8 +3,10 @@ package com.unit5app.utils;
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.util.Log;
 
 import com.unit5app.Article;
+import com.unit5app.com.unit5app.parsers.CalendarEvent;
 
 import java.util.Comparator;
 import java.util.regex.Matcher;
@@ -17,7 +19,7 @@ import java.util.regex.Pattern;
  * @version 2/21/2016
  */
 public abstract class Utils {
-    private static final String TAG = "Utils"; /* String name passed to the Logging API */
+    private static final String TAG = "Unit5Utils"; /* String name passed to the Logging API */
 
     public static boolean hadInternetOnLastCheck = false;
     
@@ -65,6 +67,19 @@ public abstract class Utils {
     };
 
     /**
+     * can be used to sort a List of CalendarEvents by their dates.
+     * <br><ul><b>How To Use:</b><li>Collections.sort(calendarEventsToSort, Utils.calendarEventDateSorter);</li></ul></br>
+     */
+    public static Comparator<CalendarEvent> calendarEventDateSorter = new Comparator<CalendarEvent>() {
+        @Override
+        public int compare(CalendarEvent event0, CalendarEvent event1) {
+            if(Time.getDateAsNumber(event1.getDate()) < Time.getDateAsNumber(event0.getDate())) return -1; //moves event0 up in the index array
+            if(Time.getDateAsNumber(event1.getDate()) > Time.getDateAsNumber(event0.getDate())) return +1; //moves event0 down in the index array
+            return 0; //keeps events at the same position in the index array.
+        }
+    };
+
+    /**
      * Returns true if the user is connected to the internet in some way.
      * @param context - context of an Acivity
      * @return
@@ -99,5 +114,38 @@ public abstract class Utils {
             sb.append(c);
         }
         return sb.toString();
+    }
+
+    /**
+     * for each thread waiting at the same time, if they each have a different boolean to start again, we need to add another object and another boolean, along with their respective waitFor and unlock methods.
+     */
+    private static final Object monitor = new Object();
+    public static boolean monitorState;
+    /**
+     * waits on the thread until unlockWaiter() is called by another thread.
+     * Acts similar to pThreads and a mutex.
+     */
+    public static void waitForMonitorState() {
+        Log.d(TAG, "waiting!");
+        monitorState = true;
+        while (monitorState) {
+            synchronized (monitor) {
+                try {
+                    monitor.wait(); // wait until notified
+                } catch (Exception e) { e.printStackTrace(); }
+            }
+        }
+    }
+
+    /**
+     * unlocks all threads locked by the method: waitForMonitorState()
+     * Acts similar to pThreads and a mutex.
+     */
+    public static void unlockWaiter() {
+        Log.d(TAG, "unlocked waiter!");
+        synchronized (monitor) {
+            monitorState = false;
+            monitor.notifyAll(); // unlock again
+        }
     }
 }

@@ -2,15 +2,17 @@ package com.unit5app;
 
 import android.app.ListActivity;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Toast;
 
 import com.unit5app.com.unit5app.parsers.RSSReader;
-import com.unit5app.com.unit5app.parsers.ReadAllFeedTask;
 import com.unit5app.com.unit5app.parsers.WestNewsReader;
+import com.unit5app.utils.Utils;
 
 /**
  * Created by Andrew on 2/11/2016.
@@ -24,22 +26,27 @@ public class RssActivity  extends ListActivity {
     private RSSReader rssReader;
     private WestNewsReader westNews;
 
+    private Object montiorCondition;
+
+    private String[] loading = {"loading..."};
+    ArrayAdapter<String> adapter;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.rss_layout);
+        montiorCondition = new Object();
 
-        /**
-         * unit5 homepage article rss feed.
-         */
-        rssReader = new RSSReader("http://www.unit5.org/site/RSS.aspx?DomainID=4&ModuleInstanceID=4&PageID=1");
-        westNews = new WestNewsReader("http://www.unit5.org/site/RSS.aspx?DomainID=30&ModuleInstanceID=1852&PageID=53");
-
-        /**
-         * retrieves the feed from the rssReader.
-         */
-        final ReadAllFeedTask task = new ReadAllFeedTask(getListView(), rssReader, westNews);
-        task.execute();
+        if(!MainActivity.mainCalendar.newsLoaded()) {
+            adapter = new ArrayAdapter<>(getListView().getContext(), android.R.layout.simple_list_item_1, loading);
+            adapter.notifyDataSetChanged();
+            getListView().setAdapter(adapter);
+            new waitUntilNewsLoaded().execute();
+        } else {
+            adapter = new ArrayAdapter<>(getListView().getContext(), android.R.layout.simple_list_item_1, MainActivity.mainCalendar.getNewsTask().getNewsArticleTitlesForList());
+            adapter.notifyDataSetChanged();
+            getListView().setAdapter(adapter);
+        }
 
         /**
          * what to do for each click on an item in the listview.
@@ -47,11 +54,11 @@ public class RssActivity  extends ListActivity {
         getListView().setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                if (!task.isLoaded()) {
+                if (!MainActivity.mainCalendar.newsLoaded()) {
                     Toast.makeText(getApplicationContext(), "Still loading...", Toast.LENGTH_SHORT);
                 } else {
                     try {
-                        ArticleActivity.setArticle(task.getArticleAt(position));
+                        ArticleActivity.setArticle(MainActivity.mainCalendar.getNewsTask().getNewsArticleAt(position));
                     } catch (ArrayIndexOutOfBoundsException e) {
                         Log.d(TAG, "Index out of bounds for articles[position]!");
                     }
@@ -59,6 +66,28 @@ public class RssActivity  extends ListActivity {
                 }
             }
         });
+    }
 
+    private class waitUntilNewsLoaded extends AsyncTask<Void, Void, Void> {
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            super.onPostExecute(aVoid);
+            getListView().setAdapter(null);
+            adapter = new ArrayAdapter<>(getListView().getContext(), android.R.layout.simple_list_item_1, MainActivity.mainCalendar.getNewsTask().getNewsArticleTitlesForList());
+            adapter.notifyDataSetChanged();
+            getListView().setAdapter(adapter);
+        }
+
+
+        @Override
+        protected Void doInBackground(Void... params) {
+            Log.d(TAG, "waiting for monitor state!");
+            if(!MainActivity.mainCalendar.newsLoaded()) {
+                Utils.waitForMonitorState();
+            }
+            Log.d(TAG, "Done waiting for monitor state.");
+            return null;
+        }
     }
 }

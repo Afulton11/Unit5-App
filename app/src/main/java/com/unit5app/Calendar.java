@@ -1,14 +1,38 @@
 package com.unit5app;
 
+import com.unit5app.com.unit5app.parsers.CalendarEvent;
+import com.unit5app.com.unit5app.parsers.CalendarRssReader;
 import com.unit5app.com.unit5app.parsers.RSSReader;
 import com.unit5app.com.unit5app.parsers.ReadAllFeedTask;
+import com.unit5app.utils.Time;
+import com.unit5app.utils.Utils;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 
 public class Calendar {
 
-    private ReadAllFeedTask rssTask;
+    /*
+    TODO: add the day's lunch to every date.
+     */
 
-    public Calendar(String calendarUrl) {
+    public static final CalendarEvent[] NO_CALENDAR_EVENTS = {};
+    private static final String CALENDAR_URL = "http://www.unit5.org/site/RSS.aspx?DomainID=4&ModuleInstanceID=1&PageID=2";
+
+
+    private ReadAllFeedTask newsTask;
+
+    private List<CalendarEvent> calendarEvents;
+
+    /**
+     * creates a new Calendar from the Main calendar url: <a href="{@value #CALENDAR_URL}">See Calendar Url</a>
+     * @param numDays -- the number of days to extend from the current day.
+     */
+    public Calendar(int numDays) {
+        loadCalendar();
+        newsTask = new ReadAllFeedTask();
 
     }
 
@@ -17,19 +41,68 @@ public class Calendar {
     }
 
     public void loadNews(RSSReader... readers) {
-        rssTask = new ReadAllFeedTask(null, readers);
-        rssTask.execute();
+        newsTask = new ReadAllFeedTask();
+        newsTask.setReaders(readers);
+        newsTask.execute();
+    }
+
+    public void loadCalendar() {
+        calendarEvents = new ArrayList<>();
+        CalendarRssReader calendarReader = new CalendarRssReader(CALENDAR_URL);
+        ReadAllFeedTask calendarTask = new ReadAllFeedTask();
+        calendarTask.setReaders(calendarReader);
+        calendarTask.execute();
+        if(!calendarTask.isLoaded()) Utils.waitForMonitorState();
+        for(CalendarEvent event : calendarReader.getCalendarEvents()) {
+            calendarEvents.add(event);
+        }
+        sortCalendarEvents();
     }
 
     public void loadLunchMenu(String lunchMenuPdfUrl) {
 
     }
 
-    public void loadCurrentHourInfo() {
+    /**
+     * This would combine all of today's info onto one date (events, lunch meals, breakfast meals, announcements, and anything else. Perhaps we should make an Overall 'CalendarDate' class or something).
+     */
+    public void loadTodaysInformation() {
 
     }
 
-    public void loadTodaysEvents() {
+    /**
+     *
+     * @param date the date to get the events for
+     * @return a CalendarEvent[] containing all the events happening on that day. If the date is blank, it will return an empty array.
+     *              <ul>You can test if the returned array is blank by doing this:
+     *                  <li>&nbsp;&nbsp;&nbsp;&nbsp;returned array == Calendar.NO_CALENDAR_EVENTS</li></ul>
+     */
+    public CalendarEvent[] getEventsForDate(String date) {
+        List<CalendarEvent> events = new ArrayList<>();
+        for(CalendarEvent event : calendarEvents) {
+            if(Time.getDateAsNumber(date) == Time.getDateAsNumber(event.getDate())) {
+                events.add(event);
+            }
+        }
+        if(events.size() < 1) return NO_CALENDAR_EVENTS;
+        CalendarEvent[] events_array = new CalendarEvent[events.size()];
+        events.toArray(events_array);
+        return events_array;
+    }
+
+    /**
+     * sorts the calendar events by date.
+     */
+    public void sortCalendarEvents() {
+        Collections.sort(calendarEvents, Utils.calendarEventDateSorter);
+    }
+
+    public ReadAllFeedTask getNewsTask() {
+        return newsTask;
+    }
+
+    public boolean newsLoaded() {
+        return (newsTask != null && newsTask.isLoaded());
     }
 
 }

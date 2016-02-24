@@ -1,5 +1,6 @@
 package com.unit5app.utils;
 
+import com.unit5app.MainActivity;
 import com.unit5app.UpcomingEventsActivity;
 import com.unit5app.com.unit5app.parsers.CalendarEvent;
 import com.unit5app.com.unit5app.parsers.EventType;
@@ -7,7 +8,6 @@ import com.unit5app.com.unit5app.parsers.EventType;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.List;
 
 /**
  * Utility class to get and manipulate Time information.
@@ -53,9 +53,12 @@ public abstract class Time {
 
     /**
      * Given a format, returns today's date without leading zeroes.
-     * <ul>Examples:</>
+     * <ul>Examples:
      * <li>getCurrentDate("MM/dd/yy") would return "1/1/1970".</>
      * <li>getCurrentTime("E, dd of M, YY") would return "Thursday, 1 of January, 1970".</>
+     * </ul>
+     *
+     * look here for more ways to format the date: <a href="https://docs.oracle.com/javase/8/docs/api/java/text/SimpleDateFormat.html">JavaDoc</a>
      * @param format - String to fit to a SimpleDateFormat.
      * @return a String representing the current Date based on 'format', without leading zeroes.
      */
@@ -120,11 +123,10 @@ public abstract class Time {
     public static boolean isTodayLateStart() {
         if (UpcomingEventsActivity.rssCalendarReader.doneParsing()) {
 
-            List<CalendarEvent> calendarEvents = UpcomingEventsActivity.rssCalendarReader.getCalendarEvents(); //gets all the calendar events from the rssCalendarReader.
+            CalendarEvent[] calendarEvents = MainActivity.mainCalendar.getEventsForDate(getCurrentDate("MM/dd/yy")); //gets all the calendar events from the rssCalendarReader.
 
             for (CalendarEvent event : calendarEvents) {
-                if (event.getType().toString().equals(EventType.lateStart.toString()) &&
-                        event.getDate().equals(getCurrentDate("MM/dd/yy"))) {
+                if (event.getType().toString().equals(EventType.lateStart.toString())) {
                     return true;
                 }
             }

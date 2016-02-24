@@ -18,10 +18,10 @@ public class CalendarEvent {
 
     /**
      * creates a new calendar event.
-     * @param title
-     * @param date
-     * @param timeOccurring
-     * @param type
+     * @param title -- title of the calendar event
+     * @param date -- date of the calendar event
+     * @param timeOccurring -- time the event is occuring
+     * @param type -- type of event
      */
     public CalendarEvent(String title, String date, String timeOccurring, EventType type) {
         this.title = title;
@@ -41,16 +41,14 @@ public class CalendarEvent {
             this.date = fullTitle.substring(0, firstSpaceLoc);
             int useSpaceNum = 1;
             try {
-                Integer.parseInt(fullTitle.substring(firstSpaceLoc + 1, firstSpaceLoc + 2));
                 this.timeOccurring = fullTitle.substring(firstSpaceLoc + 1, fullTitle.indexOf('M') + 1);
                 useSpaceNum = 2; //if we do find a time use the third space found in the fullTitle to get the title from the xml.
-            } catch (NumberFormatException e) {
+            } catch (Exception e){
                 this.timeOccurring = "12:00 AM"; // if their is no specific time found in the title string, just set the time occuring to "12am".
                 useSpaceNum = 0;
                 Log.d(TAG, "\tNo time for calendar event found.");
             } finally {
-                String title = fullTitle.substring(Utils.findNthIndexOf(fullTitle," ", useSpaceNum) + 1); // the rest of the title tag should be the name of the event.
-                this.title = title;
+                this.title = fullTitle.substring(Utils.findNthIndexOf(fullTitle," ", useSpaceNum) + 1); // the rest of the title tag should be the name of the event.;
                 parseEventType();
                 logEvent();
             }

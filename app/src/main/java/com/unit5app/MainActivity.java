@@ -12,6 +12,8 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.unit5app.com.unit5app.parsers.RSSReader;
+import com.unit5app.com.unit5app.parsers.WestNewsReader;
 import com.unit5app.utils.Utils;
 
 import java.util.ArrayList;
@@ -23,9 +25,15 @@ import java.util.List;
  */
 public class MainActivity extends AppCompatActivity {
 
+    /*
+    TODO: add a way for us to know what Activity the user is currently looking at and if the user has puased the application (if we are running in the background).
+     */
+
     /* Lists to hold the titles and descriptions for a future search function */
     public static List<String> all_titles = new ArrayList<>();
     public  static List<String> all_descriptions = new ArrayList<>();
+
+    public static Calendar mainCalendar;
 
     /* Buttons to be pressed */
     private Button testpdf, testWestNews, testCalendarReading;
@@ -38,6 +46,12 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        //set content view to a loading screen first, Then once everything is loaded we would setContentView to the home screen?
+
+        mainCalendar = new Calendar(60);
+        WestNewsReader westNews = new WestNewsReader("http://www.unit5.org/site/RSS.aspx?DomainID=30&ModuleInstanceID=1852&PageID=53");
+        RSSReader unit5News = new RSSReader("http://www.unit5.org/site/RSS.aspx?DomainID=4&ModuleInstanceID=4&PageID=1");
+        mainCalendar.loadNews(westNews, unit5News);
 
         /* Load object placement as defined in Resources file */
         setContentView(R.layout.activity_main);

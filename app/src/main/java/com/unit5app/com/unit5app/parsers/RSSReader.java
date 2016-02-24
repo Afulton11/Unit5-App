@@ -20,7 +20,6 @@ import java.util.List;
  * Reads, then parses XML grabbed from an RSS feed.
  */
 public class RSSReader {
-    /* TODO: Implementation that's not hardcoded to differentiate between Calendars and other XML */
 
     private String TAG = "Unit5Reader";
 
@@ -29,16 +28,11 @@ public class RSSReader {
     All the links in the given xml url.
      */
     private List<String> links;
-    private List<CalendarEvent> calendarEvents;
 
     private String rssUrl;
 
-    private volatile boolean doneParsing;
+    protected volatile boolean doneParsing;
 
-    /*
-     * whether or not the xml the reader is retrieving is from a calendar or not, true = it is a calendar.
-     */
-    public boolean isCalendar = false;
 
     /**
      * creates a new RSSReader from the specified Rss url address, unless the url is null.
@@ -49,7 +43,6 @@ public class RSSReader {
                 this.rssUrl = rssURL;
                 articles = new ArrayList<>();
                 links = new ArrayList<>();
-                calendarEvents = new ArrayList<>();
                 doneParsing = false;
             } catch (Exception e) {
                 Log.e(TAG, e.getMessage());
@@ -65,11 +58,8 @@ public class RSSReader {
             doneParsing = false;
             articles.clear();
             links.clear();
-            calendarEvents.clear();
             URL url = new URL(rssUrl);
-            Log.d(TAG, "Requesting URL stream!");
             InputStream stream = url.openStream();
-            Log.d(TAG, "Connected to url stream!");
 
 
             XmlPullParserFactory xmlFactory = XmlPullParserFactory.newInstance();
@@ -81,7 +71,6 @@ public class RSSReader {
             parse(xmlParser);
             stream.close();
             doneParsing = true;
-            Log.d(TAG, "done parsing XML!");
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -95,7 +84,6 @@ public class RSSReader {
      * @param XmlPullParser - the parser that is streaming xml.
      */
     protected void parse(XmlPullParser myParser) {
-        Log.d(TAG, "Starting parse of XML!");
 
         int event;
         String text=null;
@@ -110,30 +98,15 @@ public class RSSReader {
                 switch (event) {
                     /* If <tag> */
                     case XmlPullParser.START_TAG:
-                        if(name.equals("item") && !isCalendar) {
-                            Log.d(TAG, "Item found!");
+                        if(name.equals("item")) {
                             Article articleToAdd = readArticle(myParser);
                             if (articleToAdd.isArticleFull()) articles.add(articleToAdd);
-                            Log.d(TAG, "SIZE: " + articles.size());
                         }
                         break;
 
                     /* If <tag> content </tag> */
                     case XmlPullParser.TEXT:
                         text = myParser.getText(); /* Capture it */
-                        break;
-
-                    case XmlPullParser.END_TAG:
-                        /* If we got some text out of it */
-                        if(text != null) { /* Use if-else instead of switch statements b/c some tags
-                                              may be different depending on the rss you read. */
-                            if(isCalendar) { /* NOTE: not sure if instance variable best solution */
-                                /* If is a title tag */
-                                if(name.equals("title") && !text.equals("Calendar")) { // making sure the text != "Calendar" gets rid of the first title on a unit5 calendar which is used to name the calendar itself.
-                                    calendarEvents.add(new CalendarEvent(text));
-                                }
-                            }
-                        }
                         break;
                 }
                 event = myParser.next();
@@ -262,7 +235,7 @@ public class RSSReader {
         }
     }
 
-    /**
+    /** <b>NOT TO BE USED BY A CALENDAR RSSREADER!</b>
      * returns a list of articles that the reader has retrieved from the inputted xml url of the reader.
      * @return - a list of articles
      */
@@ -270,7 +243,7 @@ public class RSSReader {
         return articles;
     }
 
-    /**
+    /** <b>NOT TO BE USED BY A CALENDAR RSSREADER!</b>
      * returns a list of all the links found in the given reader xml url.
      * @return - a list of Strings that contain unparsed html links.
      */
@@ -278,19 +251,6 @@ public class RSSReader {
         return links;
     }
 
-    /*
-    returns all the calendarEvents found if the RssReader is retrieving from a calendar event.
-    If the reader is not done parsing, or is not a calendar, it will return a blank calendar that has only one day on it.
-     */
-    public List<CalendarEvent> getCalendarEvents() {
-        if(doneParsing && isCalendar) {
-            return calendarEvents;
-        } else {
-            List<CalendarEvent> blankList = new ArrayList<>();
-            blankList.add(new CalendarEvent("", "", "", EventType.regular));
-            return blankList;
-        }
-    }
 
     public boolean doneParsing() {
         return doneParsing;

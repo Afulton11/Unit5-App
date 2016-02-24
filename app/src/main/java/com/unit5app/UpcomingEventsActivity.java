@@ -9,18 +9,19 @@ import android.text.method.ScrollingMovementMethod;
 import android.widget.TextView;
 
 import com.unit5app.com.unit5app.parsers.CalendarEvent;
-import com.unit5app.com.unit5app.parsers.RSSReader;
+import com.unit5app.com.unit5app.parsers.CalendarRssReader;
 
 import java.util.List;
 
 /**
- * Created by Andrew on 2/19/2016.
+ * @author Andrew
+ * @version 2/19/16
  */
 public class UpcomingEventsActivity extends Activity {
 
     private TextView textView_calendarEvents;
 
-    public static RSSReader rssCalendarReader;
+    public static CalendarRssReader rssCalendarReader;
 
     public static Spanned calendarEventsString = null;
 
@@ -47,8 +48,7 @@ public class UpcomingEventsActivity extends Activity {
      * loads the main unit5 calendar through xml.
      */
     public static void loadCalendar() {
-        rssCalendarReader = new RSSReader("http://www.unit5.org/site/RSS.aspx?DomainID=4&ModuleInstanceID=1&PageID=2");
-        rssCalendarReader.isCalendar = true;
+        rssCalendarReader = new CalendarRssReader("http://www.unit5.org/site/RSS.aspx?DomainID=4&ModuleInstanceID=1&PageID=2");
 
         new UpcomingEventsActivity.ReadCalendarTask(rssCalendarReader).execute();
     }
@@ -58,9 +58,9 @@ public class UpcomingEventsActivity extends Activity {
      */
     public static class ReadCalendarTask extends AsyncTask<Void, Void, Void> {
 
-        private RSSReader reader;
+        private CalendarRssReader reader;
 
-        public ReadCalendarTask(RSSReader reader) {
+        public ReadCalendarTask(CalendarRssReader reader) {
             this.reader = reader;
         }
 
@@ -70,17 +70,17 @@ public class UpcomingEventsActivity extends Activity {
             //when finished parsing do the following:
             List<CalendarEvent> events = reader.getCalendarEvents();
 
-            StringBuffer html_styling_buffer = new StringBuffer();
+            String html_styling_string = "";
 
             for(int i = 0; i < events.size(); i++) { //goes through every calendar event found in the xml from the calendar and adds a little bit of styling to the text before displaying it on the textview.
                 CalendarEvent event = events.get(i);
-                html_styling_buffer.append("<br><b>&#8226;" + event.getDate() +
+                html_styling_string += ("<br><b>&#8226;" + event.getDate() +
                         "</b></br><br>&nbsp;&nbsp;&nbsp;&nbsp;Title: " + event.getTitle() +
                         "</br><br>&nbsp;&nbsp;&nbsp;&nbsp;Time Occuring: "+ event.getTimeOccurring() +
                         "</br><br>&nbsp;&nbsp;&nbsp;&nbsp;Type (debug): " + event.getType() + "</br><br></br>");
             }
 
-            UpcomingEventsActivity.calendarEventsString = Html.fromHtml(html_styling_buffer.toString());
+            UpcomingEventsActivity.calendarEventsString = Html.fromHtml(html_styling_string);
         }
 
         @Override
