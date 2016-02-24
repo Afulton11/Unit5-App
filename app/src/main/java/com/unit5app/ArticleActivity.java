@@ -10,6 +10,8 @@ import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
 import android.widget.TextView;
 
+import com.unit5app.utils.Utils;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
@@ -35,7 +37,7 @@ public class ArticleActivity extends Activity {
         Heading = (TextView) findViewById(R.id.article_title);
         Body = (TextView) findViewById(R.id.article_body);
 
-        Heading.setText(toTitleCase(Html.fromHtml(article.getTitle()).toString()));
+        Heading.setText(Utils.toTitleCase(Html.fromHtml(article.getTitle()).toString()));
         Heading.setMovementMethod(new ScrollingMovementMethod());
         //we need a new task/thread because android doesn't allow connecting to a network on the main thread.
         new AsyncTask<Object, Void, Void>() {
@@ -79,25 +81,6 @@ public class ArticleActivity extends Activity {
                 return null;
             }
         }.execute();
-    }
-
-    /*
-    Used mainly for titles, this method will make the first letter in every word in the string a Capital.
-     */
-    static String toTitleCase(String title) {
-        StringBuilder sb = new StringBuilder();
-        boolean spaceFound = true;
-        title = title.toLowerCase();
-        for(char c : title.toCharArray()) {
-            if(c == ' ') {
-                spaceFound = true;
-            } else if(spaceFound) {
-                c = Character.toUpperCase(c);
-                spaceFound = false;
-            }
-            sb.append(c);
-        }
-        return sb.toString();
     }
 
     /**

@@ -25,10 +25,12 @@ public class PDFGrabberTask extends Thread {
             InputStream inputStream = url.openStream();
             Log.d(TAG, "Successfully connected to PDF at URL: " + pdfUrl);
 
+
             /* Store info into a PDDocument */
             pdf.load(inputStream);
 
             /* Close the input stream and free its resources. */
+            pdf.close();
             inputStream.close();
         }
         catch (IOException e) {

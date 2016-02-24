@@ -81,4 +81,23 @@ public abstract class Utils {
         hadInternetOnLastCheck = activeNetwork != null && activeNetwork.isConnectedOrConnecting();
         return hadInternetOnLastCheck;
     }
+
+    /*
+    Used mainly for titles, this method will make the first letter in every word in the string a Capital.
+     */
+    public static String toTitleCase(String title) {
+        StringBuilder sb = new StringBuilder();
+        boolean spaceFound = true;
+        title = title.toLowerCase();
+        for(char c : title.toCharArray()) {
+            if(c == ' ') {
+                spaceFound = true;
+            } else if(spaceFound) {
+                c = Character.toUpperCase(c);
+                spaceFound = false;
+            }
+            sb.append(c);
+        }
+        return sb.toString();
+    }
 }

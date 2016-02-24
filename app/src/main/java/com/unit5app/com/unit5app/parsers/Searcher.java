@@ -1,5 +1,7 @@
 package com.unit5app.com.unit5app.parsers;
 
+import com.unit5app.Article;
+
 import java.util.List;
 
 /**
@@ -13,32 +15,24 @@ public class Searcher {
      */
     private List<String> serachViewTitles;
 
-    private String[] titles, descritions;
+    private Article[] articles;
 
     /**
      * initializes the titles and descriptions for the Searcher, these are the items that the Searcher searches through when given a string.
-     * @param titles - unparsed html titles
-     * @param descriptions - unparsed html descriptions
+     * @param articles - parsed html articles
      */
-    public Searcher(String[] titles, String[] descriptions) {
-        this.titles = titles;
-        this.descritions = descriptions;
+    public Searcher(Article[] articles) {
+        this.articles = articles;
     }
 
     /**
      * initializes the titles and descriptions for the Searcher, these are the items that the Searcher searches through when given a string.
-     * @param titles - unparsed html titles
-     * @param descriptions - unparsed html descriptions
+     * @param articles - parsed html articles
      */
-    public Searcher(List<String> titles, List<String> descriptions) {
-        this.titles = new String[titles.size() - 1];
-        for(int i = 0; i < this.titles.length; i++) {
-            this.titles[i] = titles.get(i);
-        }
-
-        this.descritions = new String[descriptions.size() - 1];
-        for(int i = 0; i < this.descritions.length; i++) {
-            this.descritions[i] = descriptions.get(i);
+    public Searcher(List<Article> articles) {
+        this.articles = new Article[articles.size()];
+        for(int index = 0; index < this.articles.length; index++) {
+            this.articles[index] = articles.get(index);
         }
     }
 
@@ -48,7 +42,7 @@ public class Searcher {
      * @param titlesOnly - search through the titles only
      * @param descriptionsOnly - search through the descriptions only
      * @return
-     * TODO: (backlog item?) searchFor() function.
+     * TODO: (backlog item) searchFor() function.
      *              To search through both titles and descriptions, leave titlesOnly and descripionsOnly as true.
      */
     public List<String> searchFor(String string, boolean titlesOnly, boolean descriptionsOnly) {
@@ -61,12 +55,8 @@ public class Searcher {
         return null;
     }
 
-    public String[] getTitles() {
-        return titles;
-    }
-
-    public String[] getDescritions() {
-        return descritions;
+    public Article[] getArticles() {
+        return articles;
     }
 
 }
