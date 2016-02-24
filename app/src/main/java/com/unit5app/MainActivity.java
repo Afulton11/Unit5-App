@@ -88,7 +88,8 @@ public class MainActivity extends AppCompatActivity {
         testWestNews.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                RssActivity.useWestNews = true;
+//                RssActivity.useWestNews = false;
+//                RssActivity.combineReaders = true;
                 startActivity(new Intent(MainActivity.this, RssActivity.class));
             }
         });
@@ -106,9 +107,7 @@ public class MainActivity extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-//                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-//                        .setAction("Action", null).show();
-                RssActivity.useWestNews = false;
+
                 startActivity(new Intent(MainActivity.this, RssActivity.class));
             }
         });

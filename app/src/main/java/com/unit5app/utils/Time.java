@@ -80,6 +80,19 @@ public abstract class Time {
         return buf.toString();
     }
 
+    private static final int MONTH_MULTIPLIER = 10, DAY_MULTIPLIER = 1, YEAR_MULTIPLIER = 100;
+
+    /**
+     * returns the given date as a number. the number of months is multiplied by MONTH_MULTIPLIER ({@value #MONTH_MULTIPLIER}), days by DAY_MULTIPLER ({@value #DAY_MULTIPLIER}),
+     * and years by YEAR_MULTIPLIER ({@value #YEAR_MULTIPLIER}).
+     * @param date a string date can be any date. e.g. "04/13/01" or "4/1/2"
+     * @return returns the date parsed as an integer. so "04/13/01" would be returned as: 40 + 13 + 100, or 153.
+     */
+    public static int getDateAsNumber(String date) {
+        String[] monthDayYear = date.split("/");
+        return (Integer.parseInt(monthDayYear[0]) * MONTH_MULTIPLIER) + (Integer.parseInt(monthDayYear[1]) * DAY_MULTIPLIER) + (Integer.parseInt(monthDayYear[2]) * YEAR_MULTIPLIER);
+    }
+
     /**
      * Gets the day of the week for a specified date. ("Mon", "Tue", "Wed", etc...)
      * @param date - Date to get day of.

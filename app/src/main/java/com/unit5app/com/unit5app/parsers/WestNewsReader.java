@@ -74,7 +74,7 @@ public class WestNewsReader extends RSSReader{
                 element_paragraphs.remove(element_paragraphs.size() - 1);
                 element_paragraphs.remove(element_paragraphs.size() - 1);
 
-                StringBuilder builder = new StringBuilder();
+                StringBuilder buffer_body = new StringBuilder();
                 for (Element e : element_paragraphs) {
                     StringBuilder e_string = new StringBuilder(e.toString());
                     if(e.toString().startsWith("<a href=\"/")) {
@@ -85,10 +85,10 @@ public class WestNewsReader extends RSSReader{
                         Log.d(TAG, "Replaced a link!");
                     }
 
-                    builder.append(e_string.toString());
+                    buffer_body.append(e_string.toString());
                 }
 
-                String fullBody = builder.toString();
+                String fullBody = buffer_body.toString();
                 Log.d(TAG, fullBody);
                 article.setDescription(fullBody);
 

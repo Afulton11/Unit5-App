@@ -38,7 +38,7 @@ public class ArticleActivity extends Activity {
         Heading.setText(toTitleCase(Html.fromHtml(article.getTitle()).toString()));
         Heading.setMovementMethod(new ScrollingMovementMethod());
         //we need a new task/thread because android doesn't allow connecting to a network on the main thread.
-        AsyncTask loadBody = new AsyncTask<Object, Void, Void>() {
+        new AsyncTask<Object, Void, Void>() {
             Spanned resultBody;
             Drawable image;
 
@@ -49,6 +49,7 @@ public class ArticleActivity extends Activity {
                 Body.setMovementMethod(new ScrollingMovementMethod());
                 Body.setHorizontalScrollBarEnabled(true);
                 Body.setLinksClickable(true);
+                Body.setTextIsSelectable(true);
             }
             @Override
             protected Void doInBackground(Object... params) {
@@ -77,8 +78,7 @@ public class ArticleActivity extends Activity {
                     }, null);
                 return null;
             }
-        };
-        loadBody.execute();
+        }.execute();
     }
 
     /*
@@ -87,6 +87,7 @@ public class ArticleActivity extends Activity {
     static String toTitleCase(String title) {
         StringBuilder sb = new StringBuilder();
         boolean spaceFound = true;
+        title = title.toLowerCase();
         for(char c : title.toCharArray()) {
             if(c == ' ') {
                 spaceFound = true;

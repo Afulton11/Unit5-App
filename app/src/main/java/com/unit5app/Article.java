@@ -1,5 +1,13 @@
 package com.unit5app;
 
+import android.util.Log;
+
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.TimeZone;
+
 /**
  * This class holds the title and description of an article.
  * @author Andrew
@@ -76,7 +84,35 @@ public class Article {
      * Set/change the publishing date of the Article.
      * @param pubDate - publishing date to set/change the article to.
      */
-    public void setPubDate(String pubDate) { this.pubDate = pubDate; }
+    public void setPubDate(String pubDate) {
+        if(pubDate != null) {
+            if (pubDate.contains("/")) {
+                this.pubDate = pubDate;
+            } else {
+                SimpleDateFormat format;
+                if(pubDate.contains(",")) {
+                    format = new SimpleDateFormat("E, dd MMM yyyy hh:mm:ss z");
+                } else {
+                    format = new SimpleDateFormat("E MMM dd hh:mm:ss z yyyy");
+                }
+                Date date = null;
+                Log.d("PubDate", "Before: " + pubDate);
+                try {
+                    date = format.parse(pubDate);
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
+                if (date != null) {
+                    Calendar calendar = Calendar.getInstance(TimeZone.getTimeZone("CST")); //forces Central Standard Time, the date automatically changes time to CST anyways.
+                    calendar.setTime(date);
+                    int year = calendar.get(Calendar.YEAR) - 2000;
+                    int dayOfMonth = calendar.get(Calendar.DAY_OF_MONTH); //may have to add one to the day, not really sure.
+                    int month = calendar.get(Calendar.MONTH) + 1;
+                    this.pubDate = month + "/" + dayOfMonth + "/" + year;
+                }
+            }
+        }
+    }
 
     public void setLink(String link) { this.link = link; }
 

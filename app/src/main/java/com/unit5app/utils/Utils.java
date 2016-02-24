@@ -4,6 +4,9 @@ import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 
+import com.unit5app.Article;
+
+import java.util.Comparator;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -47,6 +50,19 @@ public abstract class Utils {
                                                                  crash. */
         return index;
     }
+
+    /**
+     * can be used to sort a List of articles by their publishing dates.
+     * <br><ul><b>How To Use:</b><li>Collections.sort(articleListToSort, Utils.articlePubDateSorter);</li></ul></br>
+     */
+    public static Comparator<Article> articlePubDateSorter = new Comparator<Article>() {
+        @Override
+        public int compare(Article article0, Article article1) {
+            if(Time.getDateAsNumber(article1.getPubDate()) < Time.getDateAsNumber(article0.getPubDate())) return -1; //moves article0 up in the index array
+            if(Time.getDateAsNumber(article1.getPubDate()) > Time.getDateAsNumber(article0.getPubDate())) return +1; //moves article0 down in the index array
+            return 0; //keeps articles at the same position in the index array.
+        }
+    };
 
     /**
      * Returns true if the user is connected to the internet in some way.

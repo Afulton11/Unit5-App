@@ -22,7 +22,8 @@ public class EndOfHourHandler {
     private Context context;
 
     /* NOTE: Having multiple arrays with indexes that match up is behavior similar to objects.
-     * Should we just create a new "Period.java" class? */
+     * Should we just create a new "Period.java" class?
+     * we might aswell.*/
 
     /* Hour names ("1st, 2nd, 3rd, etc...") */
     private String[] periods = new String[] {"0<sup><small>th</small></sup>",
@@ -39,7 +40,7 @@ public class EndOfHourHandler {
     private int currentPeriod = 0;
 
     public void start() {
-        final long initialDelayTime = 2235; //the time to wait before starting the entire loop that uses delayTime.
+        final long initialDelayTime = 0; //the time to wait before starting the entire loop that uses delayTime.
         final long delayTime = 10000; //the amount of time to wait before checking the time again in milliseconds. 1000 ms = 1 second.
         final String startBufferText = "# hour ends at [TIME-HERE].";
 
@@ -48,7 +49,7 @@ public class EndOfHourHandler {
                 StringBuffer buffer;
                 @Override
                 public void run() {
-                    if( isSchoolInSession() && (!Utils.hadInternetOnLastCheck || UpcomingEventsActivity.rssCalendarReader.doneParsing())) { //we make sure the calendar reader is done parsing because if it isn't, we may get some null pointer exceptions when checking things about today's date.
+                    if( isSchoolInSession() && (!Utils.isInternetConnected(context)|| UpcomingEventsActivity.rssCalendarReader.doneParsing())) { //we make sure the calendar reader is done parsing because if it isn't, we may get some null pointer exceptions when checking things about today's date.
                         buffer = new StringBuffer(startBufferText);
 
                         setCurrentPeriodAndEndTime();
@@ -69,10 +70,10 @@ public class EndOfHourHandler {
                         view.setText(formatted); //sets the text of the textView after doing any html formatting to the text.
 
                         /**
-                         * My attempt at reloading the calendar to be used by the clock when the user is reconnected to the internet
-                         * Not sure if this works yet.
+                         * If the calendar hasn't finished parsing, or isn't being parsed, and the user reconnects to the internet, this will
+                         * reload the calendar so that everythin g will work with the information provided by the calendar.
                          */
-                        if(!Utils.hadInternetOnLastCheck && Utils.isInternetConnected(context)) {
+                        if(!Utils.hadInternetOnLastCheck && Utils.isInternetConnected(context) && !UpcomingEventsActivity.rssCalendarReader.doneParsing()) {
                             UpcomingEventsActivity.loadCalendar();
                         }
 
