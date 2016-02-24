@@ -11,7 +11,7 @@ import java.net.URL;
 /**
  * Class to grab PDF documents from the Web and convert them into PDDocument objects.
  */
-public class PDFGrabberTask implements Runnable {
+public class PDFGrabberTask extends Thread {
     private PDDocument pdf;
     private String pdfUrl;
     private String TAG = "PDFGrabberTask";
@@ -19,10 +19,11 @@ public class PDFGrabberTask implements Runnable {
     @Override
     public void run() {
         try {
+            pdf = new PDDocument();
             URL url = new URL(pdfUrl);
-            Log.d(TAG, "Attempting to connect to PDF at URL: \t" + pdfUrl);
+            Log.d(TAG, "Attempting to connect to PDF at URL:  " + pdfUrl);
             InputStream inputStream = url.openStream();
-            Log.d(TAG, "Successfully connected to PDF at URL: \t" + pdfUrl);
+            Log.d(TAG, "Successfully connected to PDF at URL: " + pdfUrl);
 
             /* Store info into a PDDocument */
             pdf.load(inputStream);
@@ -38,10 +39,13 @@ public class PDFGrabberTask implements Runnable {
 
     public PDFGrabberTask(String pdfUrl) {
         this.pdfUrl = pdfUrl;
-        pdf = new PDDocument();
     }
 
     public PDDocument getPdf() {
+        while (pdf == null) {
+            Log.d(TAG, "Waiting for PDF to not be null.");
+        }
+
         return pdf;
     }
 }

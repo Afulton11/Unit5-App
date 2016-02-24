@@ -117,13 +117,7 @@ public class MainActivity extends AppCompatActivity {
         });
 
         /* TEST CODE, PROOF OF CONCEPT */
-        PDFGrabberTask pdfGrabberTask = new PDFGrabberTask("http://www.unit5.org/cms/lib03/IL01905100/Centricity/Domain/55/2016%20Feb%20Sr%20High%20Lunch.pdf");
-        PDDocument doc = pdfGrabberTask.getPdf();
-        try {
-            doc.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        //PDDocument doc =  new PDFGrabberTask("http://www.unit5.org/cms/lib03/IL01905100/Centricity/Domain/55/2016%20Feb%20Sr%20High%20Lunch.pdf").getPdf();
         /* END TEST CODE */
     }
 
