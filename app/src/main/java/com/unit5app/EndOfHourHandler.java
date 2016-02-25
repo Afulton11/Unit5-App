@@ -21,20 +21,10 @@ public class EndOfHourHandler {
     private TextView view;
     private Context context;
 
-    /* NOTE: Having multiple arrays with indexes that match up is behavior similar to objects.
-     * Should we just create a new "Period.java" class?
-     * we might aswell.*/
-
-    /* Hour names ("1st, 2nd, 3rd, etc...") */
-    private String[] periods = new String[] {"0<sup><small>th</small></sup>",
-            "1<sup><small>st</small></sup>", "2<sup><small>nd</small></sup>",
-            "3<sup><small>rd</small></sup>", "4<sup><small>th</small></sup>",
-            "5<sup><small>th</small></sup>", "6<sup><small>th</small></sup>",
-            "7<sup><small>th</small></sup>", "8<sup><small>th</small></sup>"};
-    /* Period ending times (earliest to latest) in format HH:mm a with leading 0s left. */
-    private String[] endOfHourTimes = new String[] {"07:10 AM", "08:05 AM", "09:00 AM",
-                                                    "09:55 AM", "10:50 AM", "11:45 AM",
-                                                    "12:40 PM", "01:35 PM", "02:30 PM"};
+    private Period[] periods = new Period[] {
+            new Period(0, "07:10 AM"),  new Period(1, "08:05 AM"), new Period(2, "09:00 AM"),  new Period(3, "09:55 AM"), new Period(4, "10:50 AM"),
+            new Period(5, "11:45 AM"), new Period(6, "12:40 PM"),  new Period(7, "01:35 PM"), new Period(8, "02:30 PM")
+    };
 
     /* Index representing the current period and its ending time */
     private int currentPeriod = 0;
@@ -51,14 +41,14 @@ public class EndOfHourHandler {
                     if(!Utils.isAppPaused()) {
                         if (isSchoolInSession()) { //we make sure the calendar reader is done parsing because if it isn't, we may get some null pointer exceptions when checking things about today's date.
                             buffer = new StringBuffer(startBufferText);
-
                             setCurrentPeriodAndEndTime();
+                            Period current = periods[currentPeriod];
 
                             int periodLoc = buffer.indexOf("#");
-                            buffer.replace(0, periodLoc + 1, periods[currentPeriod]);
+                            buffer.replace(0, periodLoc + 1, current.getPeriod());
 
                             int hourLoc = buffer.indexOf("[TIME-HERE]");
-                            String s_currentEndTime = endOfHourTimes[currentPeriod];
+                            String s_currentEndTime = current.getEndOfPeriod();
                             buffer.delete(hourLoc, hourLoc + 10); //removes the colon as it is not needed anymore.
                             buffer.replace(hourLoc, hourLoc + 1, s_currentEndTime);
 
@@ -71,10 +61,10 @@ public class EndOfHourHandler {
 
                             /**
                              * If the calendar hasn't finished parsing, or isn't being parsed, and the user reconnects to the internet, this will
-                             * reload the calendar so that everythin g will work with the information provided by the calendar.
+                             * reload the calendar so that everything will work with the information provided by the calendar.
                              */
-                            if (!Utils.hadInternetOnLastCheck && Utils.isInternetConnected(context) && !MainActivity.mainCalendar.isCalendarLoaded()) {
-                                UpcomingEventsActivity.loadCalendar();
+                            if (!Utils.hadInternetOnLastCheck && Utils.isInternetConnected(context) && !MainActivity.mainCalendar.hasCalendarStartedLoading()) {
+                                MainActivity.mainCalendar.loadCalendar();
                             }
                             Log.d(TAG, "Updated End Of Hour TextView.");
                         } else {
@@ -111,8 +101,8 @@ public class EndOfHourHandler {
             currentHours += 12;
         }
         int lastMinutesEnd = 0;
-        for (int i = 0; i < endOfHourTimes.length; i++) {
-            String endHourTime = endOfHourTimes[i];
+        for (int i = 0; i < periods.length; i++) {
+            String endHourTime = periods[i].getEndOfPeriod();
             int colLoc = endHourTime.indexOf(':');
             int hoursEnd = Integer.parseInt(endHourTime.substring(0, colLoc));
             int minutesEnd = Integer.parseInt(endHourTime.substring(colLoc + 1, colLoc + 3));
@@ -144,11 +134,14 @@ public class EndOfHourHandler {
             int currentHours = Integer.parseInt(currentTime.substring(0, 2));
             int currentMinutes = Integer.parseInt(currentTime.substring(3, 5));
 
-            int startHours = Integer.parseInt(endOfHourTimes[0].substring(0, 2));
-            int endHours = Integer.parseInt(endOfHourTimes[8].substring(0, 2)) + 12;// we add 12 to convert the hours back to a 12 hour clock.
+            String endStartingPeriod = periods[0].getEndOfPeriod();
+            String endLastPeriod = periods[8].getEndOfPeriod();
 
-            int startMinutes = Integer.parseInt(endOfHourTimes[0].substring(3, 5));
-            int endMinutes = Integer.parseInt(endOfHourTimes[8].substring(3, 5));
+            int startHours = Integer.parseInt(endStartingPeriod.substring(0, 2));
+            int endHours = Integer.parseInt(endLastPeriod.substring(0, 2)) + 12;// we add 12 to convert the hours back to a 12 hour clock.
+
+            int startMinutes = Integer.parseInt(endStartingPeriod.substring(3, 5));
+            int endMinutes = Integer.parseInt(endLastPeriod.substring(3, 5));
 
             if (currentHours < endHours && currentHours > startHours ||
                     (currentHours == startHours && currentMinutes >= startMinutes) ||

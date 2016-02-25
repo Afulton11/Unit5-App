@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -14,15 +13,12 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.unit5app.com.unit5app.parsers.PDFGrabber;
-import com.unit5app.com.unit5app.parsers.PDFParser;
 import com.unit5app.com.unit5app.parsers.RSSReader;
 import com.unit5app.com.unit5app.parsers.WestNewsReader;
 import com.unit5app.utils.Utils;
 
 import org.apache.pdfbox.pdmodel.PDDocument;
-import org.apache.pdfbox.text.PDFTextStripper;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -42,6 +38,7 @@ public class MainActivity extends AppCompatActivity {
     public  static List<String> all_descriptions = new ArrayList<>();
 
     public static Calendar mainCalendar;
+    public static RSSReader[] newsReaders;
 
     /* Buttons to be pressed */
     private Button testpdf, testWestNews, testCalendarReading;
@@ -56,12 +53,15 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         //set content view to a loading screen first, Then once everything is loaded we would setContentView to the home screen?
         Utils.setCurrentView(Utils.VIEW_LOADING);
+        /*Check if we have internet access*/
         Utils.isInternetConnected(getApplicationContext());
         /* TODO: Launch internal calendar builder to get latest info on events, etc... */
         mainCalendar = new Calendar(60);
         WestNewsReader westNews = new WestNewsReader("http://www.unit5.org/site/RSS.aspx?DomainID=30&ModuleInstanceID=1852&PageID=53");
         RSSReader unit5News = new RSSReader("http://www.unit5.org/site/RSS.aspx?DomainID=4&ModuleInstanceID=4&PageID=1");
-        //mainCalendar.loadNews(westNews, unit5News);
+        newsReaders = new RSSReader[] {westNews, unit5News};
+        mainCalendar.loadNews(newsReaders);
+
 
         /* Load object placement as defined in Resources file */
         setContentView(R.layout.activity_main);
@@ -78,8 +78,8 @@ public class MainActivity extends AppCompatActivity {
         /* Load text by how they're defined in Resources file */
         endOfHourTime = (TextView) findViewById(R.id.clock_end_of_hour);
 
-        /* Check if we have internet access. */
-        Utils.isInternetConnected(getApplicationContext());
+        /* Begin testing to see if it's the end of the hour. The text will update accordingly. */
+        new EndOfHourHandler(endOfHourTime).start();
 
         /* If not, complain to the user. */
         if(!Utils.hadInternetOnLastCheck) {
@@ -88,17 +88,6 @@ public class MainActivity extends AppCompatActivity {
                     Toast.LENGTH_LONG);
             toast.show();
         }
-
-
-
-        /* The calendar reader is loaded up in here so that we will know what is happening on the day the app is opened. It may be a late start day.
-         */
-        if(Utils.isInternetConnected(getApplicationContext())) {
-            UpcomingEventsActivity.loadCalendar();
-        }
-
-        /* Begin testing to see if it's the end of the hour. The text will update accordingly. */
-        new EndOfHourHandler(endOfHourTime).start();
 
         /* Define button click actions. */
         /* For testing the calendar: */

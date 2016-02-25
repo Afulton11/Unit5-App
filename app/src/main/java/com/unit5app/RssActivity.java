@@ -2,8 +2,8 @@ package com.unit5app;
 
 import android.app.ListActivity;
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.os.Bundle;
+import android.text.Html;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
@@ -27,7 +27,7 @@ public class RssActivity  extends ListActivity {
     private WestNewsReader westNews;
 
     private String[] loading = {"loading..."};
-    ArrayAdapter<String> adapter;
+    private ArrayAdapter<String> adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,11 +35,27 @@ public class RssActivity  extends ListActivity {
         setContentView(R.layout.rss_layout);
         Utils.setCurrentView(Utils.VIEW_ARTICLE_LIST);
 
-        if(!MainActivity.mainCalendar.newsLoaded()) {
-            adapter = new ArrayAdapter<>(getListView().getContext(), android.R.layout.simple_list_item_1, loading);
-            adapter.notifyDataSetChanged();
-            getListView().setAdapter(adapter);
-            new waitUntilNewsLoaded().execute();
+        if(!MainActivity.mainCalendar.newsStartedLoading()) {
+            if(Utils.isInternetConnected(getApplicationContext())) {
+                adapter = new ArrayAdapter<>(getListView().getContext(), android.R.layout.simple_list_item_1, loading);
+                adapter.notifyDataSetChanged();
+                getListView().setAdapter(adapter);
+
+                MainActivity.mainCalendar.loadNews();
+                Log.d("starting set of news!", "starting set of news!");
+                adapter = new ArrayAdapter<>(getListView().getContext(), android.R.layout.simple_list_item_1, MainActivity.mainCalendar.getNewsTask().getNewsArticleTitlesForList());
+                adapter.notifyDataSetChanged();
+                getListView().setAdapter(adapter);
+            } else {
+                String [] no_internet = {"<b>Unable to Load News</b>, User is <b>not conected to the internet</b>.",
+                        "Please <b>retry</b> once you are <b>reconnected to the internet</b>."};
+                for(int i = 0; i < no_internet.length; i++) {
+                    no_internet[i] = Html.fromHtml(no_internet[i]).toString();
+                }
+                adapter = new ArrayAdapter<>(getListView().getContext(), android.R.layout.simple_list_item_1, no_internet);
+                adapter.notifyDataSetChanged();
+                getListView().setAdapter(adapter);
+            }
         } else {
             adapter = new ArrayAdapter<>(getListView().getContext(), android.R.layout.simple_list_item_1, MainActivity.mainCalendar.getNewsTask().getNewsArticleTitlesForList());
             adapter.notifyDataSetChanged();
@@ -64,40 +80,5 @@ public class RssActivity  extends ListActivity {
                 }
             }
         });
-    }
-
-    private class waitUntilNewsLoaded extends AsyncTask<Void, Void, Void> {
-
-        @Override
-        protected void onPostExecute(Void aVoid) {
-            super.onPostExecute(aVoid);
-            getListView().setAdapter(null);
-            adapter = new ArrayAdapter<>(getListView().getContext(), android.R.layout.simple_list_item_1, MainActivity.mainCalendar.getNewsTask().getNewsArticleTitlesForList());
-            adapter.notifyDataSetChanged();
-            getListView().setAdapter(adapter);
-        }
-
-
-        @Override
-        protected Void doInBackground(Void... params) {
-            Log.d(TAG, "waiting for monitor state!");
-            if(!MainActivity.mainCalendar.newsLoaded()) {
-                Utils.waitForMonitorState();
-            }
-            Log.d(TAG, "Done waiting for monitor state.");
-            return null;
-        }
-    }
-
-    @Override
-    public void onPause() {
-        super.onPause();
-        Utils.universalOnPause();
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        Utils.universalOnResume();
     }
 }

@@ -46,17 +46,6 @@ public class ReadAllFeedTask extends AsyncTask<Void, Void, Void> {
     @Override
     protected void onPostExecute(Void aVoid) {
         super.onPostExecute(aVoid);
-        for(RSSReader reader : readers) {
-            if (reader instanceof WestNewsReader) {
-                readLinkOnPost((WestNewsReader) reader);
-            } else if(!(reader instanceof CalendarRssReader)) {
-                readerPostExecute(reader);
-            }
-            all_readers_executing.remove(reader);
-        }
-        if(articles.size() > 0)
-            Collections.sort(articles, Utils.articlePubDateSorter);
-
         if(list != null) {
             all_titles.clear();
             for (Article a : articles) {
@@ -69,8 +58,6 @@ public class ReadAllFeedTask extends AsyncTask<Void, Void, Void> {
             list.setAdapter(adapterLoaded);
             Toast.makeText(list.getContext(), "Done loading!", Toast.LENGTH_SHORT);
         }
-        Log.d("Unit5Utils", "done loading...");
-        Utils.unlockWaiter();
     }
 
     @Override
@@ -81,6 +68,17 @@ public class ReadAllFeedTask extends AsyncTask<Void, Void, Void> {
                 readLinkInBackground((WestNewsReader) reader);
             }
         }
+        for(RSSReader reader : readers) {
+            if (reader instanceof WestNewsReader) {
+                readLinkOnPost((WestNewsReader) reader);
+            } else if(!(reader instanceof CalendarRssReader)) {
+                readerPostExecute(reader);
+            }
+            all_readers_executing.remove(reader);
+        }
+        if(articles.size() > 0)
+            Collections.sort(articles, Utils.articlePubDateSorter);
+        Utils.unlockWaiter();
         return null;
     }
 
@@ -156,6 +154,7 @@ public class ReadAllFeedTask extends AsyncTask<Void, Void, Void> {
     }
 
     public String[] getNewsArticleTitlesForList() {
+        Log.d("Articles", "Articles: " + articles.size());
         String[] titles = new String[articles.size()];
         for(int i = 0; i < titles.length; i++) {
             titles[i] = Utils.toTitleCase(Html.fromHtml(getNewsArticleAt(i).getTitle()).toString());

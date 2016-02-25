@@ -1,9 +1,9 @@
 package com.unit5app;
 
 import com.unit5app.com.unit5app.parsers.CalendarEvent;
-import com.unit5app.com.unit5app.parsers.CalendarRssReader;
 import com.unit5app.com.unit5app.parsers.RSSReader;
 import com.unit5app.com.unit5app.parsers.ReadAllFeedTask;
+import com.unit5app.com.unit5app.parsers.ReadCalendarTask;
 import com.unit5app.utils.Time;
 import com.unit5app.utils.Utils;
 
@@ -24,6 +24,7 @@ public class Calendar {
     private ReadAllFeedTask newsTask;
 
     private List<CalendarEvent> calendarEvents;
+    private boolean startedLoadingCalendar, startedLoadingNews;
 
 //    private CalendarDate[] dates;
 
@@ -34,7 +35,7 @@ public class Calendar {
     public Calendar(int numDays) {
 //        dates = new CalendarDate[numDays];
         if(Utils.hadInternetOnLastCheck) {
-            //loadCalendar();
+            loadCalendar();
         }
     }
 
@@ -50,10 +51,13 @@ public class Calendar {
      * @param readers the RssReaders used to load the news from the school websites.
      */
     public void loadNews(RSSReader... readers) {
-        if(Utils.hadInternetOnLastCheck) {
+        if(Utils.hadInternetOnLastCheck && !startedLoadingNews) {
+            startedLoadingNews = true;
             newsTask = new ReadAllFeedTask();
+            if(readers.length == 0) readers = MainActivity.newsReaders;
             newsTask.setReaders(readers);
             newsTask.execute();
+            Utils.waitForMonitorState();
         }
     }
 
@@ -61,16 +65,17 @@ public class Calendar {
      * loads the Calendar with calendarEvents from the Unit 5 calendar.
      */
     public void loadCalendar() {
-        calendarEvents = new ArrayList<>();
-        CalendarRssReader calendarReader = new CalendarRssReader(CALENDAR_URL);
-        ReadAllFeedTask calendarTask = new ReadAllFeedTask();
-        calendarTask.setReaders(calendarReader);
-        calendarTask.execute();
-        if(!calendarTask.isLoaded()) Utils.waitForMonitorState();
-        for(CalendarEvent event : calendarReader.getCalendarEvents()) {
-            calendarEvents.add(event);
+        if(!startedLoadingCalendar) {
+            startedLoadingCalendar = true;
+            calendarEvents = new ArrayList<>();
+            ReadCalendarTask calendarTask = new ReadCalendarTask(CALENDAR_URL);
+            calendarTask.execute();
+            if (!calendarTask.isLoaded()) Utils.waitForMonitorState();
+            for (CalendarEvent event : calendarTask.getCalendarEvents()) {
+                calendarEvents.add(event);
+            }
+            sortCalendarEvents();
         }
-        sortCalendarEvents();
     }
 
     public void loadLunchMenu(String lunchMenuPdfUrl) {
@@ -119,12 +124,16 @@ public class Calendar {
         return (newsTask != null && newsTask.isLoaded());
     }
 
+    public boolean newsStartedLoading() {
+        return startedLoadingNews;
+    }
+
     /**
      * true if the calendar is loaded or is currently being loaded
      * @return true if the calendar has been loaded or is currently being loaded
      */
-    public boolean isCalendarLoaded() {
-        return (calendarEvents != null);
+    public boolean hasCalendarStartedLoading() {
+        return startedLoadingCalendar;
     }
 
 }

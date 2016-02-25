@@ -22,6 +22,8 @@ public abstract class Utils {
     private static final String TAG = "Unit5Utils"; /* String name passed to the Logging API */
 
     public static boolean hadInternetOnLastCheck = false;
+
+    public static final String SUPERSCRIPT_TH = "<sup><small>th</small></sup>", SUPERSCRIPT_ND = "<sup><small>nd</small></sup>", SUPERSCRIPT_ST = "<sup><small>st</small></sup>", SUPERSCRIPT_RD  = "<sup><small>rd</small></sup>";
     
     /**
      * Gets the index location of 'occurrence' character in a string. Case-sensitive.
