@@ -84,10 +84,10 @@ public class PDFManager {
 
     public PDFManager(String pdfUrl) {
         this.pdfUrl = pdfUrl;
-        PDFGrabberTask grabberTask = new PDFGrabberTask();
-        grabberTask.execute();
-
-        PDFStripperTask stripperTask = new PDFStripperTask();
-        stripperTask.execute();
+//        PDFGrabberTask grabberTask = new PDFGrabberTask();
+//        grabberTask.execute();
+//
+//        PDFStripperTask stripperTask = new PDFStripperTask();
+//        stripperTask.execute();
     }
 }

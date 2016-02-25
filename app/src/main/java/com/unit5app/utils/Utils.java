@@ -122,18 +122,14 @@ public abstract class Utils {
      * This method is a universalOnPause method that is to be used in every activity's onPause() method.
      */
     public static void universalOnPause() {
-        Log.d(TAG, "onPause()");
         paused = true;
-        Log.d(TAG, "paused: " + paused);
     }
 
     /**
      * This method is a universalOnResume method that is to be used in every activity's onResume() method.
      */
     public static void universalOnResume() {
-        Log.d(TAG, "onResume()");
         paused = false;
-        Log.d(TAG, "paused: " + paused);
     }
 
     /**
@@ -141,7 +137,6 @@ public abstract class Utils {
      * @return true if the application is currently paused
      */
     public static boolean isAppPaused() {
-        Log.d(TAG, "" + paused);
         return paused;
     }
 

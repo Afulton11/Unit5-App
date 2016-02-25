@@ -20,7 +20,6 @@ public class EndOfHourHandler {
 
     private TextView view;
     private Context context;
-    private boolean schoolInSession;
 
     /* NOTE: Having multiple arrays with indexes that match up is behavior similar to objects.
      * Should we just create a new "Period.java" class?
@@ -47,11 +46,10 @@ public class EndOfHourHandler {
         try {
             final Runnable timerTask = new Runnable() { //used to check the time and update the textView every 30 seconds.
                 StringBuffer buffer;
-                boolean ranOnce = false;
                 @Override
                 public void run() {
-                    if(!Utils.isAppPaused() || (!(schoolInSession = isSchoolInSession()) && ranOnce)) {
-                        if (schoolInSession && (!Utils.isInternetConnected(context) || UpcomingEventsActivity.rssCalendarReader.doneParsing())) { //we make sure the calendar reader is done parsing because if it isn't, we may get some null pointer exceptions when checking things about today's date.
+                    if(!Utils.isAppPaused()) {
+                        if (isSchoolInSession()) { //we make sure the calendar reader is done parsing because if it isn't, we may get some null pointer exceptions when checking things about today's date.
                             buffer = new StringBuffer(startBufferText);
 
                             setCurrentPeriodAndEndTime();
@@ -75,17 +73,13 @@ public class EndOfHourHandler {
                              * If the calendar hasn't finished parsing, or isn't being parsed, and the user reconnects to the internet, this will
                              * reload the calendar so that everythin g will work with the information provided by the calendar.
                              */
-                            if (!Utils.hadInternetOnLastCheck && Utils.isInternetConnected(context) && !UpcomingEventsActivity.rssCalendarReader.doneParsing()) {
+                            if (!Utils.hadInternetOnLastCheck && Utils.isInternetConnected(context) && !MainActivity.mainCalendar.isCalendarLoaded()) {
                                 UpcomingEventsActivity.loadCalendar();
                             }
                             Log.d(TAG, "Updated End Of Hour TextView.");
                         } else {
-                            ranOnce = true;
                             view.setText("School is not currently in session.");
                         }
-                    }
-                    if((!schoolInSession && ranOnce)) {
-                        view.postDelayed(this, delayTime * 3);
                     }
                     view.postDelayed(this, delayTime);//this will run this runnable (timerTask) after every delayTime (30,000) millisecond
                 }
