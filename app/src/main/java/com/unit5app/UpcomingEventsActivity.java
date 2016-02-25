@@ -10,6 +10,7 @@ import android.widget.TextView;
 
 import com.unit5app.com.unit5app.parsers.CalendarEvent;
 import com.unit5app.com.unit5app.parsers.CalendarRssReader;
+import com.unit5app.utils.Utils;
 
 import java.util.List;
 
@@ -29,7 +30,9 @@ public class UpcomingEventsActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.calendar_layout);
-        loadCalendar();
+        if(!MainActivity.mainCalendar.isCalendarLoaded()) {
+            loadCalendar();
+        }
         textView_calendarEvents = (TextView) findViewById(R.id.upcomingEvents_EventText);
         textView_calendarEvents.setText("loading calendar events...");
         textView_calendarEvents.setMovementMethod(new ScrollingMovementMethod());
@@ -95,4 +98,15 @@ public class UpcomingEventsActivity extends Activity {
         }
     }
 
+    @Override
+    public void onPause() {
+        super.onPause();
+        Utils.universalOnPause();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        Utils.universalOnResume();
+    }
 }

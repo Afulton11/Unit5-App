@@ -26,8 +26,6 @@ public class RssActivity  extends ListActivity {
     private RSSReader rssReader;
     private WestNewsReader westNews;
 
-    private Object montiorCondition;
-
     private String[] loading = {"loading..."};
     ArrayAdapter<String> adapter;
 
@@ -35,7 +33,7 @@ public class RssActivity  extends ListActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.rss_layout);
-        montiorCondition = new Object();
+        Utils.setCurrentView(Utils.VIEW_ARTICLE_LIST);
 
         if(!MainActivity.mainCalendar.newsLoaded()) {
             adapter = new ArrayAdapter<>(getListView().getContext(), android.R.layout.simple_list_item_1, loading);
@@ -89,5 +87,17 @@ public class RssActivity  extends ListActivity {
             Log.d(TAG, "Done waiting for monitor state.");
             return null;
         }
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        Utils.universalOnPause();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        Utils.universalOnResume();
     }
 }

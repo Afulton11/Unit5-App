@@ -26,26 +26,41 @@ public class Calendar {
 
     private List<CalendarEvent> calendarEvents;
 
+//    private CalendarDate[] dates;
+
     /**
      * creates a new Calendar from the Main calendar url: <a href="{@value #CALENDAR_URL}">See Calendar Url</a>
-     * @param numDays -- the number of days to extend from the current day.
+     * @param numDays the number of days to extend from the current day.
      */
     public Calendar(int numDays) {
-        loadCalendar();
-        newsTask = new ReadAllFeedTask();
-
+//        dates = new CalendarDate[numDays];
+        if(Utils.hadInternetOnLastCheck) {
+            loadCalendar();
+        }
     }
 
+    /**
+     * this can be called from the UpdateManager, once we get that going.
+     */
     public void update() {
 
     }
 
+    /**
+     * loads the news if there was internet on the last time we checked for internet.
+     * @param readers the RssReaders used to load the news from the school websites.
+     */
     public void loadNews(RSSReader... readers) {
-        newsTask = new ReadAllFeedTask();
-        newsTask.setReaders(readers);
-        newsTask.execute();
+        if(Utils.hadInternetOnLastCheck) {
+            newsTask = new ReadAllFeedTask();
+            newsTask.setReaders(readers);
+            newsTask.execute();
+        }
     }
 
+    /**
+     * loads the Calendar with calendarEvents from the Unit 5 calendar.
+     */
     public void loadCalendar() {
         calendarEvents = new ArrayList<>();
         CalendarRssReader calendarReader = new CalendarRssReader(CALENDAR_URL);
@@ -103,6 +118,14 @@ public class Calendar {
 
     public boolean newsLoaded() {
         return (newsTask != null && newsTask.isLoaded());
+    }
+
+    /**
+     * true if the calendar is loaded or is currently being loaded
+     * @return true if the calendar has been loaded or is currently being loaded
+     */
+    public boolean isCalendarLoaded() {
+        return (calendarEvents != null);
     }
 
 }

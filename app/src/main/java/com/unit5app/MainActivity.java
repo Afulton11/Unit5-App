@@ -26,7 +26,7 @@ import java.util.List;
 public class MainActivity extends AppCompatActivity {
 
     /*
-    TODO: add a way for us to know what Activity the user is currently looking at and if the user has puased the application (if we are running in the background).
+    TODO: add a way for us to know what Activity the user is currently looking at and if the user has paused the application (if we are running in the background).
      */
 
     /* Lists to hold the titles and descriptions for a future search function */
@@ -47,7 +47,9 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         //set content view to a loading screen first, Then once everything is loaded we would setContentView to the home screen?
-
+        Utils.setCurrentView(Utils.VIEW_LOADING);
+        Utils.isInternetConnected(getApplicationContext());
+        /* TODO: Launch internal calendar builder to get latest info on events, etc... */
         mainCalendar = new Calendar(60);
         WestNewsReader westNews = new WestNewsReader("http://www.unit5.org/site/RSS.aspx?DomainID=30&ModuleInstanceID=1852&PageID=53");
         RSSReader unit5News = new RSSReader("http://www.unit5.org/site/RSS.aspx?DomainID=4&ModuleInstanceID=4&PageID=1");
@@ -55,6 +57,8 @@ public class MainActivity extends AppCompatActivity {
 
         /* Load object placement as defined in Resources file */
         setContentView(R.layout.activity_main);
+        Utils.setCurrentView(Utils.VIEW_MAIN);
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -77,8 +81,6 @@ public class MainActivity extends AppCompatActivity {
             toast.show();
         }
 
-        /* TODO: Launch internal calendar builder to get latest info on events, etc... */
-
 
 
         /* The calendar reader is loaded up in here so that we will know what is happening on the day the app is opened. It may be a late start day.
@@ -86,8 +88,6 @@ public class MainActivity extends AppCompatActivity {
         if(Utils.isInternetConnected(getApplicationContext())) {
             UpcomingEventsActivity.loadCalendar();
         }
-
-//        new PDFGrabberTask("http://www.unit5.org/cms/lib03/IL01905100/Centricity/Domain/55/2016%20Feb%20Sr%20High%20Lunch.pdf").start();
 
         /* Begin testing to see if it's the end of the hour. The text will update accordingly. */
         new EndOfHourHandler(endOfHourTime).start();
@@ -130,7 +130,7 @@ public class MainActivity extends AppCompatActivity {
         });
 
         /* TEST CODE, PROOF OF CONCEPT */
-        //PDDocument doc =  new PDFGrabberTask("http://www.unit5.org/cms/lib03/IL01905100/Centricity/Domain/55/2016%20Feb%20Sr%20High%20Lunch.pdf").getPdf();
+//        PDDocument doc =  new PDFGrabberTask("http://www.unit5.org/cms/lib03/IL01905100/Centricity/Domain/55/2016%20Feb%20Sr%20High%20Lunch.pdf").getPdf();
         /* END TEST CODE */
     }
 
@@ -156,5 +156,17 @@ public class MainActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        Utils.universalOnPause();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        Utils.universalOnResume();
     }
 }

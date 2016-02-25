@@ -116,6 +116,63 @@ public abstract class Utils {
         return sb.toString();
     }
 
+    private static boolean paused = false;
+
+    /**
+     * This method is a universalOnPause method that is to be used in every activity's onPause() method.
+     */
+    public static void universalOnPause() {
+        paused = true;
+    }
+
+    /**
+     * This method is a universalOnResume method that is to be used in every activity's onResume() method.
+     */
+    public static void universalOnResume() {
+        paused = false;
+    }
+
+    /**
+     * returns true if the application is currently paused
+     * @return true if the application is currently paused
+     */
+    public static boolean isAppPaused() {
+        return paused;
+    }
+
+    /**
+     * The view id for each different activity/view.
+     */
+    public static final int VIEW_MAIN = 0, VIEW_LOADING = 1, VIEW_ARTICLE_LIST = 2, VIEW_ARTICLE = 3, VIEW_UPCOMING_EVENTS = 4, VIEW_ANNOUNCEMENTS = 5;
+    /**
+     * the current View the user is looking at.
+     */
+    public static int current_view;
+
+    /**
+     * sets the current View to the inputted view.
+     * @param viewId the viewId for the activity the user is current viewing.
+     */
+    public static void setCurrentView(int viewId) {
+        current_view = viewId;
+    }
+
+    /**
+     * returns the current ViewId.
+     * <br><ul>A list of all the possible return values
+     * <li>&nbsp;&nbsp;&nbsp;&nbsp;VIEW_MAIN = {@value #VIEW_MAIN}</li>
+     * <li>&nbsp;&nbsp;&nbsp;&nbsp;VIEW_LOADING = {@value #VIEW_LOADING}</li>
+     * <li>&nbsp;&nbsp;&nbsp;&nbsp;VIEW_ARTICLE_LIST = {@value #VIEW_ARTICLE_LIST}</li>
+     * <li>&nbsp;&nbsp;&nbsp;&nbsp;VIEW_ARTICLE = {@value #VIEW_ARTICLE}</li>
+     * <li>&nbsp;&nbsp;&nbsp;&nbsp;VIEW_UPCOMING_EVENTS = {@value #VIEW_UPCOMING_EVENTS}</li>
+     * <li>&nbsp;&nbsp;&nbsp;&nbsp;VIEW_ANNOUNCEMENTS = {@value #VIEW_ANNOUNCEMENTS}</li>
+     * </ul></br>
+     * @return the current ViewId.
+     */
+    public static int getCurrent_view() {
+        return current_view;
+    }
+
     /**
      * for each thread waiting at the same time, if they each have a different boolean to start again, we need to add another object and another boolean, along with their respective waitFor and unlock methods.
      */

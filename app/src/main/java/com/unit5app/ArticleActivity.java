@@ -33,6 +33,7 @@ public class ArticleActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.article_layout);
+        Utils.setCurrentView(Utils.VIEW_ARTICLE);
 
         Heading = (TextView) findViewById(R.id.article_title);
         Body = (TextView) findViewById(R.id.article_body);
@@ -88,4 +89,16 @@ public class ArticleActivity extends Activity {
      * @param set_article - sets the Article of the Activity
      */
     public static void setArticle(Article set_article) { article = set_article; }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        Utils.universalOnPause();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        Utils.universalOnResume();
+    }
 }

@@ -5,6 +5,8 @@ import android.os.Bundle;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
+import com.unit5app.utils.Utils;
+
 /**
  * Created by Andrew on 2/18/2016.
  *
@@ -19,6 +21,8 @@ public class AnnouncementActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.announcements_layout);
+        Utils.setCurrentView(Utils.VIEW_ANNOUNCEMENTS);
+
         pdfView = (WebView) findViewById(R.id.announcements);
 
         pdfView.getSettings().setJavaScriptEnabled(true);
@@ -35,5 +39,17 @@ public class AnnouncementActivity extends Activity {
                 WebView view, String url) {
             return(false);
         }
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        Utils.universalOnPause();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        Utils.universalOnResume();
     }
 }
