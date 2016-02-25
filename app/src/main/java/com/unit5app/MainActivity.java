@@ -12,9 +12,12 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.unit5app.com.unit5app.parsers.PDFGrabber;
 import com.unit5app.com.unit5app.parsers.RSSReader;
 import com.unit5app.com.unit5app.parsers.WestNewsReader;
 import com.unit5app.utils.Utils;
+
+import org.apache.pdfbox.pdmodel.PDDocument;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -130,7 +133,8 @@ public class MainActivity extends AppCompatActivity {
         });
 
         /* TEST CODE, PROOF OF CONCEPT */
-//        PDDocument doc =  new PDFGrabberTask("http://www.unit5.org/cms/lib03/IL01905100/Centricity/Domain/55/2016%20Feb%20Sr%20High%20Lunch.pdf").getPdf();
+        PDFGrabber grabber = new PDFGrabber();
+        PDDocument doc = grabber.fetchPDF("http://www.unit5.org/cms/lib03/IL01905100/Centricity/Domain/55/2016%20Feb%20Sr%20High%20Lunch.pdf");
         /* END TEST CODE */
     }
 
