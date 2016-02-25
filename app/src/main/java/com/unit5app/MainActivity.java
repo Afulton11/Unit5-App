@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -13,12 +14,15 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.unit5app.com.unit5app.parsers.PDFGrabber;
+import com.unit5app.com.unit5app.parsers.PDFParser;
 import com.unit5app.com.unit5app.parsers.RSSReader;
 import com.unit5app.com.unit5app.parsers.WestNewsReader;
 import com.unit5app.utils.Utils;
 
 import org.apache.pdfbox.pdmodel.PDDocument;
+import org.apache.pdfbox.text.PDFTextStripper;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -27,6 +31,7 @@ import java.util.List;
  * @version 2/21/16
  */
 public class MainActivity extends AppCompatActivity {
+    private static String TAG = "MainActivity";
 
     /*
     TODO: add a way for us to know what Activity the user is currently looking at and if the user has paused the application (if we are running in the background).
