@@ -41,11 +41,11 @@ public class EndOfHourHandler {
 
     public void start() {
         final long initialDelayTime = 0; //the time to wait before starting the entire loop that uses delayTime.
-        final long delayTime = 10000; //the amount of time to wait before checking the time again in milliseconds. 1000 ms = 1 second.
+        final long delayTime = 30000; //the amount of time to wait before checking the time again in milliseconds. 1000 ms = 1 second.
         final String startBufferText = "# hour ends at [TIME-HERE].";
 
         try {
-            Runnable timerTask = new Runnable() { //used to check the time and update the textView every 30 seconds.
+            final Runnable timerTask = new Runnable() { //used to check the time and update the textView every 30 seconds.
                 StringBuffer buffer;
                 @Override
                 public void run() {
@@ -77,12 +77,11 @@ public class EndOfHourHandler {
                         if(!Utils.hadInternetOnLastCheck && Utils.isInternetConnected(context) && !UpcomingEventsActivity.rssCalendarReader.doneParsing()) {
                             UpcomingEventsActivity.loadCalendar();
                         }
+                        Log.d(TAG, "Updated End Of Hour TextView.");
 
                     } else {
                         view.setText("School is not currently in session.");
                     }
-
-                    Log.d(TAG, "Updated End Of Hour TextView.");
                     view.postDelayed(this, delayTime);//this will run this runnable (timerTask) after every delayTime (30,000) millisecond
                 }
             };
