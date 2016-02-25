@@ -61,7 +61,7 @@ public class MainActivity extends AppCompatActivity {
         mainCalendar = new Calendar(60);
         WestNewsReader westNews = new WestNewsReader("http://www.unit5.org/site/RSS.aspx?DomainID=30&ModuleInstanceID=1852&PageID=53");
         RSSReader unit5News = new RSSReader("http://www.unit5.org/site/RSS.aspx?DomainID=4&ModuleInstanceID=4&PageID=1");
-        mainCalendar.loadNews(westNews, unit5News);
+        //mainCalendar.loadNews(westNews, unit5News);
 
         /* Load object placement as defined in Resources file */
         setContentView(R.layout.activity_main);

@@ -21,7 +21,6 @@ public class Calendar {
     public static final CalendarEvent[] NO_CALENDAR_EVENTS = {};
     private static final String CALENDAR_URL = "http://www.unit5.org/site/RSS.aspx?DomainID=4&ModuleInstanceID=1&PageID=2";
 
-
     private ReadAllFeedTask newsTask;
 
     private List<CalendarEvent> calendarEvents;
@@ -35,7 +34,7 @@ public class Calendar {
     public Calendar(int numDays) {
 //        dates = new CalendarDate[numDays];
         if(Utils.hadInternetOnLastCheck) {
-            loadCalendar();
+            //loadCalendar();
         }
     }
 
