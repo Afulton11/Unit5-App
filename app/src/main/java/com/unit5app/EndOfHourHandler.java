@@ -20,6 +20,7 @@ public class EndOfHourHandler {
 
     private TextView view;
     private Context context;
+    private boolean schoolInSession;
 
     /* NOTE: Having multiple arrays with indexes that match up is behavior similar to objects.
      * Should we just create a new "Period.java" class?
@@ -41,46 +42,50 @@ public class EndOfHourHandler {
 
     public void start() {
         final long initialDelayTime = 0; //the time to wait before starting the entire loop that uses delayTime.
-        final long delayTime = 30000; //the amount of time to wait before checking the time again in milliseconds. 1000 ms = 1 second.
+        final long delayTime = 10000; //the amount of time to wait before checking the time again in milliseconds. 1000 ms = 1 second.
         final String startBufferText = "# hour ends at [TIME-HERE].";
-
         try {
             final Runnable timerTask = new Runnable() { //used to check the time and update the textView every 30 seconds.
                 StringBuffer buffer;
+                boolean ranOnce = false;
                 @Override
                 public void run() {
-                    if( isSchoolInSession() && (!Utils.isInternetConnected(context)|| UpcomingEventsActivity.rssCalendarReader.doneParsing()) &&
-                            !Utils.isAppPaused()) { //we make sure the calendar reader is done parsing because if it isn't, we may get some null pointer exceptions when checking things about today's date.
-                        buffer = new StringBuffer(startBufferText);
+                    if(!Utils.isAppPaused() || (!(schoolInSession = isSchoolInSession()) && ranOnce)) {
+                        if (schoolInSession && (!Utils.isInternetConnected(context) || UpcomingEventsActivity.rssCalendarReader.doneParsing())) { //we make sure the calendar reader is done parsing because if it isn't, we may get some null pointer exceptions when checking things about today's date.
+                            buffer = new StringBuffer(startBufferText);
 
-                        setCurrentPeriodAndEndTime();
+                            setCurrentPeriodAndEndTime();
 
-                        int periodLoc = buffer.indexOf("#");
-                        buffer.replace(0, periodLoc + 1, periods[currentPeriod]);
+                            int periodLoc = buffer.indexOf("#");
+                            buffer.replace(0, periodLoc + 1, periods[currentPeriod]);
 
-                        int hourLoc = buffer.indexOf("[TIME-HERE]");
-                        String s_currentEndTime = endOfHourTimes[currentPeriod];
-                        buffer.delete(hourLoc, hourLoc + 10); //removes the colon as it is not needed anymore.
-                        buffer.replace(hourLoc, hourLoc + 1, s_currentEndTime);
+                            int hourLoc = buffer.indexOf("[TIME-HERE]");
+                            String s_currentEndTime = endOfHourTimes[currentPeriod];
+                            buffer.delete(hourLoc, hourLoc + 10); //removes the colon as it is not needed anymore.
+                            buffer.replace(hourLoc, hourLoc + 1, s_currentEndTime);
 
-                        if (s_currentEndTime.toCharArray()[0] == '0') //removes the 0 from the start of the end time, if the first character is a 0.
-                            buffer.delete(hourLoc, hourLoc + 1);
+                            if (s_currentEndTime.toCharArray()[0] == '0') //removes the 0 from the start of the end time, if the first character is a 0.
+                                buffer.delete(hourLoc, hourLoc + 1);
 
-                        Spanned formatted = Html.fromHtml(buffer.toString());
+                            Spanned formatted = Html.fromHtml(buffer.toString());
 
-                        view.setText(formatted); //sets the text of the textView after doing any html formatting to the text.
+                            view.setText(formatted); //sets the text of the textView after doing any html formatting to the text.
 
-                        /**
-                         * If the calendar hasn't finished parsing, or isn't being parsed, and the user reconnects to the internet, this will
-                         * reload the calendar so that everythin g will work with the information provided by the calendar.
-                         */
-                        if(!Utils.hadInternetOnLastCheck && Utils.isInternetConnected(context) && !UpcomingEventsActivity.rssCalendarReader.doneParsing()) {
-                            UpcomingEventsActivity.loadCalendar();
+                            /**
+                             * If the calendar hasn't finished parsing, or isn't being parsed, and the user reconnects to the internet, this will
+                             * reload the calendar so that everythin g will work with the information provided by the calendar.
+                             */
+                            if (!Utils.hadInternetOnLastCheck && Utils.isInternetConnected(context) && !UpcomingEventsActivity.rssCalendarReader.doneParsing()) {
+                                UpcomingEventsActivity.loadCalendar();
+                            }
+                            Log.d(TAG, "Updated End Of Hour TextView.");
+                        } else {
+                            ranOnce = true;
+                            view.setText("School is not currently in session.");
                         }
-                        Log.d(TAG, "Updated End Of Hour TextView.");
-
-                    } else {
-                        view.setText("School is not currently in session.");
+                    }
+                    if((!schoolInSession && ranOnce)) {
+                        view.postDelayed(this, delayTime * 3);
                     }
                     view.postDelayed(this, delayTime);//this will run this runnable (timerTask) after every delayTime (30,000) millisecond
                 }
