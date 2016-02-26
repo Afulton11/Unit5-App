@@ -1,4 +1,4 @@
-package com.unit5app;
+package com.unit5app.calendars;
 
 import com.unit5app.activities.MainActivity;
 import com.unit5app.com.unit5app.parsers.CalendarEvent;
@@ -13,7 +13,7 @@ import java.util.Collections;
 import java.util.List;
 
 
-public class Calendar {
+public class Unit5Calendar {
 
     /*
     TODO: add the day's lunch to every date.
@@ -33,7 +33,7 @@ public class Calendar {
      * creates a new Calendar from the Main calendar url: <a href="{@value #CALENDAR_URL}">See Calendar Url</a>
      * @param numDays the number of days to extend from the current day.
      */
-    public Calendar(int numDays) {
+    public Unit5Calendar(int numDays) {
 //        dates = new CalendarDate[numDays];
         if(Utils.hadInternetOnLastCheck) {
             loadCalendar();

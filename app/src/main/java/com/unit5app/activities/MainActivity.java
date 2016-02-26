@@ -12,8 +12,7 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.unit5app.Calendar;
-import com.unit5app.EndOfHourHandler;
+import com.unit5app.calendars.Unit5Calendar;
 import com.unit5app.R;
 import com.unit5app.com.unit5app.parsers.RSSReader;
 import com.unit5app.com.unit5app.parsers.WestNewsReader;
@@ -38,7 +37,7 @@ public class MainActivity extends AppCompatActivity {
     public static List<String> all_titles = new ArrayList<>();
     public  static List<String> all_descriptions = new ArrayList<>();
 
-    public static Calendar mainCalendar;
+    public static Unit5Calendar mainCalendar;
     public static RSSReader[] newsReaders;
 
     /* Buttons to be pressed */
@@ -57,7 +56,7 @@ public class MainActivity extends AppCompatActivity {
         /*Check if we have internet access*/
         Utils.isInternetConnected(getApplicationContext());
         /* TODO: Launch internal calendar builder to get latest info on events, etc... */
-        mainCalendar = new Calendar(60);
+        mainCalendar = new Unit5Calendar(60);
         WestNewsReader westNews = new WestNewsReader("http://www.unit5.org/site/RSS.aspx?DomainID=30&ModuleInstanceID=1852&PageID=53");
         RSSReader unit5News = new RSSReader("http://www.unit5.org/site/RSS.aspx?DomainID=4&ModuleInstanceID=4&PageID=1");
         newsReaders = new RSSReader[] {westNews, unit5News};
