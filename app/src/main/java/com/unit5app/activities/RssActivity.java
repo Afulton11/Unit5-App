@@ -1,4 +1,4 @@
-package com.unit5app;
+package com.unit5app.activities;
 
 import android.app.ListActivity;
 import android.content.Intent;
@@ -10,6 +10,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Toast;
 
+import com.unit5app.R;
 import com.unit5app.com.unit5app.parsers.RSSReader;
 import com.unit5app.com.unit5app.parsers.WestNewsReader;
 import com.unit5app.utils.Utils;

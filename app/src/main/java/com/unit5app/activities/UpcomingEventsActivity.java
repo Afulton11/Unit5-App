@@ -1,4 +1,4 @@
-package com.unit5app;
+package com.unit5app.activities;
 
 import android.app.Activity;
 import android.os.Bundle;
@@ -8,6 +8,7 @@ import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
 import android.widget.TextView;
 
+import com.unit5app.R;
 import com.unit5app.com.unit5app.parsers.CalendarRssReader;
 import com.unit5app.utils.Utils;
 

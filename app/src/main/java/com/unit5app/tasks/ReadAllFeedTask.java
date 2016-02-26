@@ -1,4 +1,4 @@
-package com.unit5app.com.unit5app.parsers;
+package com.unit5app.tasks;
 
 import android.os.AsyncTask;
 import android.text.Html;
@@ -8,6 +8,9 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import com.unit5app.Article;
+import com.unit5app.com.unit5app.parsers.CalendarRssReader;
+import com.unit5app.com.unit5app.parsers.RSSReader;
+import com.unit5app.com.unit5app.parsers.WestNewsReader;
 import com.unit5app.utils.Utils;
 
 import java.util.ArrayList;

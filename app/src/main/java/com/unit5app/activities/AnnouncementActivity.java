@@ -1,10 +1,11 @@
-package com.unit5app;
+package com.unit5app.activities;
 
 import android.app.Activity;
 import android.os.Bundle;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
+import com.unit5app.R;
 import com.unit5app.utils.Utils;
 
 /**

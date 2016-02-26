@@ -1,4 +1,4 @@
-package com.unit5app;
+package com.unit5app.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -12,12 +12,13 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.unit5app.Calendar;
+import com.unit5app.EndOfHourHandler;
+import com.unit5app.R;
 import com.unit5app.tasks.PDFGrabber;
 import com.unit5app.com.unit5app.parsers.RSSReader;
 import com.unit5app.com.unit5app.parsers.WestNewsReader;
 import com.unit5app.utils.Utils;
-
-import org.apache.pdfbox.pdmodel.PDDocument;
 
 import java.util.ArrayList;
 import java.util.List;

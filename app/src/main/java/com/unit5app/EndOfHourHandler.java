@@ -6,6 +6,7 @@ import android.text.Spanned;
 import android.util.Log;
 import android.widget.TextView;
 
+import com.unit5app.activities.MainActivity;
 import com.unit5app.utils.Time;
 import com.unit5app.utils.Utils;
 
