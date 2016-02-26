@@ -1,5 +1,6 @@
 package com.unit5app.tasks;
 
+import android.os.AsyncTask;
 import android.util.Log;
 
 import org.apache.pdfbox.pdmodel.PDDocument;
@@ -16,28 +17,8 @@ public abstract class PDFManager {
     private static String TAG = "PDFManager";
     private static String pdfAsString;
 
-    public static String collectAndParsePdf(final String webUrl) {
-        Thread thread = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                PDDocument pdf = grabPdf(webUrl);
-                String stringPdf = stripPdf(pdf);
-                synchronized (pdfAsString) {
-                    pdfAsString = parsePdf(stringPdf);
-                    pdfAsString.notify();
-                }
-            }
-        });
-        thread.start();
-
-        try {
-            synchronized (pdfAsString) {
-                pdfAsString.wait();
-            }
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-
+    public static String collectAndParsePdf(String webUrl) {
+        new PDFEditorTask().execute(webUrl);
         return pdfAsString;
     }
 
@@ -48,7 +29,6 @@ public abstract class PDFManager {
             Log.d(TAG, "Attempting to connect to PDF at URL:  " + webUrl);
             InputStream inputStream = url.openStream();
             Log.d(TAG, "Successfully connected to PDF at URL: " + webUrl);
-
 
             /* Store info into a PDDocument */
             pdf.load(inputStream);
@@ -91,5 +71,20 @@ public abstract class PDFManager {
     private static String parsePdf(String pdfAsString) {
         /* TODO: implement parsePdf to get needed text */
         return pdfAsString;
+    }
+
+    private static class PDFEditorTask extends AsyncTask<String, Void, String> {
+        @Override
+        protected String doInBackground(String... params) {
+            PDDocument pdf = grabPdf(params[0]);
+            String strippedPdf = stripPdf(pdf);
+            return parsePdf(strippedPdf);
+        }
+
+        @Override
+        protected void onPostExecute(String s) {
+            super.onPostExecute(s);
+            pdfAsString = s;
+        }
     }
 }
