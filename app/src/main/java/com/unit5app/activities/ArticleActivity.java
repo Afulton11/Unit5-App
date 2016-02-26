@@ -1,4 +1,4 @@
-package com.unit5app;
+package com.unit5app.activities;
 
 import android.app.Activity;
 import android.graphics.drawable.Drawable;
@@ -10,6 +10,8 @@ import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
 import android.widget.TextView;
 
+import com.unit5app.Article;
+import com.unit5app.R;
 import com.unit5app.utils.Utils;
 
 import java.io.IOException;

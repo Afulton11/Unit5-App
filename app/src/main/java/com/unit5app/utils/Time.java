@@ -1,7 +1,7 @@
 package com.unit5app.utils;
 
-import com.unit5app.MainActivity;
-import com.unit5app.UpcomingEventsActivity;
+import com.unit5app.activities.MainActivity;
+import com.unit5app.activities.UpcomingEventsActivity;
 import com.unit5app.com.unit5app.parsers.CalendarEvent;
 import com.unit5app.com.unit5app.parsers.EventType;
 

@@ -1,9 +1,10 @@
 package com.unit5app;
 
+import com.unit5app.activities.MainActivity;
 import com.unit5app.com.unit5app.parsers.CalendarEvent;
 import com.unit5app.com.unit5app.parsers.RSSReader;
-import com.unit5app.com.unit5app.parsers.ReadAllFeedTask;
-import com.unit5app.com.unit5app.parsers.ReadCalendarTask;
+import com.unit5app.tasks.ReadAllFeedTask;
+import com.unit5app.tasks.ReadCalendarTask;
 import com.unit5app.utils.Time;
 import com.unit5app.utils.Utils;
 
