@@ -199,14 +199,16 @@ public abstract class Utils {
      * waits on the thread until unlockWaiter() is called by another thread.
      * Acts similar to pThreads and a mutex.
      */
-    public static void waitForMonitorState() {
+    public static void waitForMonitorState() {  //http://stackoverflow.com/questions/1036754/difference-between-wait-and-sleep
         Log.d(TAG, "waiting!");
         monitorState = true;
-        while (monitorState) {
-            synchronized (monitor) {
-                try {
-                    monitor.wait(); // wait until notified
-                } catch (Exception e) { e.printStackTrace(); }
+        synchronized (monitor) {
+                while (monitorState) {
+                    try {
+                        monitor.wait(); // sleep until notified or monitorState = true.
+                    } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
         }
     }
@@ -219,7 +221,7 @@ public abstract class Utils {
         Log.d(TAG, "unlocked waiter!");
         synchronized (monitor) {
             monitorState = false;
-            monitor.notifyAll(); // unlock again
+            monitor.notify(); // unlock again
         }
     }
 }

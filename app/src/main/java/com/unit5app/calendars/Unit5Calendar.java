@@ -26,14 +26,27 @@ public class Unit5Calendar {
     private List<CalendarEvent> calendarEvents;
     private boolean startedLoadingCalendar, startedLoadingNews;
 
-//    private CalendarDate[] dates;
+    /*TODO: inform each calendar date of everything else besides calendar events.*/
+    private CalendarDate[] dates;
 
     /**
      * creates a new Calendar from the Main calendar url: <a href="{@value #CALENDAR_URL}">See Calendar Url</a>
      * @param numDays the number of days to extend from the current day.
      */
     public Unit5Calendar(int numDays) {
-//        dates = new CalendarDate[numDays];
+        dates = new CalendarDate[numDays];
+        String currentDate = Time.getCurrentDate(Time.FORMAT_BASIC_DATE);
+        int currentDateNum = Time.getDateAsNumber(currentDate);
+        String previousDate = currentDate;
+        for(int i = 0; i < dates.length; i++) {
+            if(i == 0) {
+                dates[0] = new CalendarDate(currentDate);
+            } else {
+                currentDate = Time.getDateAfterDate(previousDate);
+                dates[i] = new CalendarDate(currentDate);
+                previousDate = currentDate;
+            }
+        }
         if(Utils.hadInternetOnLastCheck) {
             loadCalendar();
         }
@@ -75,6 +88,11 @@ public class Unit5Calendar {
                 calendarEvents.add(event);
             }
             sortCalendarEvents();
+            for(CalendarDate date : dates) {
+                for(CalendarEvent event : calendarEvents) {
+                    if(event.getDate().equals(date.getDate())) date.addEvent(event);
+                }
+            }
         }
     }
 

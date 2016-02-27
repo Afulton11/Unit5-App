@@ -12,11 +12,11 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.unit5app.calendars.Unit5Calendar;
+import com.unit5app.EndOfHourHandler;
 import com.unit5app.R;
+import com.unit5app.calendars.Unit5Calendar;
 import com.unit5app.com.unit5app.parsers.RSSReader;
 import com.unit5app.com.unit5app.parsers.WestNewsReader;
-import com.unit5app.tasks.PDFManager;
 import com.unit5app.utils.Utils;
 
 import java.util.ArrayList;
@@ -79,7 +79,7 @@ public class MainActivity extends AppCompatActivity {
         endOfHourTime = (TextView) findViewById(R.id.clock_end_of_hour);
 
         /* Begin testing to see if it's the end of the hour. The text will update accordingly. */
-        //new EndOfHourHandler(endOfHourTime).start();
+        new EndOfHourHandler(endOfHourTime).start();
 
         /* If not, complain to the user. */
         if(!Utils.hadInternetOnLastCheck) {
@@ -89,7 +89,7 @@ public class MainActivity extends AppCompatActivity {
             toast.show();
         }
 
-        System.out.println(PDFManager.collectAndParsePdf("http://www.unit5.org/cms/lib03/IL01905100/Centricity/Domain/55/2016%20Feb%20Sr%20High%20Lunch.pdf"));
+//        System.out.println(PDFManager.collectAndParsePdf("http://www.unit5.org/cms/lib03/IL01905100/Centricity/Domain/55/2016%20Feb%20Sr%20High%20Lunch.pdf"));
 
         /* Define button click actions. */
         /* For testing the calendar: */

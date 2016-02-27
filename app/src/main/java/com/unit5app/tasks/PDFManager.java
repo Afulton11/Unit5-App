@@ -3,6 +3,8 @@ package com.unit5app.tasks;
 import android.os.AsyncTask;
 import android.util.Log;
 
+import com.unit5app.utils.Utils;
+
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.text.PDFTextStripper;
 
@@ -19,6 +21,7 @@ public abstract class PDFManager {
 
     public static String collectAndParsePdf(String webUrl) {
         new PDFEditorTask().execute(webUrl);
+        Utils.waitForMonitorState();
         return pdfAsString;
     }
 
@@ -31,13 +34,13 @@ public abstract class PDFManager {
             Log.d(TAG, "Successfully connected to PDF at URL: " + webUrl);
 
             /* Store info into a PDDocument */
-            pdf.load(inputStream);
+            PDDocument loadedPdf = pdf.load(inputStream); //NOTE: the load() function doesn't store the document, it returns
 
             /* Close the input stream and free its resources. */
             pdf.close();
             inputStream.close();
             Log.d(TAG, "Document stream and input stream closed.");
-            return pdf;
+            return loadedPdf;
         }
         catch (IOException e) {
             e.printStackTrace();
@@ -57,6 +60,8 @@ public abstract class PDFManager {
             pdfTextStripper.setStartPage(1);
             pdfTextStripper.setEndPage(numPages);
 
+            Log.d(TAG, pdfTextStripper.getText(pdf));
+
             return pdfTextStripper.getText(pdf);
         }
         catch (IOException e) {
@@ -70,6 +75,7 @@ public abstract class PDFManager {
 
     private static String parsePdf(String pdfAsString) {
         /* TODO: implement parsePdf to get needed text */
+        Utils.unlockWaiter();
         return pdfAsString;
     }
 
@@ -78,6 +84,7 @@ public abstract class PDFManager {
         protected String doInBackground(String... params) {
             PDDocument pdf = grabPdf(params[0]);
             String strippedPdf = stripPdf(pdf);
+            pdfAsString = parsePdf(strippedPdf);
             return parsePdf(strippedPdf);
         }
 
