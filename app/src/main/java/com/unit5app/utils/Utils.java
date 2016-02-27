@@ -6,9 +6,11 @@ import android.net.NetworkInfo;
 import android.util.Log;
 
 import com.unit5app.Article;
-import com.unit5app.com.unit5app.parsers.CalendarEvent;
+import com.unit5app.calendars.CalendarEvent;
+import com.unit5app.calendars.EventType;
 
 import java.util.Comparator;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -80,6 +82,19 @@ public abstract class Utils {
             return 0; //keeps events at the same position in the index array.
         }
     };
+
+    /**
+     * true if the calendarEvent list given contains an event with the given Event type.
+     * @param events the CalendarEvents list to search for the type in.
+     * @param type EventType to check if the events list contains an event with the type.
+     * @return true if the calendarEvent list given contains an event with the given Event type.
+     */
+    public static boolean isCalendarEventTypeInList(List<CalendarEvent> events, EventType type) {
+        for(CalendarEvent event : events) {
+            if(event.getType().equals(type)) return true;
+        }
+        return false;
+    }
 
     /**
      * Returns true if the user is connected to the internet in some way.

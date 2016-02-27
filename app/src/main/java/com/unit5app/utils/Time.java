@@ -2,8 +2,8 @@ package com.unit5app.utils;
 
 import com.unit5app.activities.MainActivity;
 import com.unit5app.activities.UpcomingEventsActivity;
-import com.unit5app.com.unit5app.parsers.CalendarEvent;
-import com.unit5app.com.unit5app.parsers.EventType;
+import com.unit5app.calendars.CalendarEvent;
+import com.unit5app.calendars.EventType;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -14,6 +14,9 @@ import java.util.Date;
  * @version 2/22/16
  */
 public abstract class Time {
+
+    public static final String FORMAT_BASIC_DATE = "MM/dd/yy";
+
     /**
      * Gets the current time based on a given format. ex: 13:05 or 01:05 PM.
      * <ul>Examples:</>

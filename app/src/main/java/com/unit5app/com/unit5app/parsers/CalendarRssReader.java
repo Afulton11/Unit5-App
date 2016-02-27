@@ -1,5 +1,8 @@
 package com.unit5app.com.unit5app.parsers;
 
+import com.unit5app.calendars.CalendarEvent;
+import com.unit5app.calendars.EventType;
+
 import org.xmlpull.v1.XmlPullParser;
 
 import java.util.ArrayList;

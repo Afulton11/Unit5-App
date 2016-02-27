@@ -1,7 +1,6 @@
 package com.unit5app.calendars;
 
 import com.unit5app.activities.MainActivity;
-import com.unit5app.com.unit5app.parsers.CalendarEvent;
 import com.unit5app.com.unit5app.parsers.RSSReader;
 import com.unit5app.tasks.ReadAllFeedTask;
 import com.unit5app.tasks.ReadCalendarTask;
@@ -87,7 +86,7 @@ public class Unit5Calendar {
      * This would combine all of today's info onto one date (events, lunch meals, breakfast meals, announcements, and anything else. Perhaps we should make an Overall 'CalendarDate' class or something).
      */
     public void loadTodaysInformation() {
-
+        String date = Time.getCurrentDate(Time.FORMAT_BASIC_DATE);
     }
 
     /**

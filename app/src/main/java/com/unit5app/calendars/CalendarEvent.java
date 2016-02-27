@@ -1,4 +1,4 @@
-package com.unit5app.com.unit5app.parsers;
+package com.unit5app.calendars;
 
 
 import android.util.Log;

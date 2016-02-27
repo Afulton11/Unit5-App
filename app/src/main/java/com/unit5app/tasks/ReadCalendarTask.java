@@ -4,7 +4,7 @@ import android.os.AsyncTask;
 import android.text.Html;
 
 import com.unit5app.activities.UpcomingEventsActivity;
-import com.unit5app.com.unit5app.parsers.CalendarEvent;
+import com.unit5app.calendars.CalendarEvent;
 import com.unit5app.com.unit5app.parsers.CalendarRssReader;
 import com.unit5app.utils.Utils;
 
