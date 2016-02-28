@@ -1,6 +1,5 @@
 package com.unit5app.activities;
 
-import android.app.Activity;
 import android.os.Bundle;
 import android.text.Html;
 import android.text.Spanned;
@@ -16,7 +15,7 @@ import com.unit5app.utils.Utils;
  * @author Andrew
  * @version 2/19/16
  */
-public class UpcomingEventsActivity extends Activity {
+public class UpcomingEventsActivity extends BaseActivity {
 
     private TextView textView_calendarEvents;
 

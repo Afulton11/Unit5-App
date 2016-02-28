@@ -1,6 +1,5 @@
 package com.unit5app.activities;
 
-import android.app.ListActivity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.Html;
@@ -8,6 +7,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.ListView;
 import android.widget.Toast;
 
 import com.unit5app.R;
@@ -20,7 +20,7 @@ import com.unit5app.utils.Utils;
  * The Activity that reads a rss feed and loads it onto the listView.
  * The items in the list view can then be clicked on to go to an Article Activity.
  */
-public class RssActivity  extends ListActivity {
+public class RssActivity  extends BaseActivity {
 
     private static final String TAG = "unit5ActivityRSS";
 
@@ -36,37 +36,39 @@ public class RssActivity  extends ListActivity {
         setContentView(R.layout.rss_layout);
         Utils.setCurrentView(Utils.VIEW_ARTICLE_LIST);
 
+        ListView list = (ListView) findViewById(android.R.id.list);
+
         if(!MainActivity.mainCalendar.newsStartedLoading()) {
             if(Utils.isInternetConnected(getApplicationContext())) {
-                adapter = new ArrayAdapter<>(getListView().getContext(), android.R.layout.simple_list_item_1, loading);
+                adapter = new ArrayAdapter<>(list.getContext(), android.R.layout.simple_list_item_1, loading);
                 adapter.notifyDataSetChanged();
-                getListView().setAdapter(adapter);
+                list.setAdapter(adapter);
 
                 MainActivity.mainCalendar.loadNews();
                 Log.d("starting set of news!", "starting set of news!");
-                adapter = new ArrayAdapter<>(getListView().getContext(), android.R.layout.simple_list_item_1, MainActivity.mainCalendar.getNewsTask().getNewsArticleTitlesForList());
+                adapter = new ArrayAdapter<>(list.getContext(), android.R.layout.simple_list_item_1, MainActivity.mainCalendar.getNewsTask().getNewsArticleTitlesForList());
                 adapter.notifyDataSetChanged();
-                getListView().setAdapter(adapter);
+                list.setAdapter(adapter);
             } else {
                 String [] no_internet = {"<b>Unable to Load News</b>, User is <b>not conected to the internet</b>.",
                         "Please <b>retry</b> once you are <b>reconnected to the internet</b>."};
                 for(int i = 0; i < no_internet.length; i++) {
                     no_internet[i] = Html.fromHtml(no_internet[i]).toString();
                 }
-                adapter = new ArrayAdapter<>(getListView().getContext(), android.R.layout.simple_list_item_1, no_internet);
+                adapter = new ArrayAdapter<>(list.getContext(), android.R.layout.simple_list_item_1, no_internet);
                 adapter.notifyDataSetChanged();
-                getListView().setAdapter(adapter);
+                list.setAdapter(adapter);
             }
         } else {
-            adapter = new ArrayAdapter<>(getListView().getContext(), android.R.layout.simple_list_item_1, MainActivity.mainCalendar.getNewsTask().getNewsArticleTitlesForList());
+            adapter = new ArrayAdapter<>(list.getContext(), android.R.layout.simple_list_item_1, MainActivity.mainCalendar.getNewsTask().getNewsArticleTitlesForList());
             adapter.notifyDataSetChanged();
-            getListView().setAdapter(adapter);
+            list.setAdapter(adapter);
         }
 
         /**
          * what to do for each click on an item in the listview.
          */
-        getListView().setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 if (!MainActivity.mainCalendar.newsLoaded()) {

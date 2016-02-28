@@ -3,9 +3,6 @@ package com.unit5app.activities;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
@@ -26,7 +23,7 @@ import java.util.List;
  * Class to handle the activity the User sees upon opening the App to its main page.
  * @version 2/21/16
  */
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends BaseActivity {
     private static String TAG = "MainActivity";
 
     /*
@@ -51,6 +48,8 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+
         //set content view to a loading screen first, Then once everything is loaded we would setContentView to the home screen?
         Utils.setCurrentView(Utils.VIEW_LOADING);
         /*Check if we have internet access*/
@@ -62,13 +61,9 @@ public class MainActivity extends AppCompatActivity {
         newsReaders = new RSSReader[] {westNews, unit5News};
         mainCalendar.loadNews(newsReaders);
 
-
         /* Load object placement as defined in Resources file */
         setContentView(R.layout.activity_main);
         Utils.setCurrentView(Utils.VIEW_MAIN);
-
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
 
         /* Load the buttons by how they're defined in Resources file */
         testpdf = (Button) findViewById(R.id.btn_testPdf);
@@ -126,14 +121,6 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(new Intent(MainActivity.this, RssActivity.class));
             }
         });
-    }
-
-    /* Button to take you to settings panel. */
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_main, menu);
-        return true;
     }
 
     /* Function to handle when you click something in the action bar */

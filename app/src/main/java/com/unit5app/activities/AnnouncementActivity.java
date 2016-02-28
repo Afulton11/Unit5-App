@@ -1,6 +1,5 @@
 package com.unit5app.activities;
 
-import android.app.Activity;
 import android.os.Bundle;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
@@ -13,7 +12,7 @@ import com.unit5app.utils.Utils;
  *
  * If we want to parse the pdf instead of load it through a webView we can use this source: <a href="http://www.ehow.com/how_6582916_read-pdf-file-java.html">source</a>
  */
-public class AnnouncementActivity extends Activity {
+public class AnnouncementActivity extends BaseActivity {
 
     private String pdfUrl = "http://www.unit5.org/cms/lib03/IL01905100/Centricity/Domain/55/2016%20Feb%20Sr%20High%20Lunch.pdf"; //changed to the lunch menu because I want to know what is for lunch before lunch
     private WebView pdfView;

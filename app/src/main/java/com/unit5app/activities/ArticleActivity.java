@@ -1,6 +1,5 @@
 package com.unit5app.activities;
 
-import android.app.Activity;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -23,7 +22,7 @@ import java.net.URL;
  * Created by Andrew on 2/11/2016.
  * The Activity class used to show an Article to the user.
  */
-public class ArticleActivity extends Activity {
+public class ArticleActivity extends BaseActivity {
 
     private static final String TAG = "ArticleActivity";
 

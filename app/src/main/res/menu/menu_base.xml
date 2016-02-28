@@ -7,4 +7,9 @@
         android:orderInCategory="100"
         android:title="@string/action_settings"
         app:showAsAction="never" />
+
+    <item
+        android:id="@+id/reminder_settings"
+        android:orderInCategory="10"
+        android:title="Reminders" />
 </menu>

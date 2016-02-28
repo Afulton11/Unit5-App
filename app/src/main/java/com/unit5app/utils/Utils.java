@@ -6,6 +6,11 @@ import android.net.NetworkInfo;
 import android.util.Log;
 
 import com.unit5app.Article;
+import com.unit5app.activities.AnnouncementActivity;
+import com.unit5app.activities.ArticleActivity;
+import com.unit5app.activities.MainActivity;
+import com.unit5app.activities.RssActivity;
+import com.unit5app.activities.UpcomingEventsActivity;
 import com.unit5app.calendars.CalendarEvent;
 import com.unit5app.calendars.EventType;
 
@@ -222,6 +227,25 @@ public abstract class Utils {
         synchronized (monitor) {
             monitorState = false;
             monitor.notify(); // unlock again
+        }
+    }
+
+    public static Class getCurrentActivityClass() {
+        switch(current_view) {
+            case VIEW_LOADING:
+                return MainActivity.class;
+            case VIEW_MAIN:
+                return MainActivity.class;
+            case VIEW_ANNOUNCEMENTS:
+                return AnnouncementActivity.class;
+            case VIEW_ARTICLE:
+                return ArticleActivity.class;
+            case VIEW_ARTICLE_LIST:
+                return RssActivity.class;
+            case VIEW_UPCOMING_EVENTS:
+                return UpcomingEventsActivity.class;
+            default:
+                return MainActivity.class;
         }
     }
 }
