@@ -28,7 +28,9 @@ public class RssActivity  extends BaseActivity {
     private WestNewsReader westNews;
 
     private String[] loading = {"loading..."};
-    private ArrayAdapter<String> adapter;
+    
+    private static ArrayAdapter<String> adapter;
+    private static ListView list;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,33 +38,37 @@ public class RssActivity  extends BaseActivity {
         setContentView(R.layout.rss_layout);
         Utils.setCurrentView(Utils.VIEW_ARTICLE_LIST);
 
-        ListView list = (ListView) findViewById(android.R.id.list);
+        list = (ListView) findViewById(android.R.id.list);
 
-        if(!MainActivity.mainCalendar.newsStartedLoading()) {
-            if(Utils.isInternetConnected(getApplicationContext())) {
-                adapter = new ArrayAdapter<>(list.getContext(), android.R.layout.simple_list_item_1, loading);
-                adapter.notifyDataSetChanged();
-                list.setAdapter(adapter);
+        if(!MainActivity.mainCalendar.newsLoaded()) {
+            if(!MainActivity.mainCalendar.newsStartedLoading()) {
+                if (Utils.isInternetConnected(getApplicationContext())) {
+                    Runnable listRunnable = new Runnable() {
+                        @Override
+                        public void run() {
+                            Log.d(TAG, "list view post runnable is running.");
+                            setListViewLoading();
 
-                MainActivity.mainCalendar.loadNews();
-                Log.d("starting set of news!", "starting set of news!");
-                adapter = new ArrayAdapter<>(list.getContext(), android.R.layout.simple_list_item_1, MainActivity.mainCalendar.getNewsTask().getNewsArticleTitlesForList());
-                adapter.notifyDataSetChanged();
-                list.setAdapter(adapter);
-            } else {
-                String [] no_internet = {"<b>Unable to Load News</b>, User is <b>not conected to the internet</b>.",
-                        "Please <b>retry</b> once you are <b>reconnected to the internet</b>."};
-                for(int i = 0; i < no_internet.length; i++) {
-                    no_internet[i] = Html.fromHtml(no_internet[i]).toString();
+                            MainActivity.mainCalendar.loadNews();
+                            Log.d("starting set of news!", "starting set of news!");
+                        }
+                    };
+                    list.post(listRunnable);
+                } else {
+                    String[] no_internet = {"<b>Unable to Load News</b>, User is <b>not conected to the internet</b>.",
+                            "Please <b>retry</b> once you are <b>reconnected to the internet</b>."};
+                    for (int i = 0; i < no_internet.length; i++) {
+                        no_internet[i] = Html.fromHtml(no_internet[i]).toString();
+                    }
+                    adapter = new ArrayAdapter<>(list.getContext(), android.R.layout.simple_list_item_1, no_internet);
+                    adapter.notifyDataSetChanged();
+                    list.setAdapter(adapter);
                 }
-                adapter = new ArrayAdapter<>(list.getContext(), android.R.layout.simple_list_item_1, no_internet);
-                adapter.notifyDataSetChanged();
-                list.setAdapter(adapter);
+            } else {
+
             }
         } else {
-            adapter = new ArrayAdapter<>(list.getContext(), android.R.layout.simple_list_item_1, MainActivity.mainCalendar.getNewsTask().getNewsArticleTitlesForList());
-            adapter.notifyDataSetChanged();
-            list.setAdapter(adapter);
+            setListToNewsArticles();
         }
 
         /**
@@ -83,5 +89,19 @@ public class RssActivity  extends BaseActivity {
                 }
             }
         });
+    }
+
+    public void setListViewLoading() {
+        list.setAdapter(null);
+        adapter = new ArrayAdapter<>(list.getContext(), android.R.layout.simple_list_item_1, loading);
+        adapter.notifyDataSetChanged();
+        list.setAdapter(adapter);
+    }
+
+    public static void setListToNewsArticles() {
+        list.setAdapter(null);
+        adapter = new ArrayAdapter<>(list.getContext(), android.R.layout.simple_list_item_1, MainActivity.mainCalendar.getNewsTask().getNewsArticleTitlesForList());
+        adapter.notifyDataSetChanged();
+        list.setAdapter(adapter);
     }
 }

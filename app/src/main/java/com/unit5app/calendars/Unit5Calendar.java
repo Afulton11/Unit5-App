@@ -1,8 +1,5 @@
 package com.unit5app.calendars;
 
-import android.os.AsyncTask;
-
-import com.unit5app.activities.MainActivity;
 import com.unit5app.com.unit5app.parsers.RSSReader;
 import com.unit5app.tasks.ReadAllFeedTask;
 import com.unit5app.tasks.ReadCalendarTask;
@@ -76,11 +73,10 @@ public class Unit5Calendar {
                     if(rssReaders.length > 0) {
                         newsTask.setReaders(rssReaders);
                         newsTask.execute();
-                        Utils.waitForMonitorState();
                     }
                 }
             }
-        });
+        }).start();
     }
 
     /**
@@ -106,7 +102,7 @@ public class Unit5Calendar {
                         }
                     }
                 }
-            });
+            }).start();
         }
     }
 

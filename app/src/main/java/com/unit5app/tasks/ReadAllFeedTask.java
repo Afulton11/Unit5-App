@@ -8,6 +8,7 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import com.unit5app.Article;
+import com.unit5app.activities.RssActivity;
 import com.unit5app.com.unit5app.parsers.CalendarRssReader;
 import com.unit5app.com.unit5app.parsers.RSSReader;
 import com.unit5app.com.unit5app.parsers.WestNewsReader;
@@ -49,16 +50,12 @@ public class ReadAllFeedTask extends AsyncTask<Void, Void, Void> {
     @Override
     protected void onPostExecute(Void aVoid) {
         super.onPostExecute(aVoid);
-        if(list != null) {
+        if(Utils.current_view == Utils.VIEW_ARTICLE_LIST) {
             all_titles.clear();
             for (Article a : articles) {
                 all_titles.add(Utils.toTitleCase(Html.fromHtml(a.getTitle()).toString()));
             }
-            list.setAdapter(null);
-            ArrayAdapter<String> adapterLoaded;
-            adapterLoaded = new ArrayAdapter<>(list.getContext(), android.R.layout.simple_list_item_1, all_titles);
-            adapterLoaded.notifyDataSetChanged();
-            list.setAdapter(adapterLoaded);
+            RssActivity.setListToNewsArticles();
             Toast.makeText(list.getContext(), "Done loading!", Toast.LENGTH_SHORT);
         }
     }

@@ -24,6 +24,7 @@ import java.util.List;
  * @version 2/21/16
  */
 public class MainActivity extends BaseActivity {
+
     private static String TAG = "MainActivity";
 
     /*
