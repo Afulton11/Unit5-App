@@ -1,5 +1,7 @@
 package com.unit5app.calendars;
 
+import android.util.Log;
+
 import com.unit5app.com.unit5app.parsers.RSSReader;
 import com.unit5app.tasks.ReadAllFeedTask;
 import com.unit5app.tasks.ReadCalendarTask;
@@ -64,6 +66,7 @@ public class Unit5Calendar {
      */
     public void loadNews(RSSReader... readers) {
         final RSSReader[] rssReaders = readers;
+        Log.d("Calendar", readers.toString());
         startedLoadingNews = true;
         newsTask = new ReadAllFeedTask();
         new Thread(new Runnable() {
