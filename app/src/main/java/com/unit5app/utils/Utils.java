@@ -1,6 +1,9 @@
 package com.unit5app.utils;
 
+import android.app.AlarmManager;
+import android.app.PendingIntent;
 import android.content.Context;
+import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.util.Log;
@@ -13,7 +16,11 @@ import com.unit5app.activities.RssActivity;
 import com.unit5app.activities.UpcomingEventsActivity;
 import com.unit5app.calendars.CalendarEvent;
 import com.unit5app.calendars.EventType;
+import com.unit5app.notifications.NotificationReceiver;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Comparator;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -247,5 +254,29 @@ public abstract class Utils {
             default:
                 return MainActivity.class;
         }
+    }
+
+    /**
+     * creates a new notification that will go off at the time of the event. : tested and worked even when the app was closed by the user.
+     * @param context - context of the Activity to go to when clicking the notification, preferrably the mainActivity.
+     * @param event - a CalendarEvent to notify the person of.
+     */
+    public static void createNotification(Context context, CalendarEvent event) {
+        Intent notificationIntent = new Intent(context, NotificationReceiver.class);
+        notificationIntent.putExtra("title", event.getType().toString());
+        notificationIntent.putExtra("message", event.getTitle());
+        notificationIntent.putExtra("sub", event.getTimeOccurring());
+
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(context, 0, notificationIntent, 0);
+        AlarmManager alarm = (AlarmManager)context.getSystemService(Context.ALARM_SERVICE);
+
+        SimpleDateFormat sdf = new SimpleDateFormat(Time.FORMAT_DATE_TIME_12HOUR);
+        Calendar c = Calendar.getInstance();
+        try {
+            c.setTime(sdf.parse(event.getDate() + " "+ event.getTimeOccurring()));
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        alarm.set(AlarmManager.RTC_WAKEUP, c.getTimeInMillis(), pendingIntent);
     }
 }

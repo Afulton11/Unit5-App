@@ -20,7 +20,7 @@ import java.util.Date;
  */
 public abstract class Time {
 
-    public static final String FORMAT_BASIC_DATE = "MM/dd/yy";
+    public static final String FORMAT_BASIC_DATE = "MM/dd/yy", FORMAT_DATE_TIMEMILLIS = "MM/dd/yy S", FORMAT_DATE_TIME_12HOUR = "MM/dd/yy hh:mm a";
 
     /**
      * Gets the current time based on a given format. ex: 13:05 or 01:05 PM.
@@ -204,7 +204,5 @@ public abstract class Time {
      */
     public static boolean isWeekend() {
         return (getDOTW(new Date()).matches("Sat|Sun"));
-        /*(Andrew) the | operation is like saying or in the middle of the string. the | represents a bitwise inclusive OR statement. However
-        it doesn't short-circuit like a normal || OR statement. You can switch it back to the regular || if you would like.*/
     }
 }

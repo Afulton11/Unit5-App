@@ -79,7 +79,9 @@ public class CalendarEvent {
 
     public String getDate() { return  date; }
     public String getTitle() { return  title; }
-    public String getTimeOccurring() {return timeOccurring; }
+    public String getTimeOccurring() {
+        return timeOccurring;
+    }
     public EventType getType() { return type; }
 
     /**

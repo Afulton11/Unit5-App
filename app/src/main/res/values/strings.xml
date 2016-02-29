@@ -1,8 +1,8 @@
 <resources>
     <string name="app_name">Unit5 App</string>
     <string name="action_settings">Settings</string>
-    <string name="Article">Article Activity</string>
-    <string name="RSSActivity">Title List</string>
+    <string name="Article">Article Viewer</string>
+    <string name="RSSActivity">News Titles</string>
     <string name="AnnouncementActivity">Announcements</string>
     <string name="UpcomingEventsActivity">Upcoming Events</string>
     <string name="title_activity_base">BaseActivity</string>
@@ -15,6 +15,4 @@
 
     <!-- Accessibility description for navigation mDrawerLayout -->
     <string name="navdrawer_description_a11y">Navigation Drawer used to switch between major features of the application</string>
-    <string name="title_activity_deleteme">deleteme</string>
-    <string name="title_activity_2">Activity2</string>
 </resources>

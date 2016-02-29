@@ -44,12 +44,9 @@ public class MainActivity extends BaseActivity {
     /* Text displayed on the screen */
     private TextView endOfHourTime;
 
-    // private RSSReader rssCalendarReader; /* Unnecessary b/c Calendar Reader is its own thing?
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
 
         //set content view to a loading screen first, Then once everything is loaded we would setContentView to the home screen?
         Utils.setCurrentView(Utils.VIEW_LOADING);
