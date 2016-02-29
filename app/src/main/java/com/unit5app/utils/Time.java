@@ -9,6 +9,7 @@ import com.unit5app.calendars.EventType;
 
 import java.text.DateFormat;
 import java.text.ParseException;
+import java.text.ParsePosition;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -147,6 +148,16 @@ public abstract class Time {
 
         Log.d("time", "Date returned: " + months + "/" + days + "/" + years);
         return months + "/" + days + "/" + years;
+    }
+
+    /**
+     * returns a java.util.Date from a string of a date with a given format
+     * @param stringDate - date as a string
+     * @param format - format of the string
+     * @return java.util.Date
+     */
+    public static Date getDateFromString(String stringDate, String format) {
+        return new SimpleDateFormat(format).parse(stringDate, new ParsePosition(0));
     }
 
     /**

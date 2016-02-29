@@ -50,7 +50,7 @@ public class BaseActivity extends AppCompatActivity  implements NavigationView.O
                 break;
 
             case R.id.action_settings:
-                createBackStack(new Intent(this, MainActivity.class));
+                createBackStack(new Intent(this, RssActivity.class));
                 break;
         }
 
