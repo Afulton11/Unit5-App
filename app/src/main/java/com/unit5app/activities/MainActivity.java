@@ -84,8 +84,6 @@ public class MainActivity extends BaseActivity {
             toast.show();
         }
 
-//        System.out.println(PDFManager.collectAndParsePdf("http://www.unit5.org/cms/lib03/IL01905100/Centricity/Domain/55/2016%20Feb%20Sr%20High%20Lunch.pdf"));
-
         /* Define button click actions. */
         /* For testing the calendar: */
         testCalendarReading.setOnClickListener(new View.OnClickListener() {
