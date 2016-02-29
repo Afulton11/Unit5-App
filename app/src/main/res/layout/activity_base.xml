@@ -16,7 +16,7 @@
             android:layout_width="match_parent"
             android:layout_height="?actionBarSize"
             android:background="@color/colorPrimary"
-            app:theme="@style/MainActionBar"
+            android:theme="@style/MainActionBar"
             />
         <FrameLayout
             android:id="@+id/activity_content"

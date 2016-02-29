@@ -1,5 +1,7 @@
 package com.unit5app.calendars;
 
+import android.os.AsyncTask;
+
 import com.unit5app.activities.MainActivity;
 import com.unit5app.com.unit5app.parsers.RSSReader;
 import com.unit5app.tasks.ReadAllFeedTask;
@@ -64,14 +66,21 @@ public class Unit5Calendar {
      * @param readers the RssReaders used to load the news from the school websites.
      */
     public void loadNews(RSSReader... readers) {
-        if(Utils.hadInternetOnLastCheck && !startedLoadingNews) {
-            startedLoadingNews = true;
-            newsTask = new ReadAllFeedTask();
-            if(readers.length == 0) readers = MainActivity.newsReaders;
-            newsTask.setReaders(readers);
-            newsTask.execute();
-            Utils.waitForMonitorState();
-        }
+        final RSSReader[] rssReaders = readers;
+        startedLoadingNews = true;
+        newsTask = new ReadAllFeedTask();
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                if(Utils.hadInternetOnLastCheck && !startedLoadingNews) {
+                    if(rssReaders.length > 0) {
+                        newsTask.setReaders(rssReaders);
+                        newsTask.execute();
+                        Utils.waitForMonitorState();
+                    }
+                }
+            }
+        });
     }
 
     /**
@@ -81,18 +90,23 @@ public class Unit5Calendar {
         if(!startedLoadingCalendar) {
             startedLoadingCalendar = true;
             calendarEvents = new ArrayList<>();
-            ReadCalendarTask calendarTask = new ReadCalendarTask(CALENDAR_URL);
-            calendarTask.execute();
-            if (!calendarTask.isLoaded()) Utils.waitForMonitorState();
-            for (CalendarEvent event : calendarTask.getCalendarEvents()) {
-                calendarEvents.add(event);
-            }
-            sortCalendarEvents();
-            for(CalendarDate date : dates) {
-                for(CalendarEvent event : calendarEvents) {
-                    if(event.getDate().equals(date.getDate())) date.addEvent(event);
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    ReadCalendarTask calendarTask = new ReadCalendarTask(CALENDAR_URL);
+                    calendarTask.execute();
+                    if (!calendarTask.isLoaded()) Utils.waitForMonitorState();
+                    for (CalendarEvent event : calendarTask.getCalendarEvents()) {
+                        calendarEvents.add(event);
+                    }
+                    sortCalendarEvents();
+                    for(CalendarDate date : dates) {
+                        for(CalendarEvent event : calendarEvents) {
+                            if(event.getDate().equals(date.getDate())) date.addEvent(event);
+                        }
+                    }
                 }
-            }
+            });
         }
     }
 
