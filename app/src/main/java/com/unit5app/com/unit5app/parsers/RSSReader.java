@@ -131,7 +131,6 @@ public class RSSReader {
             if(parser.getEventType() != XmlPullParser.START_TAG) continue;
 
             String name = parser.getName();
-            Log.d(TAG, name);
             switch(name) {
                 case "title":
                     currentArticle.setTitle(readText(parser));

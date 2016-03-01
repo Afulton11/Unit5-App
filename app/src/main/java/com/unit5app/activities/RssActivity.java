@@ -40,6 +40,8 @@ public class RssActivity  extends BaseActivity {
 
         list = (ListView) findViewById(android.R.id.list);
 
+        MainActivity.mainCalendar.getNewsTask().setList(list);
+
         if(!MainActivity.mainCalendar.newsLoaded()) {
             if(!MainActivity.mainCalendar.newsStartedLoading()) {
                 if (Utils.isInternetConnected(getApplicationContext())) {
@@ -65,7 +67,7 @@ public class RssActivity  extends BaseActivity {
                     list.setAdapter(adapter);
                 }
             } else {
-
+                setListViewLoading();
             }
         } else {
             setListToNewsArticles();
