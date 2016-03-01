@@ -1,7 +1,5 @@
 package com.unit5app.calendars;
 
-import android.util.Log;
-
 import com.unit5app.com.unit5app.parsers.RSSReader;
 import com.unit5app.tasks.ReadAllFeedTask;
 import com.unit5app.tasks.ReadCalendarTask;
@@ -22,6 +20,7 @@ public class Unit5Calendar {
     public static final CalendarEvent[] NO_CALENDAR_EVENTS = {};
     private static final String CALENDAR_URL = "http://www.unit5.org/site/RSS.aspx?DomainID=4&ModuleInstanceID=1&PageID=2";
 
+    private RSSReader[] rssReaders;
     private ReadAllFeedTask newsTask;
 
     private List<CalendarEvent> calendarEvents;
@@ -62,24 +61,31 @@ public class Unit5Calendar {
 
     /**
      * loads the news if there was internet on the last time we checked for internet.
-     * @param readers the RssReaders used to load the news from the school websites.
+     * <br><b>Make Sure to always setNewsRssReaders() in the calendar before calling loadNews()!</b></br>
      */
-    public void loadNews(RSSReader... readers) {
-        final RSSReader[] rssReaders = readers;
-        Log.d("Calendar", readers.toString());
-        startedLoadingNews = true;
-        newsTask = new ReadAllFeedTask();
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                if(Utils.hadInternetOnLastCheck && !startedLoadingNews) {
-                    if(rssReaders.length > 0) {
-                        newsTask.setReaders(rssReaders);
-                        newsTask.execute();
+    public void loadNews() {
+        if(rssReaders != null) {
+            startedLoadingNews = true;
+            newsTask = new ReadAllFeedTask();
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    if (Utils.hadInternetOnLastCheck /*&& !startedLoadingNews*/) {
+                        if (rssReaders.length > 0) {
+                            newsTask.setReaders(rssReaders);
+                            newsTask.execute();
+                        }
                     }
                 }
-            }
-        }).start();
+            }).start();
+        }
+    }
+
+    /**
+     * @param readers the RssReaders used to load the news from the school websites.
+     */
+    public void setNewsRssReaders(RSSReader...readers) {
+        rssReaders = readers;
     }
 
     /**

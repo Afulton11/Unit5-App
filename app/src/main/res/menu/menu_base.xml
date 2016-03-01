@@ -12,4 +12,14 @@
         android:id="@+id/reminder_settings"
         android:orderInCategory="10"
         android:title="Reminders" />
+
+    <item
+        android:id="@+id/home_navigation"
+        android:orderInCategory="0"
+        android:title="Home" />
+
+    <item
+        android:id="@+id/news_navigation"
+        android:orderInCategory="1"
+        android:title="News" />
 </menu>

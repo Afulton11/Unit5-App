@@ -44,9 +44,14 @@ public class BaseActivity extends AppCompatActivity  implements NavigationView.O
         int id = item.getItemId();
 
         switch (id) {
+            case R.id.home_navigation:
+                createBackStack(new Intent(this, MainActivity.class));
+                break;
+            case R.id.news_navigation:
+                createBackStack(new Intent(this, RssActivity.class));
+                break;
             case R.id.reminder_settings:
-//                createBackStack(new Intent(this, MainActivity.class));
-                setContentView(R.layout.notifications_layout);
+                createBackStack(new Intent(this, MainActivity.class));
                 break;
 
             case R.id.action_settings:

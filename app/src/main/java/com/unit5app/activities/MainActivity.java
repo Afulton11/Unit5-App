@@ -36,7 +36,6 @@ public class MainActivity extends BaseActivity {
     public  static List<String> all_descriptions = new ArrayList<>();
 
     public static Unit5Calendar mainCalendar;
-    public static RSSReader[] newsReaders;
 
     /* Buttons to be pressed */
     private Button testpdf, testWestNews, testCalendarReading;
@@ -56,8 +55,8 @@ public class MainActivity extends BaseActivity {
         mainCalendar = new Unit5Calendar(60);
         WestNewsReader westNews = new WestNewsReader("http://www.unit5.org/site/RSS.aspx?DomainID=30&ModuleInstanceID=1852&PageID=53");
         RSSReader unit5News = new RSSReader("http://www.unit5.org/site/RSS.aspx?DomainID=4&ModuleInstanceID=4&PageID=1");
-        newsReaders = new RSSReader[] {westNews, unit5News};
-        mainCalendar.loadNews(newsReaders);
+        mainCalendar.setNewsRssReaders(westNews, unit5News);
+        mainCalendar.loadNews();
 
         /* Load object placement as defined in Resources file */
         setContentView(R.layout.activity_main);
