@@ -14,7 +14,7 @@ import com.unit5app.utils.Utils;
  */
 public class AnnouncementActivity extends BaseActivity {
 
-    private String pdfUrl = "http://www.unit5.org/cms/lib03/IL01905100/Centricity/Domain/55/2016%20Feb%20Sr%20High%20Lunch.pdf"; //changed to the lunch menu because I want to know what is for lunch before lunch
+    private String pdfUrl = "http://www.unit5.org/cms/lib03/IL01905100/Centricity/Domain/55/2016%20Mar%20Sr%20High%20Lunch.pdf"; //changed to the lunch menu because I want to know what is for lunch before lunch
     private WebView pdfView;
 
     @Override
