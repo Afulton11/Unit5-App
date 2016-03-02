@@ -46,17 +46,21 @@ public class MainActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Utils.setCurrentView(Utils.VIEW_LOADING); //TODO: make setContentView(R.layout.view_loading) not get rid of the major details gained from the base activity such as the title for when setting the content view again.
 
         //set content view to a loading screen first, Then once everything is loaded we would setContentView to the home screen?
-        Utils.setCurrentView(Utils.VIEW_LOADING);
-        /*Check if we have internet access*/
-        Utils.isInternetConnected(getApplicationContext());
+         /*Check if we have internet access*/
+       Utils.isInternetConnected(getApplicationContext());
+        if(savedInstanceState == null) {
         /* TODO: Launch internal calendar builder to get latest info on events, etc... */
-        mainCalendar = new Unit5Calendar(60);
-        WestNewsReader westNews = new WestNewsReader("http://www.unit5.org/site/RSS.aspx?DomainID=30&ModuleInstanceID=1852&PageID=53");
-        RSSReader unit5News = new RSSReader("http://www.unit5.org/site/RSS.aspx?DomainID=4&ModuleInstanceID=4&PageID=1");
-        mainCalendar.setNewsRssReaders(westNews, unit5News);
-        mainCalendar.loadNews();
+            if(mainCalendar == null && Utils.hadInternetOnLastCheck) {
+                mainCalendar = new Unit5Calendar(60);
+                WestNewsReader westNews = new WestNewsReader("http://www.unit5.org/site/RSS.aspx?DomainID=30&ModuleInstanceID=1852&PageID=53");
+                RSSReader unit5News = new RSSReader("http://www.unit5.org/site/RSS.aspx?DomainID=4&ModuleInstanceID=4&PageID=1");
+                mainCalendar.setNewsRssReaders(westNews, unit5News);
+                mainCalendar.loadNews();
+            }
+        }
 
         /* Load object placement as defined in Resources file */
         setContentView(R.layout.activity_main);
@@ -116,6 +120,7 @@ public class MainActivity extends BaseActivity {
                 startActivity(new Intent(MainActivity.this, RssActivity.class));
             }
         });
+
     }
 
     /* Function to handle when you click something in the action bar */

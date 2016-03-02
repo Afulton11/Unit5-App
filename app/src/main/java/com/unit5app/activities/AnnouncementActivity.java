@@ -25,10 +25,11 @@ public class AnnouncementActivity extends BaseActivity {
 
         pdfView = (WebView) findViewById(R.id.announcements);
 
-        pdfView.getSettings().setJavaScriptEnabled(true);
-        pdfView.setWebViewClient(new Callback());
-        pdfView.loadUrl("http://docs.google.com/gview?embedded=true&url=" + pdfUrl);
-
+        if(Utils.isInternetConnected(this)) {
+            pdfView.getSettings().setJavaScriptEnabled(true);
+            pdfView.setWebViewClient(new Callback());
+            pdfView.loadUrl("http://docs.google.com/gview?embedded=true&url=" + pdfUrl);
+        }
     }
 
     public void setPdfUrl(String pdfUrl) { this.pdfUrl = pdfUrl; }

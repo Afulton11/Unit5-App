@@ -32,6 +32,8 @@ public class RssActivity  extends BaseActivity {
     private static ArrayAdapter<String> adapter;
     private static ListView list;
 
+    private static String[] titleList;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -41,8 +43,11 @@ public class RssActivity  extends BaseActivity {
         list = (ListView) findViewById(android.R.id.list);
 
         MainActivity.mainCalendar.getNewsTask().setList(list);
-
-        if(!MainActivity.mainCalendar.newsLoaded()) {
+        if(savedInstanceState != null) {
+            adapter = new ArrayAdapter<>(list.getContext(), android.R.layout.simple_list_item_1, titleList);
+            adapter.notifyDataSetChanged();
+            list.setAdapter(adapter);
+        } else if(!MainActivity.mainCalendar.newsLoaded()) {
             if(!MainActivity.mainCalendar.newsStartedLoading()) {
                 if (Utils.isInternetConnected(getApplicationContext())) {
                     Runnable listRunnable = new Runnable() {
@@ -93,6 +98,12 @@ public class RssActivity  extends BaseActivity {
         });
     }
 
+    @Override
+    public void onSaveInstanceState(Bundle savedInstanceState) {
+        savedInstanceState.putStringArray("key", titleList);
+        super.onSaveInstanceState(savedInstanceState);
+    }
+
     public void setListViewLoading() {
         list.setAdapter(null);
         adapter = new ArrayAdapter<>(list.getContext(), android.R.layout.simple_list_item_1, loading);
@@ -101,9 +112,11 @@ public class RssActivity  extends BaseActivity {
     }
 
     public static void setListToNewsArticles() {
+        String[] article_titles = MainActivity.mainCalendar.getNewsTask().getNewsArticleTitlesForList();
         list.setAdapter(null);
-        adapter = new ArrayAdapter<>(list.getContext(), android.R.layout.simple_list_item_1, MainActivity.mainCalendar.getNewsTask().getNewsArticleTitlesForList());
+        adapter = new ArrayAdapter<>(list.getContext(), android.R.layout.simple_list_item_1, article_titles);
         adapter.notifyDataSetChanged();
         list.setAdapter(adapter);
+        titleList = article_titles;
     }
 }

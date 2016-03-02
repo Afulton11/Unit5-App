@@ -11,7 +11,7 @@ import java.util.Collections;
 import java.util.List;
 
 
-public class Unit5Calendar {
+public class Unit5Calendar{
 
     /*
     TODO: add the day's lunch to every date.
@@ -28,6 +28,7 @@ public class Unit5Calendar {
 
     /*TODO: inform each calendar date of everything else besides calendar events.*/
     private CalendarDate[] dates;
+
 
     /**
      * creates a new Calendar from the Main calendar url: <a href="{@value #CALENDAR_URL}">See Calendar Url</a>
@@ -70,7 +71,7 @@ public class Unit5Calendar {
             new Thread(new Runnable() {
                 @Override
                 public void run() {
-                    if (Utils.hadInternetOnLastCheck /*&& !startedLoadingNews*/) {
+                    if (Utils.hadInternetOnLastCheck) {
                         if (rssReaders.length > 0) {
                             newsTask.setReaders(rssReaders);
                             newsTask.execute();
@@ -172,5 +173,6 @@ public class Unit5Calendar {
     public boolean hasCalendarStartedLoading() {
         return startedLoadingCalendar;
     }
+
 
 }

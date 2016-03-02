@@ -1,5 +1,7 @@
 package com.unit5app;
 
+import android.os.Parcel;
+import android.os.Parcelable;
 import android.util.Log;
 
 import java.text.ParseException;
@@ -13,7 +15,7 @@ import java.util.TimeZone;
  * @author Andrew
  * @version 2/22/16
  */
-public class Article {
+public class Article implements Parcelable{
 
     private String title, description, pubDate, link;
 
@@ -131,4 +133,33 @@ public class Article {
     public boolean hasPubDate() {
         return (pubDate != null && !pubDate.equals(""));
     }
+
+
+    /*
+    CODE BELOW IS FOR SAVED INSTANCE STATES IN THE TITLE LIST ACTIVITY!
+     */
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(title);
+        dest.writeString("%-%-%" + description);
+        if (this.hasPubDate()) dest.writeString("%-%-%" + pubDate);
+    }
+
+    public static final Parcelable.Creator<Article> CREATOR = new Parcelable.Creator<Article>() {
+        public Article createFromParcel(Parcel in) {
+            String[] parcelArray = in.createStringArray();
+            String pubDate = (parcelArray.length > 1) ? parcelArray[2] : null;
+            return new Article(parcelArray[0], parcelArray[1], pubDate);
+        }
+
+        public Article[] newArray(int size) {
+            return new Article[size];
+        }
+    };
 }
