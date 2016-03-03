@@ -77,13 +77,28 @@ public class WestNewsReader extends RSSReader{
                 StringBuilder buffer_body = new StringBuilder();
                 for (Element e : element_paragraphs) {
                     StringBuilder e_string = new StringBuilder(e.toString());
-                    if(e.toString().startsWith("<a href=\"/")) {
+                    Log.d(TAG, "element Paragrpah: " + e.toString());
+                    if(e.toString().contains("<a href=\"/")) {
+                        int replaceIndex = e_string.indexOf("<a href=\"/");
                         Log.d(TAG, "Replacing a link!");
                         Log.d(TAG, e.toString());
-                        int replaceIndex = e_string.indexOf("<a href=\"/");
-                        e_string.replace(replaceIndex, replaceIndex + 1, "http://www.unit5.org/"); //TODO: make this properly add the www.unit5.org to the front of a link if the link starts with something like /cms/../...
+//http://www.unit5.org/
+                        e_string.replace(replaceIndex, replaceIndex + 9, "<a href=\"http://www.unit5.org/"); //TODO: make this properly add the www.unit5.org to the front of a link if the link starts with something like /cms/../...
+
+                        int endArrow = e.toString().indexOf('>', replaceIndex + 9);
+                        String linkOnly = e_string.substring(replaceIndex + 9, endArrow);
+                        if(linkOnly.contains(" ")) {
+                            int space;
+//                            while((space = linkOnly.indexOf(" ")) >= 0) {
+//                                e_string.replace(space + replaceIndex + 9, replaceIndex + 9 + space + 1, "%20");
+//                            }
+                        }
+
+                        e_string.replace(endArrow, endArrow + 1, "");
+
                         Log.d(TAG, "Replaced a link!");
                     }
+                    Log.d(TAG, "element Paragraph link replaced: " + e_string.toString());
 
                     buffer_body.append(e_string.toString());
                 }
