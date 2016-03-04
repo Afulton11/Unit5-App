@@ -22,7 +22,9 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -67,6 +69,59 @@ public abstract class Utils {
         if (index < 0) throw new IndexOutOfBoundsException(); /* If 'needle' is not found it WILL
                                                                  crash. */
         return index;
+    }
+
+    /**
+     * Gets the number of occurrences of a char in a string
+     * @param str - the string to search for the needle.
+     * @param needle - the char to search for within 'str'
+     * @return number of times the needle was found in the string --> 0, 1, 2, 3..
+     */
+    public static int getNumOccurrencesInString(String str, char needle) {
+        int count = 0;
+        for(int i = 0; i < str.toCharArray().length; i++) {
+            if(str.toCharArray()[i] == needle) count++;
+        }
+        return count;
+    }
+
+    /**
+     * Gets the number of occurrences of a char in a string
+     * @param str - the string to search for the needle.
+     * @param needle - the string to search for within 'str'
+     * @return number of times the needle was found in the string and the index of each occurence. Returns as a Map(occurence, index in str).
+     */
+    public static Map<Integer, Integer> getOccurrencesWithIndexInString(String str, String needle) {
+        Map<Integer, Integer> map_occurrences = new HashMap<>();
+        int occurrences = 0;
+        Pattern p = Pattern.compile(needle, Pattern.MULTILINE);
+        Matcher m = p.matcher(str);
+        while(m.find()) {
+            map_occurrences.put(occurrences, m.start());
+           occurrences++;
+        }
+        return map_occurrences;
+    }
+
+    /**
+     * Gets the number of occurrences of a char in a string
+     * @param str - the string to search for the needle.
+     * @param needle - the char to search for within 'str'
+     * @return number of times the needle was found in the string along with the index of each time it was found in the string in a Map(Integer, Integer)
+     * <br>To find the number of occurences just say '.size()' after the returned value</br>
+     *
+     * <br><b>The Map is returned as: (Nth index of find, index in string)</b>
+     */
+    public static Map<Integer, Integer> getNumOccurrencesWithIndex(String str, char needle) {
+        int count = 0;
+        Map<Integer, Integer> occurrencesWithIndexes = new HashMap<>();
+        for(int i = 0; i < str.toCharArray().length; i++) {
+            if(str.toCharArray()[i] == needle) {
+                occurrencesWithIndexes.put(count, i);
+                count++;
+            }
+        }
+        return occurrencesWithIndexes;
     }
 
     /**
