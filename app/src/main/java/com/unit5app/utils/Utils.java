@@ -227,7 +227,9 @@ public abstract class Utils {
     /**
      * The view id for each different activity/view.
      */
-    public static final int VIEW_MAIN = 0, VIEW_LOADING = 1, VIEW_ARTICLE_LIST = 2, VIEW_ARTICLE = 3, VIEW_UPCOMING_EVENTS = 4, VIEW_ANNOUNCEMENTS = 5;
+    public static final int VIEW_MAIN = 0, VIEW_LOADING = 1, VIEW_ARTICLE_LIST = 2,
+            VIEW_ARTICLE = 3, VIEW_UPCOMING_EVENTS = 4, VIEW_ANNOUNCEMENTS = 5,
+            VIEW_SETTINGS = 6;
     /**
      * the current View the user is looking at.
      */
@@ -319,20 +321,28 @@ public abstract class Utils {
      */
     public static void createNotification(Context context, CalendarEvent event) {
         Intent notificationIntent = new Intent(context, NotificationReceiver.class);
-        notificationIntent.putExtra("title", event.getType().toString());
-        notificationIntent.putExtra("message", event.getTitle());
-        notificationIntent.putExtra("sub", event.getTimeOccurring());
+
+        SimpleDateFormat sdf = new SimpleDateFormat(Time.FORMAT_DATE_TIME_12HOUR);
+        Calendar c = Calendar.getInstance();
+        if(event != null) {
+            try {
+                c.setTime(sdf.parse(event.getDate() + " " + event.getTimeOccurring()));
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+
+            notificationIntent.putExtra("title", event.getType().toString());
+            notificationIntent.putExtra("message", event.getTitle());
+            notificationIntent.putExtra("sub", event.getTimeOccurring());
+        } else {
+            notificationIntent.putExtra("title", "null");
+            notificationIntent.putExtra("message", "null");
+            notificationIntent.putExtra("sub", "null");
+        }
 
         PendingIntent pendingIntent = PendingIntent.getBroadcast(context, 0, notificationIntent, 0);
         AlarmManager alarm = (AlarmManager)context.getSystemService(Context.ALARM_SERVICE);
 
-        SimpleDateFormat sdf = new SimpleDateFormat(Time.FORMAT_DATE_TIME_12HOUR);
-        Calendar c = Calendar.getInstance();
-        try {
-            c.setTime(sdf.parse(event.getDate() + " "+ event.getTimeOccurring()));
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-        alarm.set(AlarmManager.RTC_WAKEUP, c.getTimeInMillis(), pendingIntent);
+        alarm.set(AlarmManager.RTC_WAKEUP, System.currentTimeMillis() + 300_000, pendingIntent);
     }
 }

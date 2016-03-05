@@ -122,7 +122,7 @@ public class ArticleActivity extends BaseActivity {
             int linkEndArrow;
             for (Map.Entry<Integer, Integer> entry : map_links.entrySet()) {
                 linkStartPos = entry.getValue();
-                linkEndQuote = builder.indexOf("\"", linkStartPos + linkStartLength + 1);
+//                linkEndQuote = builder.indexOf("\"", linkStartPos + linkStartLength + 1);
 //                linkEndArrow = builder.indexOf(">", linkEndQuote);
 //                Map<Integer, Integer> spaceLocs = Utils.getOccurrencesWithIndexInString(builder.substring(linkStartPos + linkStartLength, linkEndArrow), " ");
 //                for (Map.Entry<Integer, Integer> spaceLoc : spaceLocs.entrySet()) {

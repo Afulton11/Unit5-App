@@ -3,6 +3,7 @@ package com.unit5app.activities;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
@@ -51,6 +52,8 @@ public class MainActivity extends BaseActivity {
         //set content view to a loading screen first, Then once everything is loaded we would setContentView to the home screen?
          /*Check if we have internet access*/
        Utils.isInternetConnected(getApplicationContext());
+//        Settings.save(this);
+//        Settings.load(this);
         if(savedInstanceState == null) {
         /* TODO: Launch internal calendar builder to get latest info on events, etc... */
             if(mainCalendar == null && Utils.hadInternetOnLastCheck) {
@@ -61,6 +64,8 @@ public class MainActivity extends BaseActivity {
                 mainCalendar.loadNews();
             }
         }
+
+        Log.d(TAG, "Created Blank Notification!");
 
         /* Load object placement as defined in Resources file */
         setContentView(R.layout.activity_main);
@@ -120,7 +125,6 @@ public class MainActivity extends BaseActivity {
                 startActivity(new Intent(MainActivity.this, RssActivity.class));
             }
         });
-
     }
 
     /* Function to handle when you click something in the action bar */

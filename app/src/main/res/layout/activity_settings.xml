@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_marginTop="16dp"
+    android:scrollbars="vertical">
+
+    <TextView
+        style="@style/SettingsHeader"
+        android:text="NOTIFICATIONS" />
+
+    <View
+        style="@style/HorizontalDividerThick"/>
+
+    <CheckBox
+        style="@style/SettingsCheckBox"
+        android:text="Regular School Events"
+        android:drawablePadding="51dp"
+        android:id="@+id/settings_checkBox_regularEvents"  />
+
+    <View
+        style="@style/HorizontalDividerSoft"/>
+
+    <CheckBox
+        style="@style/SettingsCheckBox"
+        android:text="Holidays"
+        android:drawablePadding="174dp"
+        android:id="@+id/settings_checkBox_holidays"  />
+
+    <View
+        style="@style/HorizontalDividerSoft"/>
+
+    <CheckBox
+        style="@style/SettingsCheckBox"
+        android:text="Late Starts"
+        android:drawablePadding="155dp"
+        android:id="@+id/settings_checkBox_lateStart"  />
+
+    <View
+        style="@style/HorizontalDividerSoft"/>
+
+
+</LinearLayout>
