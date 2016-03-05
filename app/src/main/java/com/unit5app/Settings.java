@@ -23,12 +23,14 @@ public class Settings {
 
     private static final String TAG = "Settings";
 
-    private static final String FILE_PATH = "./Settings.txt";
+    private static final String FILE_NAME = "Settings.txt";
 
     /**
      * if true, notifications are on. if false, notifications are off.
      */
     private static boolean notifications;
+
+//    public static String file_string = null;
 
     /**
      * a boolean for each of the Calendar Event Types. for each true boolean and notifications are on (true), then the user will be notified of each turned on event type.
@@ -47,7 +49,7 @@ public class Settings {
     public static void load(Context context) {
         try {
             Log.d(TAG, "DIR: " + context.getFilesDir());
-            File file = new File(context.getFilesDir(), FILE_PATH);
+            File file = new File(context.getFilesDir(), FILE_NAME);
             Log.d(TAG, "DIR: " + file.getCanonicalPath());
             if (!file.exists()) file.createNewFile();
 
@@ -56,16 +58,20 @@ public class Settings {
             BufferedReader reader = new BufferedReader(new InputStreamReader(in));
             String currentLine;
             String[] tokens;
+
+//            StringBuffer buffer = new StringBuffer();
             while((currentLine = reader.readLine()) != null) {
+//                buffer.append(currentLine + System.getProperty("line.separator"));
                 if(!currentLine.startsWith("//")) {
                     tokens = currentLine.split("\t");
-                    if (tokens[0].equalsIgnoreCase("bool") && tokens.length > 2) {
+                    if (tokens.length > 2 && tokens[0].equalsIgnoreCase("bool")) {
                         boolean currentBool = Boolean.parseBoolean(tokens[2]);
                         setBoolean(Integer.parseInt(tokens[1]), currentBool);
 //                        continue; //next line.
                     }
                 }
             }
+//            file_string = buffer.toString();
         } catch (FileNotFoundException e) {
             Log.d(TAG, e.getMessage(), e);
         } catch (IOException ioe) {
@@ -73,15 +79,16 @@ public class Settings {
         }
     }
 
+
     /**
      * Saves the user's current settings when the app is paused/stopped.
      */
     public static void save(Context context) {
         try {
-            File file = new File(context.getFilesDir(), FILE_PATH);
+            File file = new File(context.getFilesDir(), FILE_NAME);
             if (!file.exists()) file.createNewFile();
 
-            OutputStreamWriter out = new OutputStreamWriter(context.openFileOutput(file.getName(), Context.MODE_PRIVATE));
+            OutputStreamWriter out = new OutputStreamWriter(context.openFileOutput(FILE_NAME, Context.MODE_PRIVATE));
             BufferedWriter writer = new BufferedWriter(out);
 
             for(int i = 0; i < NUM_NOTIFICATION_TYPES; i++) {
@@ -90,6 +97,8 @@ public class Settings {
             }
             writer.flush();
             writer.close();
+
+
             Toast.makeText(context, "Done Writing to settings!", Toast.LENGTH_LONG);
         } catch (FileNotFoundException e) {
             Log.d(TAG, e.getMessage(), e);
@@ -98,12 +107,16 @@ public class Settings {
         }
     }
 
-    private static void setBoolean(int id, boolean currentBool){
+    public static void setBoolean(int id, boolean bool){
         try {
-            notificationTypes[id] = currentBool;
+            notificationTypes[id] = bool;
         } catch(IndexOutOfBoundsException e) {
             Log.d(TAG, e.getMessage(), e);
         }
+    }
+
+    public static boolean getBoolean(int id) {
+        return notificationTypes[id];
     }
 
     public static boolean isNotifications() {

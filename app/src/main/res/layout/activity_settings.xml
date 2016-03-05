@@ -13,10 +13,10 @@
         style="@style/HorizontalDividerThick"/>
 
     <CheckBox
-        style="@style/SettingsCheckBox"
-        android:text="Regular School Events"
-        android:drawablePadding="51dp"
-        android:id="@+id/settings_checkBox_regularEvents"  />
+    style="@style/SettingsCheckBox"
+    android:text="Regular School Events"
+    android:drawablePadding="51dp"
+    android:id="@+id/settings_checkBox_regularEvents"  />
 
     <View
         style="@style/HorizontalDividerSoft"/>
@@ -35,6 +35,42 @@
         android:text="Late Starts"
         android:drawablePadding="155dp"
         android:id="@+id/settings_checkBox_lateStart"  />
+
+    <View
+        style="@style/HorizontalDividerSoft"/>
+
+    <CheckBox
+        style="@style/SettingsCheckBox"
+        android:text="No School Days"
+        android:drawablePadding="110dp"
+        android:id="@+id/settings_checkBox_noSchool"  />
+
+    <View
+        style="@style/HorizontalDividerSoft"/>
+
+    <CheckBox
+        style="@style/SettingsCheckBox"
+        android:text="Last Day Before a Break"
+        android:drawablePadding="40dp"
+        android:id="@+id/settings_checkBox_lastDayBeforeBreak"  />
+
+    <View
+        style="@style/HorizontalDividerSoft"/>
+
+    <CheckBox
+        style="@style/SettingsCheckBox"
+        android:text="End Of Grading Periods"
+        android:drawablePadding="45dp"
+        android:id="@+id/settings_checkBox_endOfGradingPeriods"  />
+
+    <View
+        style="@style/HorizontalDividerSoft"/>
+
+    <CheckBox
+        style="@style/SettingsCheckBox"
+        android:text="Board Meetings"
+        android:drawablePadding="110dp"
+        android:id="@+id/settings_checkBox_meetings"  />
 
     <View
         style="@style/HorizontalDividerSoft"/>

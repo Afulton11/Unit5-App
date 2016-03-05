@@ -42,15 +42,16 @@ public class AnnouncementActivity extends BaseActivity {
         }
     }
 
+
     @Override
     public void onPause() {
         super.onPause();
-        Utils.universalOnPause();
+        Utils.universalOnPause(getApplicationContext());
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        Utils.universalOnResume();
+        Utils.universalOnResume(getApplicationContext());
     }
 }

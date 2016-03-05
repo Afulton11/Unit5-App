@@ -119,4 +119,17 @@ public class RssActivity  extends BaseActivity {
         list.setAdapter(adapter);
         titleList = article_titles;
     }
+
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        Utils.universalOnPause(getApplicationContext());
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        Utils.universalOnResume(getApplicationContext());
+    }
 }

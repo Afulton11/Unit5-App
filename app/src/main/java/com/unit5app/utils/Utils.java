@@ -9,6 +9,7 @@ import android.net.NetworkInfo;
 import android.util.Log;
 
 import com.unit5app.Article;
+import com.unit5app.Settings;
 import com.unit5app.activities.AnnouncementActivity;
 import com.unit5app.activities.ArticleActivity;
 import com.unit5app.activities.MainActivity;
@@ -205,14 +206,16 @@ public abstract class Utils {
     /**
      * This method is a universalOnPause method that is to be used in every activity's onPause() method.
      */
-    public static void universalOnPause() {
+    public static void universalOnPause(Context context) {
+        Settings.save(context);
         paused = true;
     }
 
     /**
      * This method is a universalOnResume method that is to be used in every activity's onResume() method.
      */
-    public static void universalOnResume() {
+    public static void universalOnResume(Context context) {
+        Settings.load(context);
         paused = false;
     }
 

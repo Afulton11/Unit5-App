@@ -12,6 +12,7 @@ import android.widget.Toast;
 
 import com.unit5app.EndOfHourHandler;
 import com.unit5app.R;
+import com.unit5app.Settings;
 import com.unit5app.calendars.Unit5Calendar;
 import com.unit5app.com.unit5app.parsers.RSSReader;
 import com.unit5app.com.unit5app.parsers.WestNewsReader;
@@ -48,12 +49,11 @@ public class MainActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Utils.setCurrentView(Utils.VIEW_LOADING); //TODO: make setContentView(R.layout.view_loading) not get rid of the major details gained from the base activity such as the title for when setting the content view again.
-
+        Settings.load(this);
         //set content view to a loading screen first, Then once everything is loaded we would setContentView to the home screen?
          /*Check if we have internet access*/
        Utils.isInternetConnected(getApplicationContext());
-//        Settings.save(this);
-//        Settings.load(this);
+
         if(savedInstanceState == null) {
         /* TODO: Launch internal calendar builder to get latest info on events, etc... */
             if(mainCalendar == null && Utils.hadInternetOnLastCheck) {
@@ -82,6 +82,7 @@ public class MainActivity extends BaseActivity {
         /* Begin testing to see if it's the end of the hour. The text will update accordingly. */
         new EndOfHourHandler(endOfHourTime).start();
 
+//        endOfHourTime.setText(Settings.file_string);
         /* If not, complain to the user. */
         if(!Utils.hadInternetOnLastCheck) {
             Toast toast = Toast.makeText(getApplicationContext(),
@@ -146,12 +147,12 @@ public class MainActivity extends BaseActivity {
     @Override
     public void onPause() {
         super.onPause();
-        Utils.universalOnPause();
+        Utils.universalOnPause(getApplicationContext());
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        Utils.universalOnResume();
+        Utils.universalOnResume(getApplicationContext());
     }
 }
