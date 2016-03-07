@@ -29,13 +29,12 @@ public class MyNotificationHandler {
     private static Context context;
 
     public static void init(Context appContext) {
-        Settings.load(context);
         context = appContext;
+        Settings.load(appContext);
         calendar = new Unit5Calendar(60);
 
         checkCalendarLoaded();
 
-//        createNotificationAndSendNow(context);
     }
 
     private static void checkCalendarLoaded() {
