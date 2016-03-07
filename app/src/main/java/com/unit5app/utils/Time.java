@@ -117,6 +117,24 @@ public abstract class Time {
         return sdf.format(c.getTime());
     }
 
+    /**
+     * returns the date of the numDaysAfter the given date.
+     * @param date - the date to get the date after a certain amount of days.
+     * @param daysAfter the days After the given date, can be negative.
+     * @return the date of the numDaysAfter the given date.
+     */
+    public static String getDateDaysAfterDate(String date, int daysAfter) {
+        SimpleDateFormat sdf = new SimpleDateFormat(FORMAT_BASIC_DATE);
+        Calendar c = Calendar.getInstance();
+        try {
+            c.setTime(sdf.parse(date));
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        c.add(Calendar.DATE, daysAfter);
+        return sdf.format(c.getTime());
+    }
+
     private static final int MONTH_MULTIPLIER = 33, DAY_MULTIPLIER = 1, YEAR_MULTIPLIER = 401;
     private static final int HIGHEST_DATE_NUM = (MONTH_MULTIPLIER * 12) * (DAY_MULTIPLIER * 31) * (YEAR_MULTIPLIER * 99);
 

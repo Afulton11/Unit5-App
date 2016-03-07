@@ -8,10 +8,12 @@ import android.text.Spanned;
 import android.text.method.LinkMovementMethod;
 import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.unit5app.Article;
 import com.unit5app.R;
+import com.unit5app.Settings;
 import com.unit5app.utils.Utils;
 
 import java.io.IOException;
@@ -37,12 +39,15 @@ public class ArticleActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.article_layout);
         Utils.setCurrentView(Utils.VIEW_ARTICLE);
-
+        if(Settings.getArticleSettingsBoolean(Settings.ID_ARTICLE_SETTING_SCROLL_WITH_TITLE)) {
+            ScrollView view = (ScrollView) findViewById(R.id.article_scrollView);
+            view.setVerticalScrollBarEnabled(false);
+        }
         Heading = (TextView) findViewById(R.id.article_title);
         Body = (TextView) findViewById(R.id.article_body);
 
         Heading.setText(Utils.toTitleCase(Html.fromHtml(article.getTitle()).toString()));
-        Heading.setMovementMethod(new ScrollingMovementMethod());
+        if(!Settings.getArticleSettingsBoolean(Settings.ID_ARTICLE_SETTING_SCROLL_WITH_TITLE)) Heading.setMovementMethod(new ScrollingMovementMethod());
         //we need a new task/thread because android doesn't allow connecting to a network on the main thread.
         new AsyncTask<Object, Void, Void>() {
             Spanned resultBody;
@@ -53,8 +58,10 @@ public class ArticleActivity extends BaseActivity {
                 super.onPostExecute(aVoid);
                 Body.setText(resultBody);
                 Body.setMovementMethod(LinkMovementMethod.getInstance());
-                Body.setHorizontalScrollBarEnabled(true);
-                Body.setVerticalScrollBarEnabled(true);
+                if(!Settings.getArticleSettingsBoolean(Settings.ID_ARTICLE_SETTING_SCROLL_WITH_TITLE)) {
+                    Body.setHorizontalScrollBarEnabled(true);
+                    Body.setVerticalScrollBarEnabled(true);
+                }
                 Body.setClickable(true);
                 Body.setLinksClickable(true);
                 Body.setTextIsSelectable(true);
@@ -118,8 +125,8 @@ public class ArticleActivity extends BaseActivity {
         if(linkStartPos > 0) {
             Map<Integer, Integer> map_links = Utils.getOccurrencesWithIndexInString(description, "<a href=\"");
             final int linkStartLength = 8; //the length of <a href="
-            int linkEndQuote;
-            int linkEndArrow;
+//            int linkEndQuote;
+//            int linkEndArrow;
             for (Map.Entry<Integer, Integer> entry : map_links.entrySet()) {
                 linkStartPos = entry.getValue();
 //                linkEndQuote = builder.indexOf("\"", linkStartPos + linkStartLength + 1);

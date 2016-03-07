@@ -3,6 +3,7 @@ package com.unit5app.calendars;
 
 import android.util.Log;
 
+import com.unit5app.utils.Time;
 import com.unit5app.utils.Utils;
 
 /**
@@ -44,7 +45,7 @@ public class CalendarEvent {
                 this.timeOccurring = fullTitle.substring(firstSpaceLoc + 1, fullTitle.indexOf('M') + 1);
                 useSpaceNum = 2; //if we do find a time use the third space found in the fullTitle to get the title from the xml.
             } catch (Exception e){
-                this.timeOccurring = "12:00 AM"; // if their is no specific time found in the title string, just set the time occuring to "12am".
+                this.timeOccurring = "06:00 AM"; // if their is no specific time found in the title string, just set the time occuring to "12am".
                 useSpaceNum = 0;
                 Log.d(TAG, "\tNo time for calendar event found.");
             } finally {
@@ -80,6 +81,10 @@ public class CalendarEvent {
     public String getDate() { return  date; }
     public String getTitle() { return  title; }
     public String getTimeOccurring() {
+        if(this.type == EventType.lateStart) {
+            this.date = Time.getDateDaysAfterDate(this.date, -1);
+            return "06:30 PM"; //the regular time to notify the user of a late start day, on the day before. can be changed to a global final variable to be set from settings.
+        }
         return timeOccurring;
     }
     public EventType getType() { return type; }

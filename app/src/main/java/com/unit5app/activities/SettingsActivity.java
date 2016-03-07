@@ -35,11 +35,11 @@ public class SettingsActivity extends BaseActivity {
 
         for(int i = 0; i < notificationBoxes.length; i++) {
             final int ID = i;
-            notificationBoxes[i].setChecked(Settings.getBoolean(ID));
+            notificationBoxes[i].setChecked(Settings.getNotificationBoolean(ID));
             notificationBoxes[i].setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                 @Override
                 public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                    Settings.setBoolean(ID, isChecked);
+                    Settings.setNotificationBoolean(ID, isChecked);
                     Settings.save(getApplicationContext());
                     if(!isChecked) {
                         MyNotificationHandler.cancelNotificationsOfType(getApplicationContext(), ID);
@@ -51,6 +51,24 @@ public class SettingsActivity extends BaseActivity {
         }
         /*
         ******************************NOTIFICATION SETTINGS END*****************************************
+        */
+
+        /*
+        *****************************ARTICLE SETTINGS START*****************************************
+         */
+
+        CheckBox scrollWithTile = (CheckBox) findViewById(R.id.settings_checkBox_scrollTitle);
+        scrollWithTile.setChecked(Settings.getArticleSettingsBoolean(Settings.ID_ARTICLE_SETTING_SCROLL_WITH_TITLE));
+        scrollWithTile.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                Settings.setArticleSettingsBoolean(0, isChecked);
+                Settings.save(getApplicationContext());
+            }
+        });
+
+        /*
+        ******************************ARTICLE SETTINGS END*****************************************
         */
     }
 

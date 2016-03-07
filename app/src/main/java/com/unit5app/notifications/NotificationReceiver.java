@@ -26,7 +26,7 @@ public class NotificationReceiver extends WakefulBroadcastReceiver{
         Log.d("Receiver", "received notification!");
         Settings.load(context);
 
-        if(!Settings.list_sentNotificationsContains(intent.getStringExtra("title")) && Settings.getBoolean(intent.getIntExtra("id", 0))) {
+        if(!Settings.list_sentNotificationsContains(intent.getStringExtra("title")) && Settings.getNotificationBoolean(intent.getIntExtra("id", 0))) {
             ComponentName comp = new ComponentName(context.getPackageName(), com.unit5app.notifications.NotificationIntentService.class.getName());
             startWakefulService(context, (intent.setComponent(comp))); //calls onHandleIntent for the NotificationIntentService
 

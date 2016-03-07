@@ -27,6 +27,10 @@ public class Settings {
 
     private static final String FILE_NAME = "Settings.txt";
 
+    private static final int NUM_NOTIFICATION_TYPES = EventType.values().length, NUM_ARTICLE_SETTINGS = 1;
+
+    public static final int ID_ARTICLE_SETTING_SCROLL_WITH_TITLE = 0;
+
     /**
      * if true, notifications are on. if false, notifications are off.
      */
@@ -37,7 +41,6 @@ public class Settings {
     /**
      * a boolean for each of the Calendar Event Types. for each true boolean and notifications are on (true), then the user will be notified of each turned on event type.
      */
-    private static final int NUM_NOTIFICATION_TYPES = EventType.values().length;
     private static boolean[] notificationTypes = new boolean[NUM_NOTIFICATION_TYPES];
 
     public static String lastSendDate = null;
@@ -45,6 +48,9 @@ public class Settings {
      * list of the sentNotifications.
      */
     public static List<String> list_sentNotifications = new ArrayList<>();
+
+    private static boolean[] article_settings = new boolean[NUM_ARTICLE_SETTINGS];
+
 
     /**
      * get User's last known settings, called from startUp or first time needed to access settings.
@@ -79,9 +85,14 @@ public class Settings {
 //               buffer.append(currentLine + System.getProperty("line.separator"));
                     if (!currentLine.startsWith("//")) {
                         tokens = currentLine.split("\t");
-                        if (tokens.length > 2 && tokens[0].equalsIgnoreCase("bool")) {
-                            boolean currentBool = Boolean.parseBoolean(tokens[2]);
-                            setBoolean(Integer.parseInt(tokens[1]), currentBool);
+                        if(tokens.length > 2) {
+                            if (tokens[0].equalsIgnoreCase("bool")) {
+                                boolean currentBool = Boolean.parseBoolean(tokens[2]);
+                                setNotificationBoolean(Integer.parseInt(tokens[1]), currentBool);
+                            } else if (tokens[0].equals("articleBool")) {
+                                boolean currentBool = Boolean.parseBoolean(tokens[2]);
+                                setArticleSettingsBoolean(Integer.parseInt(tokens[1]), currentBool);
+                            }
                         } else if (tokens.length > 1) {
                             if (tokens[0].equals("TodaysDate")) {
                                 lastSendDate = tokens[1];
@@ -144,6 +155,10 @@ public class Settings {
                 writer.write("CalEvent\t" + list_sentNotifications.get(i));
                 writer.newLine();
             }
+            for(int i = 0; i < article_settings.length; i++) {
+                writer.write("articleBool\t" + i + "\t" + article_settings[i]);
+                writer.newLine();
+            }
             writer.flush();
             writer.close();
             Log.d(TAG, "Saved Settings!");
@@ -164,7 +179,12 @@ public class Settings {
         return false;
     }
 
-    public static void setBoolean(int id, boolean bool){
+    /**
+     * Sets a Notification settings boolean to the boolean 'bool'.
+     * @param id - id, or event type, of the boolean
+     * @param bool boolean
+     */
+    public static void setNotificationBoolean(int id, boolean bool){
         try {
             notificationTypes[id] = bool;
         } catch(IndexOutOfBoundsException e) {
@@ -172,8 +192,25 @@ public class Settings {
         }
     }
 
-    public static boolean getBoolean(int id) {
+    /**
+     * Sets an Article_settings Boolean to the boolean 'bool'.
+     * @param id - id of the boolean to change.
+     * @param bool - boolean
+     */
+    public static void setArticleSettingsBoolean(int id, boolean bool) {
+        try {
+            article_settings[id] = bool;
+        } catch(IndexOutOfBoundsException e) {
+            Log.d(TAG, e.getMessage(), e);
+        }
+    }
+
+    public static boolean getNotificationBoolean(int id) {
         return notificationTypes[id];
+    }
+
+    public static boolean getArticleSettingsBoolean(int id) {
+        return article_settings[id];
     }
 
     public static boolean isNotifications() {
@@ -238,5 +275,13 @@ public class Settings {
 
     public static void setNotify_meetings(boolean bool) {
         notificationTypes[EventType.meeting.getId()] = bool;
+    }
+
+    public static boolean isScrollWithTitle() {
+        return article_settings[0];
+    }
+
+    public static void setScrollWithTitle(boolean bool) {
+        article_settings[0] = bool;
     }
 }
