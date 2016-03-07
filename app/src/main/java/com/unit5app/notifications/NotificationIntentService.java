@@ -12,6 +12,7 @@ import android.support.v7.app.NotificationCompat;
 import android.util.Log;
 
 import com.unit5app.R;
+import com.unit5app.Settings;
 import com.unit5app.activities.MainActivity;
 
 /**
@@ -42,20 +43,22 @@ public class NotificationIntentService extends IntentService {
     }
 
     public void sendNotification(Context originalContext, int id, String title, String text, String subText) {
-        Context context = originalContext.getApplicationContext();
-        PendingIntent pendingIntent = PendingIntent.getActivity(context, 1, new Intent(context, MainActivity.class), 0);
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(context);
-        builder.setSmallIcon(R.mipmap.ic_launcher);
-        builder.setContentIntent(pendingIntent);
-        builder.setAutoCancel(true); //the notification will automatically go away.
-        builder.setLargeIcon(BitmapFactory.decodeResource(Resources.getSystem(), R.mipmap.ic_launcher));
-        builder.setWhen(System.currentTimeMillis());
+        if(Settings.getBoolean(id)) { //reassuring that the user did in fact choose to have this type of notification sent to them, now we can just end all the notifications and only the ones the user has chosen will be seen.
+            Context context = originalContext.getApplicationContext();
+            PendingIntent pendingIntent = PendingIntent.getActivity(context, 1, new Intent(context, MainActivity.class), 0);
+            NotificationCompat.Builder builder = new NotificationCompat.Builder(context);
+            builder.setSmallIcon(R.mipmap.ic_launcher);
+            builder.setContentIntent(pendingIntent);
+            builder.setAutoCancel(true); //the notification will automatically go away.
+            builder.setLargeIcon(BitmapFactory.decodeResource(Resources.getSystem(), R.mipmap.ic_launcher));
+            builder.setWhen(System.currentTimeMillis());
 
-        if(title != null) builder.setContentTitle(title);
-        if(text != null) builder.setContentText(text);
-        if(subText != null) builder.setSubText(subText);
-        NotificationManager manager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
-        manager.notify(id, builder.build());
+            if (title != null) builder.setContentTitle(title);
+            if (text != null) builder.setContentText(text);
+            if (subText != null) builder.setSubText(subText);
+            NotificationManager manager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+            manager.notify(id, builder.build());
+        }
     }
 
 }

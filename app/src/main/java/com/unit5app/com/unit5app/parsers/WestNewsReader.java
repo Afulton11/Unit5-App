@@ -69,42 +69,17 @@ public class WestNewsReader extends RSSReader{
                 element_paragraphs.remove(0); //gets rid of the 'Return to Headlines' span.
                 element_paragraphs.remove(0); //gets rid of the title span.
 
-                //removing the very last 3 spans as they are used for the author's information, However: west seems to never give an author name/email/phone.
+                //removing the very last 3 spans as they are used for the author's information, since west seems to never give an author name/email/phone.
                 element_paragraphs.remove(element_paragraphs.size() - 1);
                 element_paragraphs.remove(element_paragraphs.size() - 1);
                 element_paragraphs.remove(element_paragraphs.size() - 1);
 
                 StringBuilder buffer_body = new StringBuilder();
                 for (Element e : element_paragraphs) {
-                    StringBuilder e_string = new StringBuilder(e.toString());
-                    Log.d(TAG, "element Paragrpah: " + e.toString());
-                    if(e.toString().contains("<a href=\"/")) {
-                        int replaceIndex = e_string.indexOf("<a href=\"/");
-                        Log.d(TAG, "Replacing a link!");
-                        Log.d(TAG, e.toString());
-//http://www.unit5.org/
-                        e_string.replace(replaceIndex, replaceIndex + 9, "<a href=\"http://www.unit5.org/"); //TODO: make this properly add the www.unit5.org to the front of a link if the link starts with something like /cms/../...
-
-                        int endArrow = e.toString().indexOf('>', replaceIndex + 9);
-                        String linkOnly = e_string.substring(replaceIndex + 9, endArrow);
-                        if(linkOnly.contains(" ")) {
-                            int space;
-//                            while((space = linkOnly.indexOf(" ")) >= 0) {
-//                                e_string.replace(space + replaceIndex + 9, replaceIndex + 9 + space + 1, "%20");
-//                            }
-                        }
-
-                        e_string.replace(endArrow, endArrow + 1, "");
-
-                        Log.d(TAG, "Replaced a link!");
-                    }
-                    Log.d(TAG, "element Paragraph link replaced: " + e_string.toString());
-
-                    buffer_body.append(e_string.toString());
+                    buffer_body.append(e.toString());
                 }
 
                 String fullBody = buffer_body.toString();
-                Log.d(TAG, fullBody);
                 article.setDescription(fullBody);
 
                 if(article.isArticleFull()) articles.add(article);

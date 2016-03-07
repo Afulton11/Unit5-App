@@ -186,12 +186,16 @@ public abstract class Utils {
             if(c == ' ') {
                 spaceFound = true;
             } else if(spaceFound) {
+                if(c == ' ') {
+                    spaceFound = false;
+                    continue;
+                }
                 c = Character.toUpperCase(c);
                 spaceFound = false;
             }
             sb.append(c);
         }
-        return sb.toString();
+        return sb.toString().trim();
     }
 
     private static boolean paused = false;
