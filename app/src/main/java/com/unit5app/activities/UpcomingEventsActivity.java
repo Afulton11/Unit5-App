@@ -4,11 +4,11 @@ import android.os.Bundle;
 import android.text.Html;
 import android.text.Spanned;
 import android.text.method.ScrollingMovementMethod;
-import android.util.Log;
 import android.widget.TextView;
 
 import com.unit5app.R;
 import com.unit5app.com.unit5app.parsers.CalendarRssReader;
+import com.unit5app.notifications.MyNotificationHandler;
 import com.unit5app.utils.Utils;
 
 /**
@@ -35,7 +35,6 @@ public class UpcomingEventsActivity extends BaseActivity {
             @Override
             public void run() {
                 if(!MainActivity.mainCalendar.hasCalendarStartedLoading()) {
-                    Log.d("Upcoming", "start loading? : " + MainActivity.mainCalendar.hasCalendarStartedLoading());
                     if(Utils.isInternetConnected(getApplicationContext())) {
                         MainActivity.mainCalendar.loadCalendar();
                     } else {

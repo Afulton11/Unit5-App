@@ -2,9 +2,9 @@ package com.unit5app;
 
 import android.content.Context;
 import android.util.Log;
-import android.widget.Toast;
 
 import com.unit5app.calendars.EventType;
+import com.unit5app.utils.Time;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -14,6 +14,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author Andrew
@@ -37,41 +39,81 @@ public class Settings {
      */
     private static final int NUM_NOTIFICATION_TYPES = EventType.values().length;
     private static boolean[] notificationTypes = new boolean[NUM_NOTIFICATION_TYPES];
+
+    public static String lastSendDate = null;
+    /**
+     * list of the sentNotifications.
+     */
+    public static List<String> list_sentNotifications = new ArrayList<>();
+
     /**
      * get User's last known settings, called from startUp or first time needed to access settings.
      * The Syntax of the file is currently like this:
      * <br></br>
-     * <br>    data-type\tnameID\tcondition</br>
-     *
+     * NOTIFICATION TOGGLES:
+     * <br>
+     *     type\tnameID\tcondition
+     * </br>
      *      <br>bool\t0\tfalse</br>
      *      <br>bool\t1\ttrue</br>
+     *      Whether or not notifications have been sent out today:
+     *      <br>TodaysDate\tdate</br>
+     *      <br>CalEvent\ttrue</br>
+     *      <br>CalEvent\tfalse</br>
      */
     public static void load(Context context) {
-        try {
-            Log.d(TAG, "DIR: " + context.getFilesDir());
-            File file = new File(context.getFilesDir(), FILE_NAME);
-            Log.d(TAG, "DIR: " + file.getCanonicalPath());
-            if (!file.exists()) file.createNewFile();
+        if(context != null) {
+            try {
+                Log.d(TAG, "Loading Settings...");
+                File file = new File(context.getFilesDir(), FILE_NAME);
+                if (!file.exists()) file.createNewFile();
 
-            InputStream in = context.openFileInput(file.getName());
+                InputStream in = context.openFileInput(file.getName());
 
-            BufferedReader reader = new BufferedReader(new InputStreamReader(in));
-            String currentLine;
-            String[] tokens;
+                BufferedReader reader = new BufferedReader(new InputStreamReader(in));
+                String currentLine;
+                String[] tokens;
 
 //            StringBuffer buffer = new StringBuffer();
-            while((currentLine = reader.readLine()) != null) {
-//                buffer.append(currentLine + System.getProperty("line.separator"));
-                if(!currentLine.startsWith("//")) {
-                    tokens = currentLine.split("\t");
-                    if (tokens.length > 2 && tokens[0].equalsIgnoreCase("bool")) {
-                        boolean currentBool = Boolean.parseBoolean(tokens[2]);
-                        setBoolean(Integer.parseInt(tokens[1]), currentBool);
-//                        continue; //next line.
+                while ((currentLine = reader.readLine()) != null) {
+//               buffer.append(currentLine + System.getProperty("line.separator"));
+                    if (!currentLine.startsWith("//")) {
+                        tokens = currentLine.split("\t");
+                        if (tokens.length > 2 && tokens[0].equalsIgnoreCase("bool")) {
+                            boolean currentBool = Boolean.parseBoolean(tokens[2]);
+                            setBoolean(Integer.parseInt(tokens[1]), currentBool);
+                        } else if (tokens.length > 1) {
+                            if (tokens[0].equals("TodaysDate")) {
+                                lastSendDate = tokens[1];
+                            } else if (tokens[0].equals("CalEvent") && lastSendDate.equals(Time.getCurrentDate(Time.FORMAT_BASIC_DATE))) {
+                                list_sentNotifications.add(tokens[1]);
+                            }
+                        }
                     }
                 }
-            }
+                Log.d(TAG, "done loading settings!");
 //            file_string = buffer.toString();
+            } catch (FileNotFoundException e) {
+                Log.d(TAG, e.getMessage(), e);
+            } catch (IOException ioe) {
+                Log.d(TAG, ioe.getMessage(), ioe);
+            }
+        }
+    }
+
+    public static void clearSave(Context context) {
+        try {
+            Log.d(TAG, "Clearing Settings.txt...");
+            File file = new File(context.getFilesDir(), FILE_NAME);
+            if (!file.exists()) file.createNewFile();
+
+            OutputStreamWriter out = new OutputStreamWriter(context.openFileOutput(FILE_NAME, Context.MODE_PRIVATE));
+            BufferedWriter writer = new BufferedWriter(out);
+
+            writer.write("");
+            writer.flush();
+            writer.close();
+            Log.d(TAG, "Cleared Settings.txt!");
         } catch (FileNotFoundException e) {
             Log.d(TAG, e.getMessage(), e);
         } catch (IOException ioe) {
@@ -85,6 +127,7 @@ public class Settings {
      */
     public static void save(Context context) {
         try {
+            Log.d(TAG, "Saving Settings...");
             File file = new File(context.getFilesDir(), FILE_NAME);
             if (!file.exists()) file.createNewFile();
 
@@ -95,16 +138,30 @@ public class Settings {
                 writer.write("bool\t" + i + "\t" + notificationTypes[i]);
                 writer.newLine();
             }
+            writer.write("TodaysDate\t" + Time.getCurrentDate(Time.FORMAT_BASIC_DATE));
+            writer.newLine();
+            for(int i = 0; i < list_sentNotifications.size(); i++) {
+                writer.write("CalEvent\t" + list_sentNotifications.get(i));
+                writer.newLine();
+            }
             writer.flush();
             writer.close();
-
-
-            Toast.makeText(context, "Done Writing to settings!", Toast.LENGTH_LONG);
+            Log.d(TAG, "Saved Settings!");
         } catch (FileNotFoundException e) {
             Log.d(TAG, e.getMessage(), e);
         } catch (IOException ioe) {
             Log.d(TAG, ioe.getMessage(), ioe);
         }
+    }
+
+    /**
+     * true if the list_sentNotifications contains the given title
+     * @param title the title of a notification to check if it has already beens sent once today.
+     * @return true if the title is found in the list.
+     */
+    public static boolean list_sentNotificationsContains(String title) {
+        for(String s : list_sentNotifications) if(s.equalsIgnoreCase(title)) return true;
+        return false;
     }
 
     public static void setBoolean(int id, boolean bool){

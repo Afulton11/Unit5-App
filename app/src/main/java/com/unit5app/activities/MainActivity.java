@@ -3,7 +3,6 @@ package com.unit5app.activities;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
@@ -16,6 +15,7 @@ import com.unit5app.Settings;
 import com.unit5app.calendars.Unit5Calendar;
 import com.unit5app.com.unit5app.parsers.RSSReader;
 import com.unit5app.com.unit5app.parsers.WestNewsReader;
+import com.unit5app.notifications.NotificationReceiver;
 import com.unit5app.utils.Utils;
 
 import java.util.ArrayList;
@@ -48,15 +48,19 @@ public class MainActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Utils.setCurrentView(Utils.VIEW_LOADING); //TODO: make setContentView(R.layout.view_loading) not get rid of the major details gained from the base activity such as the title for when setting the content view again.
+        Utils.setCurrentView(Utils.VIEW_LOADING); //TODO: make setContentView(R.layout.view_loading) not get rid of the major details gained from the base activity such as the title when setting the content view again.
         Settings.load(this);
+
+        if(!NotificationReceiver.started) NotificationReceiver.start(this);
+
         //set content view to a loading screen first, Then once everything is loaded we would setContentView to the home screen?
          /*Check if we have internet access*/
        Utils.isInternetConnected(getApplicationContext());
 
         if(savedInstanceState == null) {
+
         /* TODO: Launch internal calendar builder to get latest info on events, etc... */
-            if(mainCalendar == null && Utils.hadInternetOnLastCheck) {
+            if(Utils.hadInternetOnLastCheck) {
                 mainCalendar = new Unit5Calendar(60);
                 WestNewsReader westNews = new WestNewsReader("http://www.unit5.org/site/RSS.aspx?DomainID=30&ModuleInstanceID=1852&PageID=53");
                 RSSReader unit5News = new RSSReader("http://www.unit5.org/site/RSS.aspx?DomainID=4&ModuleInstanceID=4&PageID=1");
@@ -64,8 +68,6 @@ public class MainActivity extends BaseActivity {
                 mainCalendar.loadNews();
             }
         }
-
-        Log.d(TAG, "Created Blank Notification!");
 
         /* Load object placement as defined in Resources file */
         setContentView(R.layout.activity_main);

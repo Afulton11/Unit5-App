@@ -6,6 +6,7 @@ import android.widget.CompoundButton;
 
 import com.unit5app.R;
 import com.unit5app.Settings;
+import com.unit5app.notifications.MyNotificationHandler;
 import com.unit5app.utils.Utils;
 
 public class SettingsActivity extends BaseActivity {
@@ -40,13 +41,17 @@ public class SettingsActivity extends BaseActivity {
                 public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                     Settings.setBoolean(ID, isChecked);
                     Settings.save(getApplicationContext());
+                    if(!isChecked) {
+                        MyNotificationHandler.cancelNotificationsOfType(getApplicationContext(), ID);
+                    } else {
+                        MyNotificationHandler.createAllNotificationsOfType(getApplicationContext(), ID);
+                    }
                 }
             });
         }
-
         /*
         ******************************NOTIFICATION SETTINGS END*****************************************
-         */
+        */
     }
 
     @Override

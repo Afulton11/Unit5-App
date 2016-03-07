@@ -13,6 +13,7 @@ import android.widget.Toast;
 import com.unit5app.R;
 import com.unit5app.com.unit5app.parsers.RSSReader;
 import com.unit5app.com.unit5app.parsers.WestNewsReader;
+import com.unit5app.notifications.MyNotificationHandler;
 import com.unit5app.utils.Utils;
 
 /**

@@ -116,6 +116,38 @@ public class Unit5Calendar{
         }
     }
 
+    /**
+     * loads a calendar and calls the requested method at the end of the calendar async task.
+     * @param methodRequests - the class and method to call. (only works for methods with no params as of right now.)
+     *                       <br>format of a method Request string: "package\tmethodName"</br>
+     *                       <br>So calling MyNotificationHandler.createNotificationsFromSettings(), Would work as follows: </br>
+     *                       <br>addMethodRequests(new String[] {"com.unit5app.notifications.MyNotificationHandler\tcreateNotificationsFromSetting"})</br>
+     */
+    public void loadCalendar(final String... methodRequests) {
+        if(!startedLoadingCalendar) {
+            startedLoadingCalendar = true;
+            calendarEvents = new ArrayList<>();
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    ReadCalendarTask calendarTask = new ReadCalendarTask(CALENDAR_URL);
+                    calendarTask.addMethodRequests(methodRequests);
+                    calendarTask.execute();
+                    if (!calendarTask.isLoaded()) Utils.waitForMonitorState();
+                    for (CalendarEvent event : calendarTask.getCalendarEvents()) {
+                        calendarEvents.add(event);
+                    }
+                    sortCalendarEvents();
+                    for(CalendarDate date : dates) {
+                        for(CalendarEvent event : calendarEvents) {
+                            if(event.getDate().equals(date.getDate())) date.addEvent(event);
+                        }
+                    }
+                }
+            }).start();
+        }
+    }
+
     public void loadLunchMenu(String lunchMenuPdfUrl) {
 
     }

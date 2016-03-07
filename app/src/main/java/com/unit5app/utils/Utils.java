@@ -1,9 +1,6 @@
 package com.unit5app.utils;
 
-import android.app.AlarmManager;
-import android.app.PendingIntent;
 import android.content.Context;
-import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.util.Log;
@@ -17,11 +14,7 @@ import com.unit5app.activities.RssActivity;
 import com.unit5app.activities.UpcomingEventsActivity;
 import com.unit5app.calendars.CalendarEvent;
 import com.unit5app.calendars.EventType;
-import com.unit5app.notifications.NotificationReceiver;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
@@ -207,6 +200,7 @@ public abstract class Utils {
      * This method is a universalOnPause method that is to be used in every activity's onPause() method.
      */
     public static void universalOnPause(Context context) {
+        Log.d(TAG, "PAUSE");
         Settings.save(context);
         paused = true;
     }
@@ -215,6 +209,7 @@ public abstract class Utils {
      * This method is a universalOnResume method that is to be used in every activity's onResume() method.
      */
     public static void universalOnResume(Context context) {
+        Log.d(TAG, "Resume");
         Settings.load(context);
         paused = false;
     }
@@ -265,8 +260,9 @@ public abstract class Utils {
     /**
      * for each thread waiting at the same time, if they each have a different boolean to start again, we need to add another object and another boolean, along with their respective waitFor and unlock methods.
      */
-    private static final Object monitor = new Object();
+    private static final Object monitor = new Object(), internet_monitor = new Object();
     public static boolean monitorState;
+
     /**
      * waits on the thread until unlockWaiter() is called by another thread.
      * Acts similar to pThreads and a mutex.
@@ -297,6 +293,33 @@ public abstract class Utils {
         }
     }
 
+    /**
+     * similar to waitForMonitorState(), waitForInternet waits until the user is conntected to the internet.
+     */
+    public static void waitForInternet(Context context) {
+        Log.d(TAG, "waiting!");
+        synchronized (internet_monitor) {
+            while (!isInternetConnected(context)) {
+                try {
+                    internet_monitor.wait(); // sleep until notified or monitorState = true.
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+            unlockInternetWaiter(); //if we ever get out of the while loop, we must be connected to the internet, so unlock the waiter.
+        }
+    }
+
+    /**
+     * similiar to unlockWaiter(), unlockInternetWaiter unlcoks the thread waiting on the internet to move forward.
+     */
+    public static void unlockInternetWaiter() {
+        Log.d(TAG, "unlocked waiter!");
+        synchronized (internet_monitor) {
+            internet_monitor.notify(); // unlock again
+        }
+    }
+
     public static Class getCurrentActivityClass() {
         switch(current_view) {
             case VIEW_LOADING:
@@ -316,36 +339,4 @@ public abstract class Utils {
         }
     }
 
-    /**
-     * creates a new notification that will go off at the time of the event. : tested and worked even when the app was closed by the user :
-     * todo: test to make sure this will still work even when the device is turned off then back on, This may make us have to use an Android service if it doesnt work after turning off then back on.
-     * @param context - context of the Activity to go to when clicking the notification, preferrably the mainActivity.
-     * @param event - a CalendarEvent to notify the person of.
-     */
-    public static void createNotification(Context context, CalendarEvent event) {
-        Intent notificationIntent = new Intent(context, NotificationReceiver.class);
-
-        SimpleDateFormat sdf = new SimpleDateFormat(Time.FORMAT_DATE_TIME_12HOUR);
-        Calendar c = Calendar.getInstance();
-        if(event != null) {
-            try {
-                c.setTime(sdf.parse(event.getDate() + " " + event.getTimeOccurring()));
-            } catch (ParseException e) {
-                e.printStackTrace();
-            }
-
-            notificationIntent.putExtra("title", event.getType().toString());
-            notificationIntent.putExtra("message", event.getTitle());
-            notificationIntent.putExtra("sub", event.getTimeOccurring());
-        } else {
-            notificationIntent.putExtra("title", "null");
-            notificationIntent.putExtra("message", "null");
-            notificationIntent.putExtra("sub", "null");
-        }
-
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(context, 0, notificationIntent, 0);
-        AlarmManager alarm = (AlarmManager)context.getSystemService(Context.ALARM_SERVICE);
-
-        alarm.set(AlarmManager.RTC_WAKEUP, System.currentTimeMillis() + 300_000, pendingIntent);
-    }
 }
