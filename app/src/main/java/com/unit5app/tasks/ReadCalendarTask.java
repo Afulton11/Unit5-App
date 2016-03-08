@@ -6,7 +6,7 @@ import android.text.Html;
 import com.unit5app.activities.UpcomingEventsActivity;
 import com.unit5app.calendars.CalendarEvent;
 import com.unit5app.com.unit5app.parsers.CalendarRssReader;
-import com.unit5app.notifications.MyNotificationHandler;
+import com.unit5app.utils.MethodHolder;
 import com.unit5app.utils.Utils;
 
 import java.util.ArrayList;
@@ -22,7 +22,7 @@ public class ReadCalendarTask extends AsyncTask<Void, Void, Void> {
 
     boolean loaded;
 
-    private List<String> methodRequests;
+    private List<MethodHolder> methodRequests;
 
     public ReadCalendarTask(String CalendarRssUrl) {
         this.reader = new CalendarRssReader(CalendarRssUrl);
@@ -45,21 +45,12 @@ public class ReadCalendarTask extends AsyncTask<Void, Void, Void> {
         UpcomingEventsActivity.calendarEventsString = Html.fromHtml(html_styling_string);
         loaded = true;
 
-//        for(String s : methodRequests) { //http://www.mkyong.com/java/how-to-use-reflection-to-call-java-method-at-runtime/
-//            String[] split = s.split("\t");
-//            String cls_name = split[0];
-//            try {
-//                Class<?> cls = Class.forName(cls_name);
-//                Object obj = cls.newInstance();
-//
-//                Method method = cls.getMethod(split[1], new Class[] {}); //only works for methods with no params
-//                method.invoke(obj);
-//            } catch (Exception e) {
-//                Log.d("CALENDAR_TASK", e.getMessage(), e);
-//            }
-//        }
-//        methodRequests.clear();
-        MyNotificationHandler.createNotificationsFromSettings();
+        if(methodRequests.size() > 0) {
+            for (MethodHolder holder : methodRequests) { //http://www.javaworld.com/article/2077455/learn-java/dynamically-invoking-a-static-method-without-instance-reference-july-6-1999.html
+                holder.callMethod();
+            }
+            methodRequests.clear();
+        }
     }
 
     @Override
@@ -76,7 +67,7 @@ public class ReadCalendarTask extends AsyncTask<Void, Void, Void> {
      *                       <br>So calling MyNotificationHandler.createNotificationsFromSettings(), Would work as follows: </br>
      *                       <br>addMethodRequests(new String[] {"com.unit5app.notifications.MyNotificationHandler\tcreateNotificationsFromSetting"})</br>
      */
-    public void addMethodRequests(final String...methodRequests) {
+    public void addMethodRequests(final MethodHolder...methodRequests) {
         Collections.addAll(this.methodRequests, methodRequests);
     }
 

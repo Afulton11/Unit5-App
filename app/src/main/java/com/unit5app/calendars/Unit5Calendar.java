@@ -3,6 +3,7 @@ package com.unit5app.calendars;
 import com.unit5app.com.unit5app.parsers.RSSReader;
 import com.unit5app.tasks.ReadAllFeedTask;
 import com.unit5app.tasks.ReadCalendarTask;
+import com.unit5app.utils.MethodHolder;
 import com.unit5app.utils.Time;
 import com.unit5app.utils.Utils;
 
@@ -49,6 +50,30 @@ public class Unit5Calendar{
             }
         }
         if(Utils.hadInternetOnLastCheck) {
+            loadCalendar();
+        }
+    }
+
+    /**
+     * creates a new Calendar from the Main calendar url: <a href="{@value #CALENDAR_URL}">See Calendar Url</a>
+     * @param numDays the number of days to extend from the current day.
+     * @param loadCalendarImmediately true to load the calendar in the constructor, false to load the calendar from calling a loadcalendar() function.
+     */
+    public Unit5Calendar(int numDays, boolean loadCalendarImmediately) {
+        dates = new CalendarDate[numDays];
+        String currentDate = Time.getCurrentDate(Time.FORMAT_BASIC_DATE);
+        int currentDateNum = Time.getDateAsNumber(currentDate);
+        String previousDate = currentDate;
+        for(int i = 0; i < dates.length; i++) {
+            if(i == 0) {
+                dates[0] = new CalendarDate(currentDate);
+            } else {
+                currentDate = Time.getDateAfterDate(previousDate);
+                dates[i] = new CalendarDate(currentDate);
+                previousDate = currentDate;
+            }
+        }
+        if(loadCalendarImmediately && Utils.hadInternetOnLastCheck) {
             loadCalendar();
         }
     }
@@ -123,7 +148,7 @@ public class Unit5Calendar{
      *                       <br>So calling MyNotificationHandler.createNotificationsFromSettings(), Would work as follows: </br>
      *                       <br>addMethodRequests(new String[] {"com.unit5app.notifications.MyNotificationHandler\tcreateNotificationsFromSetting"})</br>
      */
-    public void loadCalendar(final String... methodRequests) {
+    public void loadCalendar(final MethodHolder... methodRequests) {
         if(!startedLoadingCalendar) {
             startedLoadingCalendar = true;
             calendarEvents = new ArrayList<>();
