@@ -51,9 +51,8 @@ public class BaseActivity extends AppCompatActivity  implements NavigationView.O
                 createBackStack(new Intent(this, RssActivity.class));
                 break;
             case R.id.reminder_settings:
-                createBackStack(new Intent(this, MainActivity.class));
+                createBackStack(new Intent(this, SettingsActivity.class));
                 break;
-
             case R.id.action_settings:
                 createBackStack(new Intent(this, SettingsActivity.class));
                 break;

@@ -3,6 +3,7 @@ package com.unit5app.calendars;
 import com.unit5app.com.unit5app.parsers.RSSReader;
 import com.unit5app.tasks.ReadAllFeedTask;
 import com.unit5app.tasks.ReadCalendarTask;
+import com.unit5app.utils.MethodHolder;
 import com.unit5app.utils.Time;
 import com.unit5app.utils.Utils;
 
@@ -123,7 +124,7 @@ public class Unit5Calendar{
      *                       <br>So calling MyNotificationHandler.createNotificationsFromSettings(), Would work as follows: </br>
      *                       <br>addMethodRequests(new String[] {"com.unit5app.notifications.MyNotificationHandler\tcreateNotificationsFromSetting"})</br>
      */
-    public void loadCalendar(final String... methodRequests) {
+    public void loadCalendar(final MethodHolder... methodRequests) {
         if(!startedLoadingCalendar) {
             startedLoadingCalendar = true;
             calendarEvents = new ArrayList<>();

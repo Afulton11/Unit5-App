@@ -39,6 +39,8 @@ public class MainActivity extends BaseActivity {
 
     public static Unit5Calendar mainCalendar;
 
+    private static MainActivity instance;
+
     /* Buttons to be pressed */
     private Button testpdf, testWestNews, testCalendarReading;
 
@@ -50,6 +52,7 @@ public class MainActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         Utils.setCurrentView(Utils.VIEW_LOADING); //TODO: make setContentView(R.layout.view_loading) not get rid of the major details gained from the base activity such as the title when setting the content view again.
         Settings.load(this);
+        instance = this;
 
         if(!NotificationReceiver.started) NotificationReceiver.start(this);
 
@@ -141,10 +144,10 @@ public class MainActivity extends BaseActivity {
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
             return true;
-        }
-
-        return super.onOptionsItemSelected(item);
     }
+
+    return super.onOptionsItemSelected(item);
+}
 
     @Override
     public void onPause() {
@@ -156,5 +159,9 @@ public class MainActivity extends BaseActivity {
     public void onResume() {
         super.onResume();
         Utils.universalOnResume(getApplicationContext());
+    }
+
+    public static MainActivity getInstance() {
+        return instance;
     }
 }

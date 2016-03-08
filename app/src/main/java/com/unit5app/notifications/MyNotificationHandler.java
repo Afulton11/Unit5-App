@@ -11,6 +11,7 @@ import com.unit5app.Settings;
 import com.unit5app.calendars.CalendarEvent;
 import com.unit5app.calendars.EventType;
 import com.unit5app.calendars.Unit5Calendar;
+import com.unit5app.utils.MethodHolder;
 import com.unit5app.utils.Time;
 
 import java.text.ParseException;
@@ -18,7 +19,6 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
 /**
- *
  * This class manages notifications.
  *@author Andrew
  * @version 3/4/16
@@ -27,19 +27,19 @@ public class MyNotificationHandler {
 
     private static Unit5Calendar calendar; //this calendar is used only for this class!
     private static Context context;
+    private Object handlerObject;
 
     public static void init(Context appContext) {
         context = appContext;
         Settings.load(appContext);
         calendar = new Unit5Calendar(60);
-
         checkCalendarLoaded();
 
     }
 
     private static void checkCalendarLoaded() {
-        if(!calendar.hasCalendarStartedLoading()) {
-            calendar.loadCalendar("com.unit5app.notifications.MyNotificationHandler\tcreateNotificationsFromSettings");
+        if(!calendar.hasCalendarStartedLoading()) {//com.unit5app.notifications.
+            calendar.loadCalendar(new MethodHolder("MyNotificationHandler", "createNotificationsFromSettings", new Class[] {}));
         }
     }
 
@@ -49,6 +49,7 @@ public class MyNotificationHandler {
      */
     public static void createNotificationsFromSettings() {
         Log.d("MyHandler", "Creating notifications from settings");
+        createNotificationAndSendNow(context);
         for(int i = 0; i < EventType.values().length; i++)
             if(Settings.getNotificationBoolean(i)) {
                 createAllNotificationsOfType(context, i);

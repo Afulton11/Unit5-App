@@ -21,7 +21,6 @@ import com.unit5app.activities.MainActivity;
  */
 public class NotificationIntentService extends IntentService {
 
-
     public NotificationIntentService() {
         super(NotificationIntentService.class.getSimpleName());
     }
