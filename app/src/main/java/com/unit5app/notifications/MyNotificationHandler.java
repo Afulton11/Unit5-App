@@ -29,16 +29,18 @@ public class MyNotificationHandler {
     private static Context context;
 
     public static void init(Context appContext) {
+        Settings.load(context);
         context = appContext;
-        Settings.load(appContext);
-        calendar = new Unit5Calendar(60);
+        calendar = new Unit5Calendar(60, false);
         checkCalendarLoaded();
 
+//        createNotificationAndSendNow(context);
     }
 
     private static void checkCalendarLoaded() {
         if(!calendar.hasCalendarStartedLoading()) {//com.unit5app.notifications.
-            calendar.loadCalendar(new MethodHolder("MyNotificationHandler", "createNotificationsFromSettings", new Class[] {}));
+            Log.d("MyNotificationHandler", "Loading calendar");
+            calendar.loadCalendar(new MethodHolder(MyNotificationHandler.class.getName(), "createNotificationsFromSettings", null));
         }
     }
 
@@ -90,18 +92,19 @@ public class MyNotificationHandler {
 
     /**
      * creates a new notification that will go off at the time of the event. : tested and worked even when the app was closed by the user :
+     * todo: test to make sure this will still work even when the device is turned off then back on, This may make us have to use an Android service if it doesnt work after turning off then back on.
      * @param context - context of the Activity to go to when clicking the notification, preferrably the mainActivity.
      * @param event - a CalendarEvent to notify the person of.
      */
     private static void createNotification(Context context, CalendarEvent event) {
-        Intent notificationIntent = new Intent(context, NotificationReceiver.class);
-
-        SimpleDateFormat sdf = new SimpleDateFormat(Time.FORMAT_DATE_TIME_12HOUR);
-        Calendar c = Calendar.getInstance();
-
-        if (event != null) {
-            if(!Settings.list_sentNotificationsContains(event.getTitle())) {
+        if(!Settings.list_sentNotificationsContains(event.getTitle())) {
             Settings.list_sentNotifications.add(event.getTitle());
+
+            Intent notificationIntent = new Intent(context, NotificationReceiver.class);
+
+            SimpleDateFormat sdf = new SimpleDateFormat(Time.FORMAT_DATE_TIME_12HOUR);
+            Calendar c = Calendar.getInstance();
+            if (event != null) {
                 try {
                     c.setTime(sdf.parse(event.getDate() + " " + event.getTimeOccurring()));
                 } catch (ParseException e) {
@@ -111,17 +114,17 @@ public class MyNotificationHandler {
                 notificationIntent.putExtra("title", event.getType().toString());
                 notificationIntent.putExtra("message", event.getTitle());
                 notificationIntent.putExtra("sub", event.getTimeOccurring());
+            } else {
+                notificationIntent.putExtra("title", "null");
+                notificationIntent.putExtra("message", "null");
+                notificationIntent.putExtra("sub", "null");
             }
-        } else {
-            notificationIntent.putExtra("title", "null");
-            notificationIntent.putExtra("message", "null");
-            notificationIntent.putExtra("sub", "null");
+
+            PendingIntent pendingIntent = PendingIntent.getBroadcast(context, 0, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+            AlarmManager alarm = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+
+            alarm.set(AlarmManager.RTC_WAKEUP, c.getTimeInMillis(), pendingIntent);
         }
-
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(context, 0, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-        AlarmManager alarm = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
-
-        alarm.set(AlarmManager.RTC_WAKEUP, c.getTimeInMillis(), pendingIntent);
     }
 
     /**

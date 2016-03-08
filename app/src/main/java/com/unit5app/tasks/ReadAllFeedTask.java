@@ -12,6 +12,7 @@ import com.unit5app.activities.RssActivity;
 import com.unit5app.com.unit5app.parsers.CalendarRssReader;
 import com.unit5app.com.unit5app.parsers.RSSReader;
 import com.unit5app.com.unit5app.parsers.WestNewsReader;
+import com.unit5app.utils.MethodHolder;
 import com.unit5app.utils.Utils;
 
 import java.util.ArrayList;
@@ -32,6 +33,8 @@ public class ReadAllFeedTask extends AsyncTask<Void, Void, Void> {
 
     private RSSReader[] readers;
     private ListView list;
+
+    private List<MethodHolder> methodRequests;
 
     public ReadAllFeedTask(ListView list, RSSReader... readers) {
         this.list = list;
@@ -57,6 +60,13 @@ public class ReadAllFeedTask extends AsyncTask<Void, Void, Void> {
             }
             RssActivity.setListToNewsArticles();
             Toast.makeText(list.getContext(), "Done loading!", Toast.LENGTH_SHORT);
+        }
+
+        if(methodRequests.size() > 0) {
+            for (MethodHolder holder : methodRequests) { //http://www.javaworld.com/article/2077455/learn-java/dynamically-invoking-a-static-method-without-instance-reference-july-6-1999.html
+                holder.callMethod();
+            }
+            methodRequests.clear();
         }
     }
 
@@ -160,5 +170,16 @@ public class ReadAllFeedTask extends AsyncTask<Void, Void, Void> {
             titles[i] = Utils.toTitleCase(Html.fromHtml(getNewsArticleAt(i).getTitle()).toString());
         }
         return titles;
+    }
+
+    /**
+     * adds a method request for when the calendar finished executing <b>NOTE: NOT YET WORKING!!</b>
+     * @param methodRequests - the class and method to call. (only works for methods with no params as of right now.)
+     *                       <br>format of a method Request string: "package\tmethodName"</br>
+     *                       <br>So calling MyNotificationHandler.createNotificationsFromSettings(), Would work as follows: </br>
+     *                       <br>addMethodRequests(new String[] {"com.unit5app.notifications.MyNotificationHandler\tcreateNotificationsFromSetting"})</br>
+     */
+    public void addMethodRequests(final MethodHolder...methodRequests) {
+        Collections.addAll(this.methodRequests, methodRequests);
     }
 }

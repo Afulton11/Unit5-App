@@ -1,5 +1,9 @@
 package com.unit5app.utils;
 
+import android.util.Log;
+
+import java.lang.reflect.Method;
+
 /**
  * Stores a method to be called through Java Reflection.
  * @author Andrew
@@ -8,18 +12,18 @@ package com.unit5app.utils;
 public class MethodHolder {
 
     private String methodName;
-    private String classPath;
+    private String className;
     private Class[] parameters;
 
     /**
      * Holds a Method to be used later by java reflection.
-     * @param classPath may be Class name and not the entire path
+     * @param className the entire path of the class name, can be gotten by calling MyClass.class.getName(), or written as "com.unit5app.mypackage.myClass"
      * @param methodName the name of the method to hold
-     * @param parameters parameters of the method. e.g. String.class, Integer.class, etc..
+     * @param parameters parameters of the method. e.g. Class[] {String.class, Integer.class, etc..} If there are no parameters, set this to null.
      */
-    public MethodHolder(String classPath, String methodName, Class... parameters) {
+    public MethodHolder(String className, String methodName, Class... parameters) {
         this.methodName = methodName;
-        this.classPath = classPath;
+        this.className = className;
         this.parameters = parameters;
     }
 
@@ -31,7 +35,17 @@ public class MethodHolder {
         return parameters;
     }
 
-    public String getObjectString() {
-        return classPath;
+    public String getClassName() {
+        return className;
+    }
+
+    public void callMethod() {
+        try {
+            Class c = Class.forName(className);
+            Method m = c.getDeclaredMethod(methodName, parameters);
+            Object o = m.invoke(null, null);
+        } catch (Exception e) {
+            Log.d("MethodHolder", e.getMessage(), e);
+        }
     }
 }

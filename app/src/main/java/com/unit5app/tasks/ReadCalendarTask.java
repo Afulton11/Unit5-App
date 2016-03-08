@@ -2,16 +2,13 @@ package com.unit5app.tasks;
 
 import android.os.AsyncTask;
 import android.text.Html;
-import android.util.Log;
 
 import com.unit5app.activities.UpcomingEventsActivity;
 import com.unit5app.calendars.CalendarEvent;
 import com.unit5app.com.unit5app.parsers.CalendarRssReader;
-import com.unit5app.notifications.MyNotificationHandler;
 import com.unit5app.utils.MethodHolder;
 import com.unit5app.utils.Utils;
 
-import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -48,20 +45,12 @@ public class ReadCalendarTask extends AsyncTask<Void, Void, Void> {
         UpcomingEventsActivity.calendarEventsString = Html.fromHtml(html_styling_string);
         loaded = true;
 
-        for(MethodHolder holder : methodRequests) { //http://www.mkyong.com/java/how-to-use-reflection-to-call-java-method-at-runtime/
-            try {
-//                Method method = holder.getClassObject().getClass().getMethod(holder.getMethodName(), holder.getParameters()); //only works for methods with no params
-//                method.invoke(holder.getClassObject(), holder.getMethodName());
-                //        Method m = valueObject.getClass().getMethod(methodName, new Class[] {});
-//        Object ret = m.invoke(valueObject, new Object[] {});
-                Method m = holder.getObjectString().getClass().getMethod(holder.getMethodName(), holder.getParameters());
-                Object obj = m.invoke(holder.getObjectString(), holder.getParameters());
-            } catch (Exception e) {
-                Log.d("CALENDAR_TASK", e.getMessage(), e);
+        if(methodRequests.size() > 0) {
+            for (MethodHolder holder : methodRequests) { //http://www.javaworld.com/article/2077455/learn-java/dynamically-invoking-a-static-method-without-instance-reference-july-6-1999.html
+                holder.callMethod();
             }
+            methodRequests.clear();
         }
-        methodRequests.clear();
-        MyNotificationHandler.createNotificationsFromSettings();
     }
 
     @Override

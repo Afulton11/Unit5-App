@@ -55,6 +55,30 @@ public class Unit5Calendar{
     }
 
     /**
+     * creates a new Calendar from the Main calendar url: <a href="{@value #CALENDAR_URL}">See Calendar Url</a>
+     * @param numDays the number of days to extend from the current day.
+     * @param loadCalendarImmediately true to load the calendar in the constructor, false to load the calendar from calling a loadcalendar() function.
+     */
+    public Unit5Calendar(int numDays, boolean loadCalendarImmediately) {
+        dates = new CalendarDate[numDays];
+        String currentDate = Time.getCurrentDate(Time.FORMAT_BASIC_DATE);
+        int currentDateNum = Time.getDateAsNumber(currentDate);
+        String previousDate = currentDate;
+        for(int i = 0; i < dates.length; i++) {
+            if(i == 0) {
+                dates[0] = new CalendarDate(currentDate);
+            } else {
+                currentDate = Time.getDateAfterDate(previousDate);
+                dates[i] = new CalendarDate(currentDate);
+                previousDate = currentDate;
+            }
+        }
+        if(loadCalendarImmediately && Utils.hadInternetOnLastCheck) {
+            loadCalendar();
+        }
+    }
+
+    /**
      * this can be called from the UpdateManager, once we get that going.
      */
     public void update() {
