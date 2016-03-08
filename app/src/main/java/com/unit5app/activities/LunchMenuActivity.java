@@ -27,8 +27,8 @@ public class LunchMenuActivity extends BaseActivity {
         PDFPaint.s_doAntiAlias = true; // Smooths text
         HardReference.sKeepCaches = true; // Saves images in cache
 
-        //webView = (WebView)findViewById(R.id.);
-        //webView.getSettings().setBuiltInZoomControls(true); // Enable zoom buttons
-        //webView.getSettings().setSupportZoom(true);     // Make zoom work
+        webView = (WebView)findViewById(R.id.lunchmenu_pdf);
+        webView.getSettings().setBuiltInZoomControls(true); // Enable zoom buttons
+        webView.getSettings().setSupportZoom(true);     // Make zoom work
     }
 }
