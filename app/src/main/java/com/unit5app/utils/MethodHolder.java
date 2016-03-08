@@ -11,6 +11,12 @@ public class MethodHolder {
     private String classPath;
     private Class[] parameters;
 
+    /**
+     * Holds a Method to be used later by java reflection.
+     * @param classPath may be Class name and not the entire path
+     * @param methodName the name of the method to hold
+     * @param parameters parameters of the method. e.g. String.class, Integer.class, etc..
+     */
     public MethodHolder(String classPath, String methodName, Class... parameters) {
         this.methodName = methodName;
         this.classPath = classPath;

@@ -7,6 +7,7 @@ import android.util.Log;
 import com.unit5app.activities.UpcomingEventsActivity;
 import com.unit5app.calendars.CalendarEvent;
 import com.unit5app.com.unit5app.parsers.CalendarRssReader;
+import com.unit5app.notifications.MyNotificationHandler;
 import com.unit5app.utils.MethodHolder;
 import com.unit5app.utils.Utils;
 
@@ -60,7 +61,7 @@ public class ReadCalendarTask extends AsyncTask<Void, Void, Void> {
             }
         }
         methodRequests.clear();
-//        MyNotificationHandler.createNotificationsFromSettings();
+        MyNotificationHandler.createNotificationsFromSettings();
     }
 
     @Override

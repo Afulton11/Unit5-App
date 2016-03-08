@@ -27,7 +27,6 @@ public class MyNotificationHandler {
 
     private static Unit5Calendar calendar; //this calendar is used only for this class!
     private static Context context;
-    private Object handlerObject;
 
     public static void init(Context appContext) {
         context = appContext;
