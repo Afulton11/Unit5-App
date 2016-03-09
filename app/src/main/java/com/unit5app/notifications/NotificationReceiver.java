@@ -4,9 +4,6 @@ import android.app.Activity;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
-import android.media.Ringtone;
-import android.media.RingtoneManager;
-import android.net.Uri;
 import android.support.v4.content.WakefulBroadcastReceiver;
 import android.util.Log;
 
@@ -26,20 +23,12 @@ public class NotificationReceiver extends WakefulBroadcastReceiver{
         Log.d("Receiver", "received notification!");
         Settings.load(context);
 
-        if(!Settings.list_sentNotificationsContains(intent.getStringExtra("title")) && Settings.getNotificationBoolean(intent.getIntExtra("id", 0))) {
+        if(!(Settings.list_sentNotificationsContains(intent.getStringExtra("title")) && Settings.getNotificationBoolean(intent.getIntExtra("id", 0)))) {
             ComponentName comp = new ComponentName(context.getPackageName(), com.unit5app.notifications.NotificationIntentService.class.getName());
             startWakefulService(context, (intent.setComponent(comp))); //calls onHandleIntent for the NotificationIntentService
 
             Settings.list_sentNotifications.add(intent.getStringExtra("title"));
             Settings.save(context);
-        }
-
-        try { //attempting to play default ringtone
-            Uri notification = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
-            Ringtone r = RingtoneManager.getRingtone(context, notification);
-            r.play();
-        } catch (Exception e) {
-            e.printStackTrace();
         }
 
         setResultCode(Activity.RESULT_OK);
