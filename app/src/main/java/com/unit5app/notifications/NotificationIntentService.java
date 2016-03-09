@@ -42,7 +42,11 @@ public class NotificationIntentService extends IntentService {
     }
 
     public void sendNotification(Context originalContext, int id, String title, String text, String subText) {
+        Log.d("IntentService", "Send Method!");
         if(Settings.getNotificationBoolean(id)) { //reassuring that the user did in fact choose to have this type of notification sent to them, now we can just end all the notifications and only the ones the user has chosen will be seen.
+            Log.d("IntentService", "Send Method Success!");
+
+            Settings.addSentNotification(title);
             Context context = originalContext.getApplicationContext();
             PendingIntent pendingIntent = PendingIntent.getActivity(context, 1, new Intent(context, MainActivity.class), 0);
             NotificationCompat.Builder builder = new NotificationCompat.Builder(context);

@@ -217,6 +217,10 @@ public class Unit5Calendar{
         return newsTask;
     }
 
+    public ReadCalendarTask getCalendarTask() {
+        return calendarTask;
+    }
+
     public boolean newsLoaded() {
         return (newsTask != null && newsTask.isLoaded());
     }

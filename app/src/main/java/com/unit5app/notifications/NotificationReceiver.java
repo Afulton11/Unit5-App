@@ -27,19 +27,17 @@ public class NotificationReceiver extends WakefulBroadcastReceiver{
         Settings.load(context);
 
         if(!Settings.list_sentNotificationsContains(intent.getStringExtra("title")) && Settings.getNotificationBoolean(intent.getIntExtra("id", 0))) {
-            ComponentName comp = new ComponentName(context.getPackageName(), com.unit5app.notifications.NotificationIntentService.class.getName());
+            Log.d("Receiver", "Sending notification to service");
+            ComponentName comp = new ComponentName(context.getPackageName(), NotificationIntentService.class.getName());
             startWakefulService(context, (intent.setComponent(comp))); //calls onHandleIntent for the NotificationIntentService
 
-            Settings.list_sentNotifications.add(intent.getStringExtra("title"));
-            Settings.save(context);
-        }
-
-        try { //attempting to play default ringtone
-            Uri notification = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
-            Ringtone r = RingtoneManager.getRingtone(context, notification);
-            r.play();
-        } catch (Exception e) {
-            e.printStackTrace();
+            try { //attempting to play default ringtone
+                Uri notification = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+                Ringtone r = RingtoneManager.getRingtone(context, notification);
+                r.play();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
 
         setResultCode(Activity.RESULT_OK);
@@ -49,7 +47,7 @@ public class NotificationReceiver extends WakefulBroadcastReceiver{
      * starts the notification service.
      * @param context context
      */
-    public static void start(Context context) { //TODO: fix the error where context is null when starting from the mainActivity, it may also be null when powering on the device and recieving context from the NotificationStarter
+    public static void start(Context context) {
         if(Utils.isInternetConnected(context)) {
             started = true;
             MyNotificationHandler.init(context);

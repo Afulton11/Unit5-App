@@ -47,7 +47,7 @@ public class Settings {
     /**
      * list of the sentNotifications.
      */
-    public static List<String> list_sentNotifications = new ArrayList<>();
+    private static List<String> list_sentNotifications = new ArrayList<>();
 
     private static boolean[] article_settings = new boolean[NUM_ARTICLE_SETTINGS];
 
@@ -82,6 +82,7 @@ public class Settings {
 
 //            StringBuffer buffer = new StringBuffer();
                 while ((currentLine = reader.readLine()) != null) {
+                    Log.d(TAG, "Stuck?" + currentLine);
 //               buffer.append(currentLine + System.getProperty("line.separator"));
                     if (!currentLine.startsWith("//")) {
                         tokens = currentLine.split("\t");
@@ -97,7 +98,7 @@ public class Settings {
                             if (tokens[0].equals("TodaysDate")) {
                                 lastSendDate = tokens[1];
                             } else if (tokens[0].equals("CalEvent") && lastSendDate.equals(Time.getCurrentDate(Time.FORMAT_BASIC_DATE))) {
-                                list_sentNotifications.add(tokens[1]);
+                                addSentNotification(tokens[1]);
                             }
                         }
                     }
@@ -151,10 +152,10 @@ public class Settings {
             }
             writer.write("TodaysDate\t" + Time.getCurrentDate(Time.FORMAT_BASIC_DATE));
             writer.newLine();
-            for(int i = 0; i < list_sentNotifications.size(); i++) {
-                writer.write("CalEvent\t" + list_sentNotifications.get(i));
-                writer.newLine();
-            }
+//            for(int i = 0; i < list_sentNotifications.size(); i++) {
+//                writer.write("CalEvent\t" + list_sentNotifications.get(i));
+//                writer.newLine();
+//            }
             for(int i = 0; i < article_settings.length; i++) {
                 writer.write("articleBool\t" + i + "\t" + article_settings[i]);
                 writer.newLine();
@@ -167,6 +168,14 @@ public class Settings {
         } catch (IOException ioe) {
             Log.d(TAG, ioe.getMessage(), ioe);
         }
+    }
+
+    /**
+     * adds the title to the list if it is not already in the list.
+     * @param title the title to add to the list.
+     */
+    public static void addSentNotification(String title) {
+        if(!list_sentNotificationsContains(title)) list_sentNotifications.add(title);
     }
 
     /**

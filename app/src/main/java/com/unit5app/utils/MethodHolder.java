@@ -43,7 +43,7 @@ public class MethodHolder {
         try {
             Class c = Class.forName(className);
             Method m = c.getDeclaredMethod(methodName, parameters);
-            Object o = m.invoke(null, null);
+            Object o = m.invoke(null, (Class[]) null);
         } catch (Exception e) {
             Log.d("MethodHolder", e.getMessage(), e);
         }

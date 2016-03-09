@@ -40,7 +40,7 @@ public class SettingsActivity extends BaseActivity {
             notificationBoxes[i].setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                 @Override
                 public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-//                    if (MyNotificationHandler.isCalendarLoaded()) {
+                    if (MyNotificationHandler.isCalendarLoaded()) {
                         Settings.setNotificationBoolean(ID, isChecked);
                         Settings.save(getApplicationContext());
                         if (!isChecked) {
@@ -48,9 +48,9 @@ public class SettingsActivity extends BaseActivity {
                         } else {
                             MyNotificationHandler.createAllNotificationsOfType(getApplicationContext(), ID);
                         }
-//                    } else {
+                    } else {
                         Toast.makeText(getApplicationContext(), "Please wait.. still loading a few things!", Toast.LENGTH_LONG);
-//                    }
+                    }
                 }
             });
         }
