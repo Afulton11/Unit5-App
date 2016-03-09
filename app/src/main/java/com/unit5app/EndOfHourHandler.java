@@ -23,8 +23,8 @@ public class EndOfHourHandler {
     private Context context;
 
     private Period[] periods = new Period[] {
-            new Period(0, "07:10 AM"),  new Period(1, "08:05 AM"), new Period(2, "09:00 AM"),  new Period(3, "09:55 AM"), new Period(4, "10:50 AM"),
-            new Period(5, "11:45 AM"), new Period(6, "12:40 PM"),  new Period(7, "01:35 PM"), new Period(8, "02:30 PM")
+            new Period(0, "07:10 AM", "8:10 AM"),  new Period(1, "08:05 AM", "09:01 AM"), new Period(2, "09:00 AM", "09:48 AM"),  new Period(3, "09:55 AM", "010:35 AM"), new Period(4, "10:50 AM", "11:22 AM"),
+            new Period(5, "11:45 AM", "12:09 PM"), new Period(6, "12:40 PM", "12:56 PM"),  new Period(7, "01:35 PM", "01:43 PM"), new Period(8, "02:30 PM", "2:30 PM")
     };
 
     /* Index representing the current period and its ending time */
@@ -127,9 +127,7 @@ public class EndOfHourHandler {
     Whether or not school is currently in session.
      */
     public boolean isSchoolInSession() {
-        /* TODO: Account for the current date, as well. */
         String currentTime = Time.getCurrentTime("HH:mm");
-//        String currentDate = Utils.getCurrentDate("MM/dd/yy");
 
         if(!Time.isWeekend()) {
             int currentHours = Integer.parseInt(currentTime.substring(0, 2));

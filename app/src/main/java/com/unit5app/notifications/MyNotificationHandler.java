@@ -120,8 +120,8 @@ public class MyNotificationHandler {
                     e.printStackTrace();
                 }
                 notificationIntent.putExtra("id", event.getType().getId());
-                notificationIntent.putExtra("title", event.getType().toString());
-                notificationIntent.putExtra("message", event.getTitle());
+                notificationIntent.putExtra("title", event.getTitle());
+                notificationIntent.putExtra("message", "");
                 notificationIntent.putExtra("sub", event.getTimeOccurring());
             }
         } else {
