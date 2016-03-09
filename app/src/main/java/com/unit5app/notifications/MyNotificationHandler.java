@@ -112,10 +112,10 @@ public class MyNotificationHandler {
         if (event != null) {
 
             if(!Settings.list_sentNotificationsContains(event.getTitle())) {
-                Settings.addSentNotification(event.getTitle());
 
                 try {
                     c.setTime(sdf.parse(event.getDate() + " " + event.getTimeOccurring()));
+                    if(c.getTimeInMillis() < SystemClock.currentThreadTimeMillis()) c.setTimeInMillis(SystemClock.currentThreadTimeMillis() + 500);
                 } catch (ParseException e) {
                     e.printStackTrace();
                 }
