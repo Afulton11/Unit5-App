@@ -45,12 +45,7 @@ public class ReadCalendarTask extends AsyncTask<Void, Void, Void> {
         UpcomingEventsActivity.calendarEventsString = Html.fromHtml(html_styling_string);
         loaded = true;
 
-        if(methodRequests.size() > 0) {
-            for (MethodHolder holder : methodRequests) { //http://www.javaworld.com/article/2077455/learn-java/dynamically-invoking-a-static-method-without-instance-reference-july-6-1999.html
-                holder.callMethod();
-            }
-            methodRequests.clear();
-        }
+
     }
 
     @Override

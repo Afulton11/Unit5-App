@@ -38,10 +38,21 @@ public class MyNotificationHandler {
     }
 
     private static void checkCalendarLoaded() {
-        if(!calendar.hasCalendarStartedLoading()) {//com.unit5app.notifications.
+        if(!calendar.hasCalendarStartedLoading()) {
             Log.d("MyNotificationHandler", "Loading calendar");
             calendar.loadCalendar(new MethodHolder(MyNotificationHandler.class.getName(), "createNotificationsFromSettings", null));
         }
+    }
+
+    public static void addMethodRequestToCalendar(MethodHolder methodHolder) {
+        checkCalendarLoaded();
+        if(!isCalendarLoaded()) {
+            calendar.getCalendarTask().addMethodRequests(methodHolder);
+        }
+    }
+
+    public static boolean isCalendarLoaded() {
+        return calendar.getCalendarTask().isLoaded();
     }
 
 
