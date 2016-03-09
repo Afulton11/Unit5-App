@@ -7,8 +7,6 @@ import android.text.method.ScrollingMovementMethod;
 import android.widget.TextView;
 
 import com.unit5app.R;
-import com.unit5app.com.unit5app.parsers.CalendarRssReader;
-import com.unit5app.notifications.MyNotificationHandler;
 import com.unit5app.utils.Utils;
 
 /**
@@ -18,8 +16,6 @@ import com.unit5app.utils.Utils;
 public class UpcomingEventsActivity extends BaseActivity {
 
     private TextView textView_calendarEvents;
-
-    public static CalendarRssReader rssCalendarReader;
 
     public static Spanned calendarEventsString = null;
 

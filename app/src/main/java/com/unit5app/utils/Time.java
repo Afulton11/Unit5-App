@@ -3,7 +3,6 @@ package com.unit5app.utils;
 import android.util.Log;
 
 import com.unit5app.activities.MainActivity;
-import com.unit5app.activities.UpcomingEventsActivity;
 import com.unit5app.calendars.CalendarEvent;
 import com.unit5app.calendars.EventType;
 
@@ -203,7 +202,7 @@ public abstract class Time {
      * @return true if today is a Late Start, false otherwise.
      */
     public static boolean isTodayLateStart() {
-        if (UpcomingEventsActivity.rssCalendarReader.doneParsing()) {
+        if (MainActivity.mainCalendar.getCalendarTask().isLoaded()) {
 
             CalendarEvent[] calendarEvents = MainActivity.mainCalendar.getEventsForDate(getCurrentDate("MM/dd/yy")); //gets all the calendar events from the rssCalendarReader.
 
