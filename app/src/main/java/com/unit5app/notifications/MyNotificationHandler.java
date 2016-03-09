@@ -30,7 +30,7 @@ public class MyNotificationHandler {
     private static Context context;
 
     public static void init(Context appContext) {
-        Settings.load(context);
+        Settings.load(appContext);
         context = appContext;
         calendar = new Unit5Calendar(60, false);
         checkCalendarLoaded();
@@ -101,7 +101,6 @@ public class MyNotificationHandler {
 
     /**
      * creates a new notification that will go off at the time of the event. : tested and worked even when the app was closed by the user :
-     * todo: test to make sure this will still work even when the device is turned off then back on, This may make us have to use an Android service if it doesnt work after turning off then back on.
      * @param context - context of the Activity to go to when clicking the notification, preferrably the mainActivity.
      * @param event - a CalendarEvent to notify the person of.
      */

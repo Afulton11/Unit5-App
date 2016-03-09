@@ -45,10 +45,10 @@
         <activity android:name=".activities.SettingsActivity"
             android:label="@string/title_settings"/>
 
-        <!--<service-->
-            <!--android:name=".notifications.NotificationIntentService"-->
-            <!--android:enabled="true"-->
-            <!--android:exported="false"/>-->
+        <service
+            android:name=".notifications.NotificationIntentService"
+            android:enabled="true"
+            android:exported="false"/>
 
         <receiver
             android:enabled="true"
