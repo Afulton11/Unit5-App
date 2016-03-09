@@ -5,6 +5,7 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.os.SystemClock;
 import android.util.Log;
 
 import com.unit5app.Settings;
@@ -29,8 +30,8 @@ public class MyNotificationHandler {
     private static Context context;
 
     public static void init(Context appContext) {
-        Settings.load(context);
         context = appContext;
+        Settings.load(context);
         calendar = new Unit5Calendar(60, false);
         checkCalendarLoaded();
     }
@@ -103,11 +104,16 @@ public class MyNotificationHandler {
         Calendar c = Calendar.getInstance();
 
         if (event != null) {
+            Log.d("notify", "Sending notification!");
             if(!Settings.list_sentNotificationsContains(event.getTitle())) {
-                Settings.list_sentNotifications.add(event.getTitle());
+                Settings.addSentNotification(event.getTitle());
+
+
+                Log.d("notify", "title: " + event.getTitle());
 
                 try {
                     c.setTime(sdf.parse(event.getDate() + " " + event.getTimeOccurring()));
+                    if(c.getTimeInMillis() < SystemClock.currentThreadTimeMillis()) c.setTimeInMillis(SystemClock.currentThreadTimeMillis() + 1000);
                 } catch (ParseException e) {
                     e.printStackTrace();
                 }

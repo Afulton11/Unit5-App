@@ -23,12 +23,9 @@ public class NotificationReceiver extends WakefulBroadcastReceiver{
         Log.d("Receiver", "received notification!");
         Settings.load(context);
 
-        if(!(Settings.list_sentNotificationsContains(intent.getStringExtra("title")) && Settings.getNotificationBoolean(intent.getIntExtra("id", 0)))) {
+        if(!Settings.list_sentNotificationsContains(intent.getStringExtra("title")) && Settings.getNotificationBoolean(intent.getIntExtra("id", 0))) {
             ComponentName comp = new ComponentName(context.getPackageName(), com.unit5app.notifications.NotificationIntentService.class.getName());
             startWakefulService(context, (intent.setComponent(comp))); //calls onHandleIntent for the NotificationIntentService
-
-            Settings.list_sentNotifications.add(intent.getStringExtra("title"));
-            Settings.save(context);
         }
 
         setResultCode(Activity.RESULT_OK);
@@ -38,7 +35,7 @@ public class NotificationReceiver extends WakefulBroadcastReceiver{
      * starts the notification service.
      * @param context context
      */
-    public static void start(Context context) { //TODO: fix the error where context is null when starting from the mainActivity, it may also be null when powering on the device and recieving context from the NotificationStarter
+    public static void start(Context context) {
         if(Utils.isInternetConnected(context)) {
             started = true;
             MyNotificationHandler.init(context);
