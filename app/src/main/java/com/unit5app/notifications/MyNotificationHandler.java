@@ -125,9 +125,9 @@ public class MyNotificationHandler {
                 notificationIntent.putExtra("sub", event.getTimeOccurring());
             }
         } else {
-            notificationIntent.putExtra("title", "null");
-            notificationIntent.putExtra("message", "null");
-            notificationIntent.putExtra("sub", "null");
+            notificationIntent.putExtra("title", "Unit5 App");
+            notificationIntent.putExtra("message", "Sorry, this notification should not have been sent.");
+            notificationIntent.putExtra("sub", "");
         }
         PendingIntent pendingIntent = PendingIntent.getBroadcast(context, 0, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
         AlarmManager alarm = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
