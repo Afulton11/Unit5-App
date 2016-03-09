@@ -67,8 +67,8 @@ public class SettingsActivity extends BaseActivity {
         scrollWithTile.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                Settings.setArticleSettingsBoolean(0, isChecked);
-                Settings.save(getApplicationContext());
+                    Settings.setArticleSettingsBoolean(0, isChecked);
+                    Settings.save(getApplicationContext());
             }
         });
 

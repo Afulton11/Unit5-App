@@ -237,5 +237,9 @@ public class Unit5Calendar{
         return startedLoadingCalendar;
     }
 
+    public ReadCalendarTask getCalendarTask() {
+        return calendarTask;
+    }
+
 
 }
