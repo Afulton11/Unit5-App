@@ -29,12 +29,12 @@ public class MyNotificationHandler {
     private static Context context;
 
     public static void init(Context appContext) {
-        Settings.load(context);
         context = appContext;
+        Settings.load(context);
         calendar = new Unit5Calendar(60, false);
         checkCalendarLoaded();
 
-//        createNotificationAndSendNow(context);
+        createNotificationAndSendNow(context);
     }
 
     private static void checkCalendarLoaded() {
@@ -44,6 +44,16 @@ public class MyNotificationHandler {
         }
     }
 
+    public static void addMethodRequestToCalendar(MethodHolder methodHolder) {
+        checkCalendarLoaded();
+        if(!isCalendarLoaded()) {
+            calendar.getCalendarTask().addMethodRequests(methodHolder);
+        }
+    }
+
+    public static boolean isCalendarLoaded() {
+        return calendar.getCalendarTask().isLoaded();
+    }
 
     /**
      * creates notifications based on the user's settings
@@ -139,6 +149,7 @@ public class MyNotificationHandler {
             notificationIntent.putExtra("title", "null");
             notificationIntent.putExtra("message", "null");
             notificationIntent.putExtra("sub", "null");
+            notificationIntent.putExtra("id", 0);
 
         PendingIntent pendingIntent = PendingIntent.getBroadcast(context, 0, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
         AlarmManager alarm = (AlarmManager)context.getSystemService(Context.ALARM_SERVICE);

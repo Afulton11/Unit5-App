@@ -24,6 +24,8 @@ public class Unit5Calendar{
     private RSSReader[] rssReaders;
     private ReadAllFeedTask newsTask;
 
+    private ReadCalendarTask calendarTask;
+
     private List<CalendarEvent> calendarEvents;
     private boolean startedLoadingCalendar, startedLoadingNews;
 
@@ -155,7 +157,7 @@ public class Unit5Calendar{
             new Thread(new Runnable() {
                 @Override
                 public void run() {
-                    ReadCalendarTask calendarTask = new ReadCalendarTask(CALENDAR_URL);
+                    calendarTask = new ReadCalendarTask(CALENDAR_URL);
                     calendarTask.addMethodRequests(methodRequests);
                     calendarTask.execute();
                     if (!calendarTask.isLoaded()) Utils.waitForMonitorState();
@@ -213,6 +215,10 @@ public class Unit5Calendar{
 
     public ReadAllFeedTask getNewsTask() {
         return newsTask;
+    }
+
+    public ReadCalendarTask getCalendarTask() {
+        return calendarTask;
     }
 
     public boolean newsLoaded() {

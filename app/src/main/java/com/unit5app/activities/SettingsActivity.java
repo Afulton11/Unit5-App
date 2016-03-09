@@ -3,6 +3,7 @@ package com.unit5app.activities;
 import android.os.Bundle;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
+import android.widget.Toast;
 
 import com.unit5app.R;
 import com.unit5app.Settings;
@@ -39,12 +40,16 @@ public class SettingsActivity extends BaseActivity {
             notificationBoxes[i].setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                 @Override
                 public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                    Settings.setNotificationBoolean(ID, isChecked);
-                    Settings.save(getApplicationContext());
-                    if(!isChecked) {
-                        MyNotificationHandler.cancelNotificationsOfType(getApplicationContext(), ID);
+                    if (MyNotificationHandler.isCalendarLoaded()) {
+                        Settings.setNotificationBoolean(ID, isChecked);
+                        Settings.save(getApplicationContext());
+                        if (!isChecked) {
+                            MyNotificationHandler.cancelNotificationsOfType(getApplicationContext(), ID);
+                        } else {
+                            MyNotificationHandler.createAllNotificationsOfType(getApplicationContext(), ID);
+                        }
                     } else {
-                        MyNotificationHandler.createAllNotificationsOfType(getApplicationContext(), ID);
+                        Toast.makeText(getApplicationContext(), "Please wait.. still loading a few things!", Toast.LENGTH_LONG);
                     }
                 }
             });

@@ -42,12 +42,14 @@ public class ReadAllFeedTask extends AsyncTask<Void, Void, Void> {
         articles = new ArrayList<>();
         all_titles = new ArrayList<>();
         all_readers_executing = new ArrayList<>();
+        methodRequests = new ArrayList<>();
     }
 
     public ReadAllFeedTask() {
         articles = new ArrayList<>();
         all_titles = new ArrayList<>();
         all_readers_executing = new ArrayList<>();
+        methodRequests = new ArrayList<>();
     }
 
     @Override
@@ -62,7 +64,7 @@ public class ReadAllFeedTask extends AsyncTask<Void, Void, Void> {
             Toast.makeText(list.getContext(), "Done loading!", Toast.LENGTH_SHORT);
         }
 
-        if(methodRequests.size() > 0) {
+        if(methodRequests != null && methodRequests.size() > 0) {
             for (MethodHolder holder : methodRequests) { //http://www.javaworld.com/article/2077455/learn-java/dynamically-invoking-a-static-method-without-instance-reference-july-6-1999.html
                 holder.callMethod();
             }
