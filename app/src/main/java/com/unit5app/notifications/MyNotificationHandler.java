@@ -5,7 +5,6 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
-import android.os.SystemClock;
 import android.util.Log;
 
 import com.unit5app.Settings;
@@ -115,7 +114,7 @@ public class MyNotificationHandler {
 
                 try {
                     c.setTime(sdf.parse(event.getDate() + " " + event.getTimeOccurring()));
-                    if(c.getTimeInMillis() < SystemClock.currentThreadTimeMillis()) c.setTimeInMillis(SystemClock.currentThreadTimeMillis() + 500);
+                    if(c.getTimeInMillis() < System.currentTimeMillis()) c.setTimeInMillis(System.currentTimeMillis() + 500);
                 } catch (ParseException e) {
                     e.printStackTrace();
                 }
