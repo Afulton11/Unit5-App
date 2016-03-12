@@ -1,6 +1,7 @@
 package com.unit5app.activities;
 
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.view.MenuItem;
@@ -128,9 +129,25 @@ public class MainActivity extends BaseActivity {
             @Override
             public void onClick(View view) {
 
-                startActivity(new Intent(MainActivity.this, RssActivity.class));
+                startSkywardApp();
             }
         });
+    }
+
+    /**
+     * starts the user's skyward app for checking grades.
+     */
+    private void startSkywardApp() {
+        PackageManager packageManager = getPackageManager();
+
+        Intent intent = packageManager.getLaunchIntentForPackage("com.skyward.mobileaccess");
+
+
+        List activities = packageManager.queryIntentActivities(intent, PackageManager.MATCH_DEFAULT_ONLY);
+        boolean hasSkyward = activities.size() > 0;
+        if(hasSkyward) {
+            startActivity(intent);
+        }
     }
 
     /* Function to handle when you click something in the action bar */
