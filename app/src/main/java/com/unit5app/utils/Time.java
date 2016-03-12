@@ -202,7 +202,8 @@ public abstract class Time {
      * @return true if today is a Late Start, false otherwise.
      */
     public static boolean isTodayLateStart() {
-        if (MainActivity.mainCalendar.getCalendarTask().isLoaded()) {
+        if (MainActivity.mainCalendar != null && MainActivity.mainCalendar.getCalendarTask() != null &&
+                MainActivity.mainCalendar.getCalendarTask().isLoaded()) {
 
             CalendarEvent[] calendarEvents = MainActivity.mainCalendar.getEventsForDate(getCurrentDate("MM/dd/yy")); //gets all the calendar events from the rssCalendarReader.
 

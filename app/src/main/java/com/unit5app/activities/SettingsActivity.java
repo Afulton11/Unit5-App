@@ -1,6 +1,8 @@
 package com.unit5app.activities;
 
 import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.Toast;
@@ -17,6 +19,20 @@ public class SettingsActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings);
         Utils.setCurrentView(Utils.VIEW_SETTINGS);
+          /*
+        *****************************DEBUG SETTINGS START*****************************************
+         */
+        Button debug_clearSettings = (Button) findViewById(R.id.settings_debug_clearSettingsFile);
+
+        debug_clearSettings.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Settings.clearSave(getApplicationContext());
+            }
+        });
+          /*
+        *****************************DEBUG SETTINGS END*****************************************
+         */
         /*
         *****************************NOTIFICATION SETTINGS START*****************************************
          */
