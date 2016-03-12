@@ -5,7 +5,6 @@ import android.text.Html;
 import android.util.Log;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
-import android.widget.Toast;
 
 import com.unit5app.Article;
 import com.unit5app.activities.RssActivity;
@@ -61,7 +60,6 @@ public class ReadAllFeedTask extends AsyncTask<Void, Void, Void> {
                 all_titles.add(Utils.toTitleCase(Html.fromHtml(a.getTitle()).toString()));
             }
             RssActivity.setListToNewsArticles();
-            Toast.makeText(list.getContext(), "Done loading!", Toast.LENGTH_SHORT);
         }
 
         if(methodRequests != null && methodRequests.size() > 0) {

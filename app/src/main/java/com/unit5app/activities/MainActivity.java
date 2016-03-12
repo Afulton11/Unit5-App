@@ -128,7 +128,6 @@ public class MainActivity extends BaseActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
                 startSkywardApp();
             }
         });
@@ -140,7 +139,7 @@ public class MainActivity extends BaseActivity {
     private void startSkywardApp() {
         PackageManager packageManager = getPackageManager();
 
-        Intent intent = packageManager.getLaunchIntentForPackage("com.skyward.mobileaccess");
+        Intent intent = packageManager.getLaunchIntentForPackage("com.skyward.mobileaccess"); //package found from going to the app's page on the google play store and looking at the last part of the url.
 
 
         List activities = packageManager.queryIntentActivities(intent, PackageManager.MATCH_DEFAULT_ONLY);
