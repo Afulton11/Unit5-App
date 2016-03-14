@@ -1,33 +1,69 @@
 package com.unit5app.tasks;
 
+import android.content.ActivityNotFoundException;
 import android.content.Context;
+import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.AsyncTask;
-import android.os.Environment;
 import android.util.Log;
+import android.widget.Toast;
 
 import java.io.BufferedInputStream;
-import java.io.DataInputStream;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
+import java.util.List;
 
-public class DownloadFile extends AsyncTask<String, Void, Void> {
+public class DownloadFile extends AsyncTask<String, Void, File> {
     private static String TAG = "FileDownloader";
     private static final int MEGABYTE = 1024 * 1024;
+    private Context context;
+
+    public DownloadFile(Context context) {
+        this.context = context;
+    }
 
     @Override
-    protected Void doInBackground(String... strings) {
+    protected void onPostExecute(File result) {
+        super.onPostExecute(result);
+
+        PackageManager packageManager = context.getPackageManager();
+
+        Intent pdfIntent = new Intent(Intent.ACTION_VIEW);
+        pdfIntent.setType("application/pdf");
+
+        List activities = packageManager.queryIntentActivities(pdfIntent, PackageManager.MATCH_DEFAULT_ONLY);
+
+        Intent intent = new Intent(Intent.ACTION_VIEW);
+        pdfIntent.setDataAndType(Uri.fromFile(result), "application/pdf");
+
+        try {
+            context.startActivity(intent);
+        }
+        catch(ActivityNotFoundException e) {
+            Toast.makeText(context, "No activity found to display PDF", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    @Override
+    protected File doInBackground(String... strings) {
         String fileUrl = strings[0];   // http://unit5.org/directory/thepdf.pdf
         String fileName = strings[1];  // myPDFName.pdf
-        String storageDir = Environment.getExternalStorageDirectory().toString() + "/Unit5-App/";
-        storageDir += fileName;
+        File pdf = new File(context.getFilesDir(), fileName);
+
+        try {
+            pdf.createNewFile();
+            Log.d(TAG, "Successfully created " + pdf.getAbsolutePath());
+        }
+        catch(IOException e) {
+            e.printStackTrace();
+        }
 
         URL u;
         try {
@@ -36,7 +72,7 @@ public class DownloadFile extends AsyncTask<String, Void, Void> {
             connection.connect();
 
             InputStream input = new BufferedInputStream(u.openStream(), MEGABYTE);
-            OutputStream output = new FileOutputStream(storageDir);
+            OutputStream output = new FileOutputStream(pdf);
 
             byte[] buffer = new byte[MEGABYTE];
             int length;
@@ -44,6 +80,7 @@ public class DownloadFile extends AsyncTask<String, Void, Void> {
             while((length = input.read(buffer)) > 0) {
                 output.write(buffer, 0, length);
             }
+            Log.d(TAG, "Successfully wrote to file from URL");
 
             // Flush output
             output.flush();
@@ -58,7 +95,8 @@ public class DownloadFile extends AsyncTask<String, Void, Void> {
         catch(IOException e) {
             e.printStackTrace();
         }
-        return null;
+
+        return pdf;
     }
 }
 
