@@ -23,7 +23,7 @@ import java.net.URLConnection;
  */
 public class DownloadPDF extends AsyncTask<String, Void, File> {
     private static final int MEGABYTE = 1024 * 1024;
-    private static String TAG = "PDFDownloader";
+    private final String TAG = "PDFDownloader";
     private Activity activity;
 
     public DownloadPDF(Activity activity) {
@@ -49,8 +49,9 @@ public class DownloadPDF extends AsyncTask<String, Void, File> {
         File pdf = new File(activity.getFilesDir(), fileName);
 
         try {
-            pdf.createNewFile();
-            Log.d(TAG, "Successfully created " + pdf.getAbsolutePath() + ".");
+            if(pdf.createNewFile()) {
+                Log.d(TAG, "Successfully created " + pdf.getAbsolutePath() + ".");
+            }
 
             URL u = new URL(fileUrl);
             URLConnection connection = u.openConnection();
