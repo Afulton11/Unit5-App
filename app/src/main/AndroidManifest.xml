@@ -33,8 +33,8 @@
             android:name=".activities.ArticleActivity"
             android:label="@string/Article"/>
         <activity
-            android:name=".activities.AnnouncementActivity"
-            android:label="@string/AnnouncementActivity"/>
+            android:name=".activities.LunchMenuActivity"
+            android:label="Lunch Menu"/>
         <activity
             android:name=".activities.UpcomingEventsActivity"
             android:label="@string/UpcomingEventsActivity"/>
@@ -51,8 +51,8 @@
             android:exported="false"/>
 
         <receiver
-            android:enabled="true"
-            android:name=".notifications.NotificationReceiver">
+            android:name=".notifications.NotificationReceiver"
+            android:enabled="true">
         </receiver>
 
         <receiver android:name=".notifications.NotificationServiceStarter">
