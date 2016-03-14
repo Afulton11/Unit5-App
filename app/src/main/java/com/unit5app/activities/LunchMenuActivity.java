@@ -16,18 +16,20 @@ import java.io.File;
 public class LunchMenuActivity extends BaseActivity {
     private static final String TAG = "LunchMenuPDFReader";
     private static final String fileUrl = "http://www.unit5.org/cms/lib03/IL01905100/Centricity/Domain/55/2016%20Mar%20Sr%20High%20Lunch.pdf";
-    private static final String fileName = "2016 Mar Sr High Lunch.pdf";
+    private static final String fileName = "MarchMenu.pdf";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        setContentView(R.layout.announcements_layout);
+
         new DownloadFile().execute(fileUrl, fileName);
 
-        setContentView(R.layout.announcements_layout);
-        Utils.setCurrentView(Utils.VIEW_ANNOUNCEMENTS);
+        String storageDir = Environment.getExternalStorageDirectory().toString() + "/Unit5-App/";
+        storageDir += fileName;
 
-        File pdfFile = new File(Environment.getExternalStorageDirectory() + "/pdfCache/" + fileName);  // -> filename = thepdf.pdf
+        File pdfFile = new File(storageDir);  // -> filename = thepdf.pdf
         Uri path = Uri.fromFile(pdfFile);
         Intent pdfIntent = new Intent(Intent.ACTION_VIEW);
         pdfIntent.setDataAndType(path, "application/pdf");
