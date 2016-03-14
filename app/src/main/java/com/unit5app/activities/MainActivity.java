@@ -40,7 +40,7 @@ public class MainActivity extends BaseActivity {
     public static Unit5Calendar mainCalendar;
 
     /* Buttons to be pressed */
-    private Button testpdf, testWestNews, testCalendarReading;
+    private Button testPdf, testWestNews, testCalendarReading;
 
     /* Text displayed on the screen */
     private TextView endOfHourTime;
@@ -74,7 +74,7 @@ public class MainActivity extends BaseActivity {
         Utils.setCurrentView(Utils.VIEW_MAIN);
 
         /* Load the buttons by how they're defined in Resources file */
-        testpdf = (Button) findViewById(R.id.btn_testPdf);
+        testPdf = (Button) findViewById(R.id.btn_testPdf);
         testWestNews = (Button) findViewById(R.id.btn_testWestNews);
         testCalendarReading = (Button) findViewById(R.id.btn_testCalendarReading);
 
@@ -112,10 +112,10 @@ public class MainActivity extends BaseActivity {
         });
 
         /* For testing how PDFs are displayed: */
-        testpdf.setOnClickListener(new View.OnClickListener() {
+        testPdf.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startActivity(new Intent(MainActivity.this, AnnouncementActivity.class));
+                startActivity(new Intent(MainActivity.this, LunchMenuActivity.class));
             }
         });
 
