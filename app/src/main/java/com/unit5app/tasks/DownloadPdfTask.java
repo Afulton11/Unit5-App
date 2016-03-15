@@ -27,13 +27,15 @@ public class DownloadPdfTask extends DownloadFileTask {
     protected void onPostExecute(File result) {
         super.onPostExecute(result);
 
+        Log.d(TAG, "PDF received, displaying....");
+        activity.setContentView(R.layout.lunchmenu_layout);
+
         PDFView pdfView = (PDFView) this.activity.findViewById(R.id.pdfview);
         pdfView.fromFile(result)
                 .defaultPage(1)
                 .showMinimap(false)
                 .enableSwipe(false)
                 .load();
-        Log.d(TAG, "PDF received, displaying....");
     }
 }
 
