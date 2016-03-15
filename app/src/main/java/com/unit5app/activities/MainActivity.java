@@ -138,10 +138,9 @@ public class MainActivity extends BaseActivity {
 
         /* If no internet, complain to the user. */
         if (!Utils.hadInternetOnLastCheck) {
-            Toast toast = Toast.makeText(getApplicationContext(),
+            Toast.makeText(getApplicationContext(),
                     "You are not connected to the internet. Most features will not work.",
-                    Toast.LENGTH_LONG);
-            toast.show();
+                    Toast.LENGTH_LONG).show();
         }
     }
 

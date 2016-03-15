@@ -36,6 +36,9 @@
             android:name=".activities.LunchMenuActivity"
             android:label="Lunch Menu"/>
         <activity
+            android:name=".activities.SpecialsMenuActivity"
+            android:label="Specials Menu" />
+        <activity
             android:name=".activities.UpcomingEventsActivity"
             android:label="@string/UpcomingEventsActivity"/>
         <activity
