@@ -14,50 +14,61 @@
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
         android:layout_margin="@dimen/fab_margin"
-        android:src="@drawable/skyward_logo_56"
+        android:background="@android:color/transparent"
         android:scaleType="center"
-        android:background="@android:color/transparent"/>
+        android:src="@drawable/skyward_logo_56" />
 
     <Button
+        android:id="@+id/btn_testLunch"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="High School Lunch Menu"
-        android:textSize="16sp"
-        android:layout_marginRight="16dp"
         android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
         android:layout_marginTop="32dp"
-        android:id="@+id/btn_testPdf"/>
+        android:text="Lunch Menu"
+        android:textSize="16sp" />
 
     <Button
+        android:id="@+id/btn_testSpecials"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Recent News"
-        android:textSize="16sp"
-        android:layout_marginRight="16dp"
+        android:layout_gravity="top|end"
         android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:layout_marginTop="32dp"
+        android:text="Specials Menu"
+        android:textSize="16sp" />
+
+    <Button
+        android:id="@+id/btn_testWestNews"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
         android:layout_marginTop="80dp"
-        android:id="@+id/btn_testWestNews"/>
+        android:text="Recent News"
+        android:textSize="16sp" />
 
     <Button
+        android:id="@+id/btn_testCalendarReading"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/UpcomingEventsActivity"
-        android:textSize="16sp"
-        android:layout_marginRight="16dp"
         android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
         android:layout_marginTop="128dp"
-        android:id="@+id/btn_testCalendarReading"/>
+        android:text="@string/UpcomingEventsActivity"
+        android:textSize="16sp" />
 
     <TextView
+        android:id="@+id/clock_end_of_hour"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginTop="176dp"
         android:text="Loading Data..."
         android:textSize="52sp"
-        android:textStyle="bold"
-        android:id="@+id/clock_end_of_hour"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginTop="176dp"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp"/>
+        android:textStyle="bold" />
 
 </android.support.design.widget.CoordinatorLayout>
