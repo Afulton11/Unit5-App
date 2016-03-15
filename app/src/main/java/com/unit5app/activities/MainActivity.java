@@ -2,6 +2,7 @@ package com.unit5app.activities;
 
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.view.MenuItem;
@@ -28,25 +29,26 @@ import java.util.List;
  */
 public class MainActivity extends BaseActivity {
 
-    private static String TAG = "MainActivity";
+    /* Lists to hold the titles and descriptions for a future search function */
+    public static List<String> all_titles = new ArrayList<>();
 
     /*
     TODO: add a way for us to know what Activity the user is currently looking at and if the user has paused the application (if we are running in the background).
      */
-
-    /* Lists to hold the titles and descriptions for a future search function */
-    public static List<String> all_titles = new ArrayList<>();
     public  static List<String> all_descriptions = new ArrayList<>();
-
     public static Unit5Calendar mainCalendar;
-
+    private static String TAG = "MainActivity";
     private static MainActivity instance;
 
     /* Buttons to be pressed */
-    private Button testPdf, testWestNews, testCalendarReading;
+    private Button testLunch, testSpecials, testWestNews, testCalendarReading;
 
     /* Text displayed on the screen */
     private TextView endOfHourTime;
+
+    public static MainActivity getInstance() {
+        return instance;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -78,7 +80,8 @@ public class MainActivity extends BaseActivity {
         Utils.setCurrentView(Utils.VIEW_MAIN);
 
         /* Load the buttons by how they're defined in Resources file */
-        testPdf = (Button) findViewById(R.id.btn_testPdf);
+        testLunch = (Button) findViewById(R.id.btn_testLunch);
+        testSpecials = (Button) findViewById(R.id.btn_testSpecials);
         testWestNews = (Button) findViewById(R.id.btn_testWestNews);
         testCalendarReading = (Button) findViewById(R.id.btn_testCalendarReading);
 
@@ -89,13 +92,6 @@ public class MainActivity extends BaseActivity {
         new EndOfHourHandler(endOfHourTime).start();
 
 //        endOfHourTime.setText(Settings.file_string);
-        /* If not, complain to the user. */
-        if(!Utils.hadInternetOnLastCheck) {
-            Toast toast = Toast.makeText(getApplicationContext(),
-                    "You are not connected to the internet. Most features will not work.",
-                    Toast.LENGTH_LONG);
-            toast.show();
-        }
 
         /* Define button click actions. */
         /* For testing the calendar: */
@@ -115,11 +111,19 @@ public class MainActivity extends BaseActivity {
             }
         });
 
-        /* For testing how PDFs are displayed: */
-        testPdf.setOnClickListener(new View.OnClickListener() {
+        /* For testing how the lunch menu is displayed: */
+        testLunch.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 startActivity(new Intent(MainActivity.this, LunchMenuActivity.class));
+            }
+        });
+
+        /* For testing how the specials menu is displayed: */
+        testSpecials.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(MainActivity.this, SpecialsMenuActivity.class));
             }
         });
 
@@ -131,6 +135,14 @@ public class MainActivity extends BaseActivity {
                 startSkywardApp();
             }
         });
+
+        /* If no internet, complain to the user. */
+        if (!Utils.hadInternetOnLastCheck) {
+            Toast toast = Toast.makeText(getApplicationContext(),
+                    "You are not connected to the internet. Most features will not work.",
+                    Toast.LENGTH_LONG);
+            toast.show();
+        }
     }
 
     /**
@@ -141,11 +153,14 @@ public class MainActivity extends BaseActivity {
 
         Intent intent = packageManager.getLaunchIntentForPackage("com.skyward.mobileaccess"); //package found from going to the app's page on the google play store and looking at the last part of the url.
 
-
         List activities = packageManager.queryIntentActivities(intent, PackageManager.MATCH_DEFAULT_ONLY);
         boolean hasSkyward = activities.size() > 0;
         if(hasSkyward) {
             startActivity(intent);
+        } else {
+            Intent browser = new Intent(Intent.ACTION_VIEW, Uri.parse("https://skyward-web." +
+                    "unit5.org/scripts/wsisa.dll/WService=wsSky/seplog01.w"));
+            startActivity(browser);
         }
     }
 
@@ -175,9 +190,5 @@ public class MainActivity extends BaseActivity {
     public void onResume() {
         super.onResume();
         Utils.universalOnResume(getApplicationContext());
-    }
-
-    public static MainActivity getInstance() {
-        return instance;
     }
 }

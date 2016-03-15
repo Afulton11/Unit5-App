@@ -28,7 +28,7 @@ public class DownloadPdfTask extends DownloadFileTask {
         super.onPostExecute(result);
 
         Log.d(TAG, "PDF received, displaying....");
-        activity.setContentView(R.layout.lunchmenu_layout);
+        activity.setContentView(R.layout.pdfviewer_layout);
 
         PDFView pdfView = (PDFView) this.activity.findViewById(R.id.pdfview);
         pdfView.fromFile(result)
