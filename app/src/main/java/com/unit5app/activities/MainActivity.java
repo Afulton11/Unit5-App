@@ -5,6 +5,7 @@ import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
@@ -148,15 +149,15 @@ public class MainActivity extends BaseActivity {
      * starts the user's skyward app for checking grades.
      */
     private void startSkywardApp() {
-        PackageManager packageManager = getPackageManager();
+        boolean hasSkyward = Utils.isPackageInstalled("com.skyward.mobileaccess", this);
 
-        Intent intent = packageManager.getLaunchIntentForPackage("com.skyward.mobileaccess"); //package found from going to the app's page on the google play store and looking at the last part of the url.
-
-        List activities = packageManager.queryIntentActivities(intent, PackageManager.MATCH_DEFAULT_ONLY);
-        boolean hasSkyward = activities.size() > 0;
         if(hasSkyward) {
+            PackageManager packageManager = getPackageManager();
+            Intent intent = packageManager.getLaunchIntentForPackage("com.skyward.mobileaccess"); //package found from going to the app's page on the google play store and looking at the last part of the url.
+
             startActivity(intent);
         } else {
+            Log.d(TAG, "Skyward app not installed. Attempting to open web browser....");
             Intent browser = new Intent(Intent.ACTION_VIEW, Uri.parse("https://skyward-web." +
                     "unit5.org/scripts/wsisa.dll/WService=wsSky/seplog01.w"));
             startActivity(browser);

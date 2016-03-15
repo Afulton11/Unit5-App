@@ -1,6 +1,7 @@
 package com.unit5app.utils;
 
 import android.content.Context;
+import android.content.pm.PackageManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.util.Log;
@@ -315,5 +316,17 @@ public abstract class Utils {
         synchronized (internet_monitor) {
             internet_monitor.notify(); // unlock again
         }
+    }
+
+    public static boolean isPackageInstalled(String uri, Context context) {
+        PackageManager pm = context.getPackageManager();
+        boolean app_installed;
+        try {
+            pm.getPackageInfo(uri, PackageManager.GET_ACTIVITIES);
+            app_installed = true;
+        } catch (PackageManager.NameNotFoundException e) {
+            app_installed = false;
+        }
+        return app_installed;
     }
 }
