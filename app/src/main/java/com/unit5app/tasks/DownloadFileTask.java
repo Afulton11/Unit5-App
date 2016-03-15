@@ -21,8 +21,8 @@ import java.net.URLConnection;
  */
 public abstract class DownloadFileTask extends AsyncTask<String, Void, File> {
     protected static final int MEGABYTE = 1024*1024;
-    protected Activity activity;
     private static final String TAG = "DownloadFileTask";
+    protected Activity activity;
 
     /**
      * Makes a new DownloadFileTask. Call taskName.execute(String url, String fileName) to start it.
@@ -38,6 +38,12 @@ public abstract class DownloadFileTask extends AsyncTask<String, Void, File> {
         String fileUrl = params[0];   // http://website.org/directory/filename.extension
         String fileName = params[1];  // whatIWantToCallFile.extension
         File file = new File(activity.getFilesDir(), fileName);
+
+        /* NOTE: This has the complication of occasionally returning corrupted files. */
+        if (file.exists()) {
+            Log.d(TAG, "File already found. Returning....");
+            return file;
+        }
 
         try {
             if(file.createNewFile()) {
