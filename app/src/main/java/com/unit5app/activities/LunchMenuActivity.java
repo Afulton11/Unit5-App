@@ -4,16 +4,18 @@ import android.os.Bundle;
 import android.util.Log;
 
 import com.unit5app.R;
-import com.unit5app.tasks.DownloadPDF;
+import com.unit5app.tasks.DownloadPdfTask;
 
 /**
- * Activity to display the current lunch menu.
+ * Activity to display a PDF with the current lunch menu.
  */
 public class LunchMenuActivity extends BaseActivity {
-    /* TODO: Generate the URL with JSoup */
+    /* TODO: Generate the URL with JSoup so that it's not hardcoded */
     private static final String TAG = "LunchMenuPDFReader";
-    private static final String fileUrl = "http://www.unit5.org/cms/lib03/IL01905100/Centricity/Domain/55/2016%20Mar%20Sr%20High%20Lunch.pdf";
-    private static final String fileName = "menu.pdf";
+    private static final String fileUrl = "http://www.unit5.org/cms/lib03/IL01905100/Centricity/" +
+            "Domain/55/2016%20Mar%20Sr%20High%20Lunch.pdf";
+    private static final String fileName = "03_menu.pdf"; // I'm thinking name convention should be
+                                                          // mm_menu.pdf where mm is the month
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -22,6 +24,6 @@ public class LunchMenuActivity extends BaseActivity {
         setContentView(R.layout.lunchmenu_layout);
         Log.d(TAG, "Layout set. Starting PDF download....");
 
-        new DownloadPDF(this).execute(fileUrl, fileName);
+        new DownloadPdfTask(this).execute(fileUrl, fileName);
     }
 }
