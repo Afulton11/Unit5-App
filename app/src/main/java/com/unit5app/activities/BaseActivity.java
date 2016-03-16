@@ -3,6 +3,7 @@ package com.unit5app.activities;
 import android.app.TaskStackBuilder;
 import android.content.Intent;
 import android.os.Build;
+import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.GravityCompat;
@@ -15,18 +16,24 @@ import android.view.View;
 import android.widget.FrameLayout;
 
 import com.unit5app.R;
+import com.unit5app.utils.Utils;
 
 /**
  * Mostly not my code, saw someone had a tutorial for this so I used their code.
  * http://mateoj.com/2015/06/21/adding-toolbar-and-navigation-drawer-all-activities-android/
  */
 public class BaseActivity extends AppCompatActivity  implements NavigationView.OnNavigationItemSelectedListener {
-
     private static final String TAG = "BaseActivity";
+    protected NavigationView mNavigationView;
     private Toolbar mActionBarToolbar;
     private DrawerLayout mDrawerLayout;
-    protected NavigationView mNavigationView;
     private ActionBarDrawerToggle mToggle;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        Utils.setCurrentActivity(this);
+    }
 
     @Override
     public void setContentView(int layoutResID) {

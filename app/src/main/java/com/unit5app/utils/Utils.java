@@ -8,6 +8,7 @@ import android.util.Log;
 
 import com.unit5app.Article;
 import com.unit5app.Settings;
+import com.unit5app.activities.BaseActivity;
 import com.unit5app.calendars.CalendarEvent;
 import com.unit5app.calendars.EventType;
 
@@ -25,22 +26,23 @@ import java.util.regex.Pattern;
  * @version 2/21/2016
  */
 public abstract class Utils {
-    public static final String SUPERSCRIPT_TH = "<sup><small>th</small></sup>", SUPERSCRIPT_ND = "<sup><small>nd</small></sup>", SUPERSCRIPT_ST = "<sup><small>st</small></sup>", SUPERSCRIPT_RD  = "<sup><small>rd</small></sup>";
-    /**
-     * The view id for each different activity/view.
-     */
-    public static final int VIEW_MAIN = 0, VIEW_LOADING = 1, VIEW_ARTICLE_LIST = 2,
-            VIEW_ARTICLE = 3, VIEW_UPCOMING_EVENTS = 4, VIEW_ANNOUNCEMENTS = 5,
-            VIEW_SETTINGS = 6, VIEW_LUNCH_MENU = 7;
+    public static final String
+            SUPERSCRIPT_TH = "<sup><small>th</small></sup>",
+            SUPERSCRIPT_ND = "<sup><small>nd</small></sup>",
+            SUPERSCRIPT_ST = "<sup><small>st</small></sup>",
+            SUPERSCRIPT_RD = "<sup><small>rd</small></sup>";
     private static final String TAG = "Unit5Utils"; /* String name passed to the Logging API */
     /**
-     * for each thread waiting at the same time, if they each have a different boolean to start again, we need to add another object and another boolean, along with their respective waitFor and unlock methods.
+     * for each thread waiting at the same time, if they each have a different boolean to start
+     * again, we need to add another object and another boolean, along with their respective
+     * waitFor and unlock methods.
      */
     private static final Object monitor = new Object(), internet_monitor = new Object();
     public static boolean hadInternetOnLastCheck = false;
     /**
      * can be used to sort a List of articles by their publishing dates.
-     * <br><ul><b>How To Use:</b><li>Collections.sort(articleListToSort, Utils.articlePubDateSorter);</li></ul></br>
+     * <br><ul><b>How To Use:</b><li>Collections.sort(articleListToSort,
+     * Utils.articlePubDateSorter);</li></ul></br>
      */
     public static Comparator<Article> articlePubDateSorter = new Comparator<Article>() {
         @Override
@@ -54,7 +56,8 @@ public abstract class Utils {
     };
     /**
      * can be used to sort a List of CalendarEvents by their dates.
-     * <br><ul><b>How To Use:</b><li>Collections.sort(calendarEventsToSort, Utils.calendarEventDateSorter);</li></ul></br>
+     * <br><ul><b>How To Use:</b><li>Collections.sort(calendarEventsToSort,
+     * Utils.calendarEventDateSorter);</li></ul></br>
      */
     public static Comparator<CalendarEvent> calendarEventDateSorter = new Comparator<CalendarEvent>() {
         @Override
@@ -71,6 +74,7 @@ public abstract class Utils {
      */
     public static int current_view;
     public static boolean monitorState;
+    private static BaseActivity currentActivity;
     private static boolean paused = false;
 
     /**
@@ -236,29 +240,12 @@ public abstract class Utils {
         return paused;
     }
 
-    /**
-     * sets the current View to the inputted view.
-     * @param viewId the viewId for the activity the user is current viewing.
-     */
-    public static void setCurrentView(int viewId) {
-        current_view = viewId;
+    public static BaseActivity getCurrentActivity() {
+        return currentActivity;
     }
 
-    /**
-     * returns the current ViewId.
-     * <br><ul>A list of all the possible return values
-     * <li>&nbsp;&nbsp;&nbsp;&nbsp;VIEW_MAIN = {@value #VIEW_MAIN}</li>
-     * <li>&nbsp;&nbsp;&nbsp;&nbsp;VIEW_LOADING = {@value #VIEW_LOADING}</li>
-     * <li>&nbsp;&nbsp;&nbsp;&nbsp;VIEW_ARTICLE_LIST = {@value #VIEW_ARTICLE_LIST}</li>
-     * <li>&nbsp;&nbsp;&nbsp;&nbsp;VIEW_ARTICLE = {@value #VIEW_ARTICLE}</li>
-     * <li>&nbsp;&nbsp;&nbsp;&nbsp;VIEW_UPCOMING_EVENTS = {@value #VIEW_UPCOMING_EVENTS}</li>
-     * <li>&nbsp;&nbsp;&nbsp;&nbsp;VIEW_ANNOUNCEMENTS = {@value #VIEW_ANNOUNCEMENTS}</li>
-     * </ul></br>
-     *
-     * @return the current ViewId.
-     */
-    public static int getCurrent_view() {
-        return current_view;
+    public static void setCurrentActivity(BaseActivity activity) {
+        currentActivity = activity;
     }
 
     /**
@@ -309,7 +296,7 @@ public abstract class Utils {
     }
 
     /**
-     * similiar to unlockWaiter(), unlockInternetWaiter unlcoks the thread waiting on the internet to move forward.
+     * similar to unlockWaiter(), unlockInternetWaiter unlocks the thread waiting on the internet to move forward.
      */
     public static void unlockInternetWaiter() {
         Log.d(TAG, "unlocked waiter!");
@@ -318,6 +305,15 @@ public abstract class Utils {
         }
     }
 
+    /**
+     * Checks to see if the user has a specified Application installed on their device.
+     *
+     * @param uri     of the App; can be found on the App's page on the Play Store,
+     *                it's the last part of the URL.
+     * @param context to call the PackageManager from. Just pass whatever activity you're calling
+     *                this method from.
+     * @return true if the App is installed, false otherwise.
+     */
     public static boolean isPackageInstalled(String uri, Context context) {
         PackageManager pm = context.getPackageManager();
         boolean app_installed;

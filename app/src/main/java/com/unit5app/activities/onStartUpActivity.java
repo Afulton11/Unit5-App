@@ -17,7 +17,6 @@ public class onStartUpActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.view_loading);
-        Utils.setCurrentView(Utils.VIEW_LOADING);
         Settings.load(this);
 
         if(!NotificationReceiver.started) NotificationReceiver.start(this);

@@ -54,7 +54,7 @@ public class ReadAllFeedTask extends AsyncTask<Void, Void, Void> {
     @Override
     protected void onPostExecute(Void aVoid) {
         super.onPostExecute(aVoid);
-        if(Utils.current_view == Utils.VIEW_ARTICLE_LIST) {
+        if (Utils.getCurrentActivity().getClass() == RssActivity.class) {
             all_titles.clear();
             for (Article a : articles) {
                 all_titles.add(Utils.toTitleCase(Html.fromHtml(a.getTitle()).toString()));
@@ -139,10 +139,6 @@ public class ReadAllFeedTask extends AsyncTask<Void, Void, Void> {
         return false;
     }
 
-    public void setReaders(RSSReader... readers) {
-        this.readers = readers;
-    }
-
     public void setList(ListView list) {
         this.list = list;
     }
@@ -153,6 +149,10 @@ public class ReadAllFeedTask extends AsyncTask<Void, Void, Void> {
 
     public RSSReader[] getReaders() {
         return readers;
+    }
+
+    public void setReaders(RSSReader... readers) {
+        this.readers = readers;
     }
 
     public List<Article> getArticles() {
