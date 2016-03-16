@@ -17,22 +17,17 @@ import com.unit5app.R;
 import com.unit5app.calendars.Unit5Calendar;
 import com.unit5app.utils.Utils;
 
-import java.util.ArrayList;
-import java.util.List;
-
 /**
  * Class to handle the activity the User sees upon opening the App to its main page.
  * @version 2/21/16
  */
 public class MainActivity extends BaseActivity {
-
     /* Lists to hold the titles and descriptions for a future search function */
-    public static List<String> all_titles = new ArrayList<>();
+    //public static List<String> all_titles = new ArrayList<>();
+    //public  static List<String> all_descriptions = new ArrayList<>();
 
-    public  static List<String> all_descriptions = new ArrayList<>();
     public static Unit5Calendar mainCalendar;
     private static String TAG = "MainActivity";
-    private static MainActivity instance;
 
     /* Buttons to be pressed */
     private Button testLunch, testSpecials, testWestNews, testCalendarReading;
@@ -40,17 +35,11 @@ public class MainActivity extends BaseActivity {
     /* Text displayed on the screen */
     private TextView endOfHourTime;
 
-    public static MainActivity getInstance() {
-        return instance;
-    }
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        instance = this;
         /* Load object placement as defined in Resources file */
         setContentView(R.layout.activity_main);
-        Utils.setCurrentView(Utils.VIEW_MAIN);
 
         /* Load the buttons by how they're defined in Resources file */
         testLunch = (Button) findViewById(R.id.btn_testLunch);
@@ -125,7 +114,7 @@ public class MainActivity extends BaseActivity {
 
         if(hasSkyward) {
             PackageManager packageManager = getPackageManager();
-            Intent intent = packageManager.getLaunchIntentForPackage("com.skyward.mobileaccess"); //package found from going to the app's page on the google play store and looking at the last part of the url.
+            Intent intent = packageManager.getLaunchIntentForPackage("com.skyward.mobileaccess");
 
             startActivity(intent);
         } else {
@@ -147,10 +136,10 @@ public class MainActivity extends BaseActivity {
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
             return true;
-    }
+        }
 
-    return super.onOptionsItemSelected(item);
-}
+        return super.onOptionsItemSelected(item);
+    }
 
     @Override
     public void onPause() {

@@ -34,11 +34,19 @@ public class ArticleActivity extends BaseActivity {
 
     private TextView Heading, Body;
 
+    /**
+     * sets the article of the ArticleActivity - the article that is displayed on the activity.
+     *
+     * @param set_article - sets the Article of the Activity
+     */
+    public static void setArticle(Article set_article) {
+        article = set_article;
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.article_layout);
-        Utils.setCurrentView(Utils.VIEW_ARTICLE);
         if(Settings.getArticleSettingsBoolean(Settings.ID_ARTICLE_SETTING_SCROLL_WITH_TITLE)) {
             ScrollView view = (ScrollView) findViewById(R.id.article_scrollView);
             view.setVerticalScrollBarEnabled(false);
@@ -107,12 +115,6 @@ public class ArticleActivity extends BaseActivity {
             }
         }.execute();
     }
-
-    /**
-     * sets the article of the ArticleActivity - the article that is displayed on the activity.
-     * @param set_article - sets the Article of the Activity
-     */
-    public static void setArticle(Article set_article) { article = set_article; }
 
     /**
      * Attempts to fix links. It is mainly hyperlinks that are causing problems.

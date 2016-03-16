@@ -13,7 +13,6 @@ import android.widget.Toast;
 import com.unit5app.R;
 import com.unit5app.com.unit5app.parsers.RSSReader;
 import com.unit5app.com.unit5app.parsers.WestNewsReader;
-import com.unit5app.notifications.MyNotificationHandler;
 import com.unit5app.utils.Utils;
 
 /**
@@ -24,22 +23,26 @@ import com.unit5app.utils.Utils;
 public class RssActivity  extends BaseActivity {
 
     private static final String TAG = "unit5ActivityRSS";
-
-    private RSSReader rssReader;
-    private WestNewsReader westNews;
-
-    private String[] loading = {"loading..."};
-    
     private static ArrayAdapter<String> adapter;
     private static ListView list;
-
     private static String[] titleList;
+    private RSSReader rssReader;
+    private WestNewsReader westNews;
+    private String[] loading = {"loading..."};
+
+    public static void setListToNewsArticles() {
+        String[] article_titles = MainActivity.mainCalendar.getNewsTask().getNewsArticleTitlesForList();
+        list.setAdapter(null);
+        adapter = new ArrayAdapter<>(list.getContext(), android.R.layout.simple_list_item_1, article_titles);
+        adapter.notifyDataSetChanged();
+        list.setAdapter(adapter);
+        titleList = article_titles;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.rss_layout);
-        Utils.setCurrentView(Utils.VIEW_ARTICLE_LIST);
 
         list = (ListView) findViewById(android.R.id.list);
 
@@ -111,16 +114,6 @@ public class RssActivity  extends BaseActivity {
         adapter.notifyDataSetChanged();
         list.setAdapter(adapter);
     }
-
-    public static void setListToNewsArticles() {
-        String[] article_titles = MainActivity.mainCalendar.getNewsTask().getNewsArticleTitlesForList();
-        list.setAdapter(null);
-        adapter = new ArrayAdapter<>(list.getContext(), android.R.layout.simple_list_item_1, article_titles);
-        adapter.notifyDataSetChanged();
-        list.setAdapter(adapter);
-        titleList = article_titles;
-    }
-
 
     @Override
     public void onPause() {
