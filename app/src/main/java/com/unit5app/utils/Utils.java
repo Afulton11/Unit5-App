@@ -31,7 +31,7 @@ public abstract class Utils {
      */
     public static final int VIEW_MAIN = 0, VIEW_LOADING = 1, VIEW_ARTICLE_LIST = 2,
             VIEW_ARTICLE = 3, VIEW_UPCOMING_EVENTS = 4, VIEW_ANNOUNCEMENTS = 5,
-            VIEW_SETTINGS = 6;
+            VIEW_SETTINGS = 6, VIEW_LUNCH_MENU = 7;
     private static final String TAG = "Unit5Utils"; /* String name passed to the Logging API */
     /**
      * for each thread waiting at the same time, if they each have a different boolean to start again, we need to add another object and another boolean, along with their respective waitFor and unlock methods.

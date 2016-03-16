@@ -14,11 +14,7 @@ import android.widget.Toast;
 
 import com.unit5app.EndOfHourHandler;
 import com.unit5app.R;
-import com.unit5app.Settings;
 import com.unit5app.calendars.Unit5Calendar;
-import com.unit5app.com.unit5app.parsers.RSSReader;
-import com.unit5app.com.unit5app.parsers.WestNewsReader;
-import com.unit5app.notifications.NotificationReceiver;
 import com.unit5app.utils.Utils;
 
 import java.util.ArrayList;
@@ -33,9 +29,6 @@ public class MainActivity extends BaseActivity {
     /* Lists to hold the titles and descriptions for a future search function */
     public static List<String> all_titles = new ArrayList<>();
 
-    /*
-    TODO: add a way for us to know what Activity the user is currently looking at and if the user has paused the application (if we are running in the background).
-     */
     public  static List<String> all_descriptions = new ArrayList<>();
     public static Unit5Calendar mainCalendar;
     private static String TAG = "MainActivity";
@@ -54,28 +47,7 @@ public class MainActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Utils.setCurrentView(Utils.VIEW_LOADING); //TODO: make setContentView(R.layout.view_loading) not get rid of the major details gained from the base activity such as the title when setting the content view again.
-        Settings.load(this);
         instance = this;
-
-        if(!NotificationReceiver.started) NotificationReceiver.start(this);
-
-        //set content view to a loading screen first, Then once everything is loaded we would setContentView to the home screen?
-         /*Check if we have internet access*/
-       Utils.isInternetConnected(getApplicationContext());
-
-        if(savedInstanceState == null) {
-
-        /* TODO: Launch internal calendar builder to get latest info on events, etc... */
-            if(Utils.hadInternetOnLastCheck) {
-                mainCalendar = new Unit5Calendar(60);
-                WestNewsReader westNews = new WestNewsReader("http://www.unit5.org/site/RSS.aspx?DomainID=30&ModuleInstanceID=1852&PageID=53");
-                RSSReader unit5News = new RSSReader("http://www.unit5.org/site/RSS.aspx?DomainID=4&ModuleInstanceID=4&PageID=1");
-                mainCalendar.setNewsRssReaders(westNews, unit5News);
-                mainCalendar.loadNews();
-            }
-        }
-
         /* Load object placement as defined in Resources file */
         setContentView(R.layout.activity_main);
         Utils.setCurrentView(Utils.VIEW_MAIN);
@@ -116,7 +88,7 @@ public class MainActivity extends BaseActivity {
         testLunch.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startActivity(new Intent(MainActivity.this, LunchMenuActivity.class));
+                startActivity(new Intent(MainActivity.this, LunchMenuLoadingActivity.class));
             }
         });
 

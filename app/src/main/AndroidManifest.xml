@@ -1,14 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.unit5app">
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-    <uses-permission android:name="android.permission.WAKE_LOCK"/>
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-
 
     <application
         android:allowBackup="true"
@@ -16,48 +14,50 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity
-            android:name=".activities.MainActivity"
-            android:label="@string/app_name"
-            android:theme="@style/AppTheme.NoActionBar">
+        <activity android:name=".activities.onStartUpActivity"
+            android:label="@string/app_name">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
         <activity
+            android:name=".activities.MainActivity"
+            android:label="@string/app_name">
+        </activity>
+        <activity
             android:name=".activities.RssActivity"
-            android:label="@string/RSSActivity"/>
+            android:label="@string/RSSActivity" />
         <activity
             android:name=".activities.ArticleActivity"
-            android:label="@string/Article"/>
+            android:label="@string/Article" />
         <activity
-            android:name=".activities.LunchMenuActivity"
-            android:label="Lunch Menu"/>
+            android:name=".activities.LunchMenuLoadingActivity"
+            android:label="Lunch Menu" />
         <activity
             android:name=".activities.SpecialsMenuActivity"
             android:label="Specials Menu" />
         <activity
             android:name=".activities.UpcomingEventsActivity"
-            android:label="@string/UpcomingEventsActivity"/>
+            android:label="@string/UpcomingEventsActivity" />
         <activity
             android:name=".activities.BaseActivity"
             android:label="@string/title_activity_base"
-            android:theme="@style/AppTheme"/>
-        <activity android:name=".activities.SettingsActivity"
-            android:label="@string/title_settings"/>
+            android:theme="@style/AppTheme" />
+        <activity
+            android:name=".activities.SettingsActivity"
+            android:label="@string/title_settings" />
+        <activity android:name=".activities.ShowLunchMenuActivity"
+            android:label="Lunch Menu"/>
 
         <service
             android:name=".notifications.NotificationIntentService"
             android:enabled="true"
-            android:exported="false"/>
+            android:exported="false" />
 
         <receiver
             android:name=".notifications.NotificationReceiver"
-            android:enabled="true">
-        </receiver>
-
+            android:enabled="true"></receiver>
         <receiver android:name=".notifications.NotificationServiceStarter">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
@@ -65,7 +65,6 @@
                 <action android:name="android.intent.action.TIME_SET" />
             </intent-filter>
         </receiver>
-
     </application>
 
 </manifest>

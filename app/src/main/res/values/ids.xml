@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <item name="lunchmenu_pdf" type="id">887</item>
+    <item name="base_no_drawer" type="id"></item>
 </resources>
