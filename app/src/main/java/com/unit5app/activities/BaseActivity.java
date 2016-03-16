@@ -96,8 +96,8 @@ public class BaseActivity extends AppCompatActivity  implements NavigationView.O
     }
 
     protected Toolbar getActionBarToolbar() {
-            Log.d(TAG, "MActionBarTool is equal to null! we want this!");
-            mActionBarToolbar = (Toolbar) findViewById(R.id.toolbar);
+        Log.d(TAG, "MActionBarTool is equal to null! we want this!");
+        mActionBarToolbar = (Toolbar) findViewById(R.id.toolbar);
             if (mActionBarToolbar != null) {
                 // Depending on which version of Android you are on the Toolbar or the ActionBar may be
                 // active so the a11y description is set here.
@@ -109,20 +109,16 @@ public class BaseActivity extends AppCompatActivity  implements NavigationView.O
                 } else {
                     mActionBarToolbar.setVisibility(View.GONE);
                 }
-
             }
         return mActionBarToolbar;
     }
 
 
     private void setupNavDrawer() {
-
-
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         if (mDrawerLayout == null) {
             return;
         }
-
 
         if (useDrawerToggle()) {
             mToggle = new ActionBarDrawerToggle(

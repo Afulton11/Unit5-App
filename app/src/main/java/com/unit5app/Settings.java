@@ -152,10 +152,10 @@ public class Settings {
             }
             writer.write("TodaysDate\t" + Time.getCurrentDate(Time.FORMAT_BASIC_DATE));
             writer.newLine();
-//            for(int i = 0; i < list_sentNotifications.size(); i++) {
-//                writer.write("CalEvent\t" + list_sentNotifications.get(i));
-//                writer.newLine();
-//            }
+            for(int i = 0; i < list_sentNotifications.size(); i++) {
+                writer.write("CalEvent\t" + list_sentNotifications.get(i));
+                writer.newLine();
+            }
             for(int i = 0; i < article_settings.length; i++) {
                 writer.write("articleBool\t" + i + "\t" + article_settings[i]);
                 writer.newLine();
