@@ -1,10 +1,10 @@
 package com.unit5app.tasks;
 
 import android.app.Activity;
-import android.content.Intent;
 import android.util.Log;
 
-import com.unit5app.activities.ShowLunchMenuActivity;
+import com.joanzapata.pdfview.PDFView;
+import com.unit5app.R;
 
 import java.io.File;
 
@@ -28,9 +28,16 @@ public class DownloadPdfTask extends DownloadFileTask {
         super.onPostExecute(result);
         Log.d(TAG, "PDF received, displaying....");
 
-        ShowLunchMenuActivity.setResult(result);
-        activity.startActivity(new Intent(activity.getApplicationContext(), ShowLunchMenuActivity.class));
-        activity.finish();
+        activity.setContentView(R.layout.pdfviewer_layout);
+
+        PDFView pdfView = (PDFView) activity.findViewById(R.id.pdfview);
+        if(result != null) {
+            pdfView.fromFile(result)
+                    .defaultPage(1)
+                    .showMinimap(false)
+                    .enableSwipe(false)
+                    .load();
+        }
     }
 }
 

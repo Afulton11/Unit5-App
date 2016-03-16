@@ -14,16 +14,13 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".activities.onStartUpActivity"
+        <activity
+            android:name=".activities.MainActivity"
             android:label="@string/app_name">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-        </activity>
-        <activity
-            android:name=".activities.MainActivity"
-            android:label="@string/app_name">
         </activity>
         <activity
             android:name=".activities.RssActivity"
@@ -32,7 +29,7 @@
             android:name=".activities.ArticleActivity"
             android:label="@string/Article" />
         <activity
-            android:name=".activities.LunchMenuLoadingActivity"
+            android:name=".activities.LunchMenuActivity"
             android:label="Lunch Menu" />
         <activity
             android:name=".activities.SpecialsMenuActivity"
@@ -47,8 +44,6 @@
         <activity
             android:name=".activities.SettingsActivity"
             android:label="@string/title_settings" />
-        <activity android:name=".activities.ShowLunchMenuActivity"
-            android:label="Lunch Menu"/>
 
         <service
             android:name=".notifications.NotificationIntentService"
@@ -57,7 +52,7 @@
 
         <receiver
             android:name=".notifications.NotificationReceiver"
-            android:enabled="true"></receiver>
+            android:enabled="true"/>
         <receiver android:name=".notifications.NotificationServiceStarter">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />

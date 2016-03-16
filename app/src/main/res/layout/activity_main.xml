@@ -69,6 +69,7 @@
         android:layout_marginTop="176dp"
         android:text="Loading Data..."
         android:textSize="52sp"
-        android:textStyle="bold" />
+        android:textStyle="bold"
+        android:textAlignment="center"/>
 
 </android.support.design.widget.CoordinatorLayout>

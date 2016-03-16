@@ -9,7 +9,7 @@ import com.unit5app.tasks.DownloadPdfTask;
 /**
  * Activity to display a PDF with the current lunch menu.
  */
-public class LunchMenuLoadingActivity extends LoadingActivity {
+public class LunchMenuActivity extends BaseActivity {
     /* TODO: Generate the URL with JSoup so that it's not hardcoded */
     /* NOTE: If U5's naming scheme is consistent, next month's menu should be '2016 Apr Sr...' */
     private static final String TAG = "LunchMenuPDFReader";

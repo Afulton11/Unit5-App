@@ -72,7 +72,6 @@ public abstract class Utils {
     /**
      * the current View the user is looking at.
      */
-    public static int current_view;
     public static boolean monitorState;
     private static BaseActivity currentActivity;
     private static boolean paused = false;

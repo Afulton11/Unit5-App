@@ -11,6 +11,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.FrameLayout;
@@ -28,6 +29,7 @@ public class BaseActivity extends AppCompatActivity  implements NavigationView.O
     private Toolbar mActionBarToolbar;
     private DrawerLayout mDrawerLayout;
     private ActionBarDrawerToggle mToggle;
+    private boolean useDrawer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,11 +39,11 @@ public class BaseActivity extends AppCompatActivity  implements NavigationView.O
 
     @Override
     public void setContentView(int layoutResID) {
+        useDrawer = (layoutResID != R.layout.view_loading);
         DrawerLayout fullView = (DrawerLayout) getLayoutInflater().inflate(R.layout.activity_base, null);
         FrameLayout activityContainer = (FrameLayout) fullView.findViewById(R.id.activity_content);
         getLayoutInflater().inflate(layoutResID, activityContainer, true);
         super.setContentView(fullView);
-
         getActionBarToolbar();
         setupNavDrawer();
     }
@@ -90,11 +92,11 @@ public class BaseActivity extends AppCompatActivity  implements NavigationView.O
      * @return true
      */
     protected boolean useDrawerToggle() {
-        return true;
+        return useDrawer;
     }
 
     protected Toolbar getActionBarToolbar() {
-        if (mActionBarToolbar == null) {
+            Log.d(TAG, "MActionBarTool is equal to null! we want this!");
             mActionBarToolbar = (Toolbar) findViewById(R.id.toolbar);
             if (mActionBarToolbar != null) {
                 // Depending on which version of Android you are on the Toolbar or the ActionBar may be
@@ -109,8 +111,6 @@ public class BaseActivity extends AppCompatActivity  implements NavigationView.O
                 }
 
             }
-        }
-
         return mActionBarToolbar;
     }
 

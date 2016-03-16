@@ -82,7 +82,7 @@ public class Settings {
 
 //            StringBuffer buffer = new StringBuffer();
                 while ((currentLine = reader.readLine()) != null) {
-                    Log.d(TAG, "Stuck?" + currentLine);
+                    Log.d(TAG, currentLine);
 //               buffer.append(currentLine + System.getProperty("line.separator"));
                     if (!currentLine.startsWith("//")) {
                         tokens = currentLine.split("\t");
