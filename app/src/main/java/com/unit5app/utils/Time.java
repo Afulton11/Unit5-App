@@ -1,7 +1,5 @@
 package com.unit5app.utils;
 
-import android.util.Log;
-
 import com.unit5app.activities.MainActivity;
 import com.unit5app.calendars.CalendarEvent;
 import com.unit5app.calendars.EventType;
@@ -99,6 +97,13 @@ public abstract class Time {
         return buf.toString();
     }
 
+    public static String changeDateYearToYY(String dateWithYYYY) {
+        String[] split = dateWithYYYY.split("/");
+        if(split[2].length() > 3)
+            return split[0] + "/" + split[1] + "/" +split[2].substring(2, 4);
+        return dateWithYYYY;
+    }
+
     /**
      * returns the date the day after the given date.
      * @param date the date to get the date after.
@@ -146,8 +151,14 @@ public abstract class Time {
      * <br></br><br>&nbsp;&nbsp;<b>The HIGHEST possible return value: </b> {@value #HIGHEST_DATE_NUM}</br>
      */
     public static int getDateAsNumber(String date) {
-        String[] monthDayYear = date.split("/");
+        String[] monthDayYear = changeDateYearToYY(date).split("/");
         return (Integer.parseInt(monthDayYear[0]) * MONTH_MULTIPLIER) + (Integer.parseInt(monthDayYear[1]) * DAY_MULTIPLIER) + (Integer.parseInt(monthDayYear[2]) * YEAR_MULTIPLIER);
+    }
+
+    public static boolean isDateEqualToDate(String date, String dateCompareable) {
+        date = changeDateYearToYY(removeUnnecessaryZeros(date));
+        dateCompareable = changeDateYearToYY(removeUnnecessaryZeros(dateCompareable));
+        return dateCompareable.equals(date);
     }
 
     /**
@@ -156,14 +167,12 @@ public abstract class Time {
      * @return date as a string in the format: {@value #FORMAT_BASIC_DATE}
      */
     public static String getDateFromNumber(int dateNum) {
-        Log.d("time", "dateNum: " + dateNum);
         int years = dateNum / YEAR_MULTIPLIER;
         dateNum -= years * YEAR_MULTIPLIER;
         int months = dateNum / MONTH_MULTIPLIER;
         dateNum -= months * MONTH_MULTIPLIER;
         int days = dateNum / DAY_MULTIPLIER;
 
-        Log.d("time", "Date returned: " + months + "/" + days + "/" + years);
         return months + "/" + days + "/" + years;
     }
 
@@ -184,7 +193,7 @@ public abstract class Time {
      */
     public static String getDOTW(Date date) {
         /*
-        (Andrew) should we get rid of the parameter and make it just return new SimpleDateFormat("E").format(new Date()).toString();? Or is their applications where inputting a Date is useful?
+        should we get rid of the parameter and make it just return new SimpleDateFormat("E").format(new Date()).toString();? Or is their applications where inputting a Date is useful?
          */
         return new SimpleDateFormat("E").format(date);
     }

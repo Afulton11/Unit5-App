@@ -13,7 +13,7 @@ import android.util.Log;
 
 import com.unit5app.R;
 import com.unit5app.Settings;
-import com.unit5app.activities.MainActivity;
+import com.unit5app.activities.UpcomingEventsActivity;
 
 /**
  * @author Andrew
@@ -48,7 +48,7 @@ public class NotificationIntentService extends IntentService {
 
             Settings.addSentNotification(title);
             Context context = originalContext.getApplicationContext();
-            PendingIntent pendingIntent = PendingIntent.getActivity(context, 1, new Intent(context, MainActivity.class), 0);
+            PendingIntent pendingIntent = PendingIntent.getActivity(context, 1, new Intent(context, UpcomingEventsActivity.class), 0);
             NotificationCompat.Builder builder = new NotificationCompat.Builder(context);
             builder.setSmallIcon(R.mipmap.ic_launcher);
             builder.setContentIntent(pendingIntent);

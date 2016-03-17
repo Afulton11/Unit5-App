@@ -58,9 +58,9 @@ public class MyNotificationHandler {
      * creates notifications based on the user's settings
      */
     public static void createNotificationsFromSettings() {
-        Log.d("MyHandler", "Creating notifications from settings");
         for(int i = 0; i < EventType.values().length; i++)
             if(Settings.getNotificationBoolean(i)) {
+                Log.d("MyHandler", "Creating notifications from settings");
                 createAllNotificationsOfType(context, i);
             }
     }
@@ -73,7 +73,7 @@ public class MyNotificationHandler {
     public static void createAllNotificationsOfType(Context context, int eventTypeId) {
         checkCalendarLoaded();
         for(CalendarEvent e : calendar.getEventsForDate(Time.getCurrentDate(Time.FORMAT_BASIC_DATE))) {
-            if(e.getType().getId() == eventTypeId) {
+            if(e.getType().getId() == eventTypeId && !Settings.list_sentNotificationsContains(e.getTitle())) {
                 createNotification(context, e);
             }
         }
@@ -105,13 +105,11 @@ public class MyNotificationHandler {
      */
     private static void createNotification(Context context, CalendarEvent event) {
         Intent notificationIntent = new Intent(context, NotificationReceiver.class);
-
+        Log.d("MyHandler", "creating notification!");
         SimpleDateFormat sdf = new SimpleDateFormat(Time.FORMAT_DATE_TIME_12HOUR);
         Calendar c = Calendar.getInstance();
         if (event != null) {
-
             if(!Settings.list_sentNotificationsContains(event.getTitle())) {
-
                 try {
                     c.setTime(sdf.parse(event.getDate() + " " + event.getTimeOccurring()));
                     if(c.getTimeInMillis() < System.currentTimeMillis()) c.setTimeInMillis(System.currentTimeMillis() + 500);
@@ -120,7 +118,7 @@ public class MyNotificationHandler {
                 }
                 notificationIntent.putExtra("id", event.getType().getId());
                 notificationIntent.putExtra("title", event.getTitle());
-                notificationIntent.putExtra("message", "");
+                notificationIntent.putExtra("message", event.getTitle());
                 notificationIntent.putExtra("sub", event.getTimeOccurring());
             }
         } else {

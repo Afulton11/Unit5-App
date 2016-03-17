@@ -1,6 +1,6 @@
 package com.unit5app.activities;
 
-import android.os.Bundle;
+import android.os.*;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -82,8 +82,12 @@ public class SettingsActivity extends BaseActivity {
         scrollWithTile.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                    Settings.setArticleSettingsBoolean(0, isChecked);
-                    Settings.save(getApplicationContext());
+                Settings.setArticleSettingsBoolean(0, isChecked);
+                Settings.save(getApplicationContext());
+                //we need to exit immediately so that the file doesn't get overriding when exiting out manually.
+                android.os.Process.killProcess(android.os.Process.myPid());
+                System.exit(1);
+
             }
         });
 

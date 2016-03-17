@@ -184,7 +184,8 @@ public class Settings {
      * @return true if the title is found in the list.
      */
     public static boolean list_sentNotificationsContains(String title) {
-        for(String s : list_sentNotifications) if(s.equalsIgnoreCase(title)) return true;
+        if(title != null)
+            for(String s : list_sentNotifications) if(s.equalsIgnoreCase(title)) return true;
         return false;
     }
 

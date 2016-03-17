@@ -1,5 +1,7 @@
 package com.unit5app.calendars;
 
+import android.util.Log;
+
 import com.unit5app.com.unit5app.parsers.RSSReader;
 import com.unit5app.tasks.ReadAllFeedTask;
 import com.unit5app.tasks.ReadCalendarTask;
@@ -195,8 +197,11 @@ public class Unit5Calendar{
      */
     public CalendarEvent[] getEventsForDate(String date) {
         List<CalendarEvent> events = new ArrayList<>();
+        Log.d("Handler2", "Current Date:" + date);
         for(CalendarEvent event : calendarEvents) {
-            if(Time.getDateAsNumber(date) == Time.getDateAsNumber(event.getDate())) {
+            Log.d("Handler2", "Event Date: " + event.getDate());
+            if(Time.isDateEqualToDate(date, event.getDate())) {
+                Log.d("Handler2", "Adding event!");
                 events.add(event);
             }
         }

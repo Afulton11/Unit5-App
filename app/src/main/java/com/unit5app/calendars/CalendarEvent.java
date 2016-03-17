@@ -61,8 +61,7 @@ public class CalendarEvent {
      *              - this then sets the EventType of the CalendarEvent to the found Event type.
      */
     private void parseEventType() { //TODO: add a list of all the school holidays to checkfor the 'holiday' event type.
-        String tempTitle = this.title;
-        tempTitle = tempTitle.toLowerCase();
+        String tempTitle = title.toLowerCase();
         if(tempTitle.contains("no school") || tempTitle.contains("teacher's institute") || tempTitle.contains("teacher's work day") || tempTitle.contains("snow day")) { //example: no school
             this.type = EventType.noSchool;
         } else if(tempTitle.contains("late start")) {//example: late start wednesday
