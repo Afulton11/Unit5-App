@@ -20,7 +20,8 @@ import com.unit5app.R;
 import com.unit5app.utils.Utils;
 
 /**
- * Mostly not my code, saw someone had a tutorial for this so I used their code.
+ * Parent class for most Activities.
+ * Reference code:
  * http://mateoj.com/2015/06/21/adding-toolbar-and-navigation-drawer-all-activities-android/
  */
 public class BaseActivity extends AppCompatActivity  implements NavigationView.OnNavigationItemSelectedListener {
@@ -97,7 +98,7 @@ public class BaseActivity extends AppCompatActivity  implements NavigationView.O
     }
 
     protected Toolbar getActionBarToolbar() {
-        Log.d(TAG, "MActionBarTool is equal to null! we want this!");
+        Log.d(TAG, "MActionBarTool is equal to null! We want this!");
         mActionBarToolbar = (Toolbar) findViewById(R.id.toolbar);
             if (mActionBarToolbar != null) {
                 // Depending on which version of Android you are on the Toolbar or the ActionBar may be
@@ -113,7 +114,6 @@ public class BaseActivity extends AppCompatActivity  implements NavigationView.O
             }
         return mActionBarToolbar;
     }
-
 
     private void setupNavDrawer() {
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -141,7 +141,6 @@ public class BaseActivity extends AppCompatActivity  implements NavigationView.O
 
     }
 
-
     @Override
     public void onBackPressed() {
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -151,7 +150,6 @@ public class BaseActivity extends AppCompatActivity  implements NavigationView.O
             super.onBackPressed();
         }
     }
-
 
     protected boolean isNavDrawerOpen() {
         return mDrawerLayout != null && mDrawerLayout.isDrawerOpen(GravityCompat.START);
