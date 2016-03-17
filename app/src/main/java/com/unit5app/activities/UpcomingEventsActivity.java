@@ -44,7 +44,6 @@ public class UpcomingEventsActivity extends BaseActivity {
                     textView_calendarEvents.setText("Error Loading Upcoming Events.");
             }
         };
-
         textView_calendarEvents.post(runnable);
 
     }

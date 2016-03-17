@@ -17,6 +17,7 @@
             android:layout_height="?actionBarSize"
             android:background="@color/colorPrimary"
             android:theme="@style/MainActionBar"
+            android:fitsSystemWindows="true"
             />
         <FrameLayout
             android:id="@+id/activity_content"
