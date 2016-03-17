@@ -30,15 +30,6 @@ public class RssActivity  extends BaseActivity {
     private WestNewsReader westNews;
     private String[] loading = {"loading..."};
 
-    public static void setListToNewsArticles() {
-        String[] article_titles = MainActivity.mainCalendar.getNewsTask().getNewsArticleTitlesForList();
-        list.setAdapter(null);
-        adapter = new ArrayAdapter<>(list.getContext(), android.R.layout.simple_list_item_1, article_titles);
-        adapter.notifyDataSetChanged();
-        list.setAdapter(adapter);
-        titleList = article_titles;
-    }
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -57,11 +48,9 @@ public class RssActivity  extends BaseActivity {
                     Runnable listRunnable = new Runnable() {
                         @Override
                         public void run() {
-                            Log.d(TAG, "list view post runnable is running.");
                             setListViewLoading();
 
                             MainActivity.mainCalendar.loadNews();
-                            Log.d("starting set of news!", "starting set of news!");
                         }
                     };
                     list.post(listRunnable);
@@ -108,11 +97,31 @@ public class RssActivity  extends BaseActivity {
         super.onSaveInstanceState(savedInstanceState);
     }
 
+    public static void setListToNewsArticles() {
+        String[] article_titles = MainActivity.mainCalendar.getNewsTask().getNewsArticleTitlesForList();
+        list.setAdapter(null);
+        adapter = new ArrayAdapter<>(list.getContext(), android.R.layout.simple_list_item_1, article_titles);
+        adapter.notifyDataSetChanged();
+        list.setAdapter(adapter);
+        titleList = article_titles;
+    }
+
     public void setListViewLoading() {
         list.setAdapter(null);
         adapter = new ArrayAdapter<>(list.getContext(), android.R.layout.simple_list_item_1, loading);
         adapter.notifyDataSetChanged();
         list.setAdapter(adapter);
+    }
+
+    /**
+     * Saves all the news articles in a file called articles.txt
+     * Format: TItlE\tTitleTextHere
+     *          BoDY\tBodyTextHere
+     */
+    public static void saveArticles() {
+        for(int i = 0; i < titleList.length; i++) {
+
+        }
     }
 
     @Override
