@@ -7,7 +7,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 import com.unit5app.Article;
-import com.unit5app.activities.RssActivity;
+import com.unit5app.activities.WestNewsActivity;
 import com.unit5app.com.unit5app.parsers.CalendarRssReader;
 import com.unit5app.com.unit5app.parsers.RSSReader;
 import com.unit5app.com.unit5app.parsers.WestNewsReader;
@@ -54,12 +54,12 @@ public class ReadAllFeedTask extends AsyncTask<Void, Void, Void> {
     @Override
     protected void onPostExecute(Void aVoid) {
         super.onPostExecute(aVoid);
-        if (Utils.getCurrentActivity().getClass() == RssActivity.class) {
+        if (Utils.getCurrentActivity().getClass() == WestNewsActivity.class) {
             all_titles.clear();
             for (Article a : articles) {
                 all_titles.add(Utils.toTitleCase(Html.fromHtml(a.getTitle()).toString()));
             }
-            RssActivity.setListToNewsArticles();
+            WestNewsActivity.setListToNewsArticles();
         }
 
         if(methodRequests != null && methodRequests.size() > 0) {

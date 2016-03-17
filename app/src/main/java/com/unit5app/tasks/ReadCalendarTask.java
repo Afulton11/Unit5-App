@@ -3,7 +3,7 @@ package com.unit5app.tasks;
 import android.os.AsyncTask;
 import android.text.Html;
 
-import com.unit5app.activities.UpcomingEventsActivity;
+import com.unit5app.activities.UpcomingEventCalendarActivity;
 import com.unit5app.calendars.CalendarEvent;
 import com.unit5app.com.unit5app.parsers.CalendarRssReader;
 import com.unit5app.utils.MethodHolder;
@@ -42,7 +42,7 @@ public class ReadCalendarTask extends AsyncTask<Void, Void, Void> {
                     "</br><br>&nbsp;&nbsp;&nbsp;&nbsp;Time Occuring: "+ event.getTimeOccurring() +
                     "</br><br>&nbsp;&nbsp;&nbsp;&nbsp;Type (debug): " + event.getType() + "</br><br></br>");
         }
-        UpcomingEventsActivity.calendarEventsString = Html.fromHtml(html_styling_string);
+        UpcomingEventCalendarActivity.calendarEventsString = Html.fromHtml(html_styling_string);
         loaded = true;
 
         if(methodRequests != null && methodRequests.size() > 0) {

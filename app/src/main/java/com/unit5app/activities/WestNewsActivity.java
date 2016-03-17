@@ -20,7 +20,7 @@ import com.unit5app.utils.Utils;
  * The Activity that reads a rss feed and loads it onto the listView.
  * The items in the list view can then be clicked on to go to an Article Activity.
  */
-public class RssActivity  extends BaseActivity {
+public class WestNewsActivity extends BaseActivity {
 
     private static final String TAG = "unit5ActivityRSS";
     private static ArrayAdapter<String> adapter;
@@ -96,7 +96,7 @@ public class RssActivity  extends BaseActivity {
                     } catch (ArrayIndexOutOfBoundsException e) {
                         Log.d(TAG, "Index out of bounds for articles[position]!");
                     }
-                    startActivity(new Intent(RssActivity.this, ArticleActivity.class));
+                    startActivity(new Intent(WestNewsActivity.this, ArticleActivity.class));
                 }
             }
         });

@@ -23,7 +23,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".activities.RssActivity"
+            android:name=".activities.WestNewsActivity"
             android:label="@string/RSSActivity" />
         <activity
             android:name=".activities.ArticleActivity"
@@ -35,7 +35,7 @@
             android:name=".activities.SpecialsMenuActivity"
             android:label="Specials Menu" />
         <activity
-            android:name=".activities.UpcomingEventsActivity"
+            android:name=".activities.UpcomingEventCalendarActivity"
             android:label="@string/UpcomingEventsActivity" />
         <activity
             android:name=".activities.BaseActivity"
