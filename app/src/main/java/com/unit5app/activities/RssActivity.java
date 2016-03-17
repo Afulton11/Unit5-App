@@ -36,7 +36,6 @@ public class RssActivity  extends BaseActivity {
         setContentView(R.layout.rss_layout);
 
         list = (ListView) findViewById(android.R.id.list);
-
         MainActivity.mainCalendar.getNewsTask().setList(list);
         if(savedInstanceState != null) {
             adapter = new ArrayAdapter<>(list.getContext(), android.R.layout.simple_list_item_1, titleList);
@@ -114,8 +113,10 @@ public class RssActivity  extends BaseActivity {
     }
 
     public static void saveArticles() {
-        for(int i = 0; i < titleList.length; i++) {
+        if(MainActivity.mainCalendar.newsLoaded()) {
+            for (int i = 0; i < titleList.length; i++) {
 
+            }
         }
     }
 

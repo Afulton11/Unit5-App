@@ -1,7 +1,9 @@
 package com.unit5app.calendars;
 
+import android.content.Context;
 import android.util.Log;
 
+import com.unit5app.Article;
 import com.unit5app.com.unit5app.parsers.RSSReader;
 import com.unit5app.tasks.ReadAllFeedTask;
 import com.unit5app.tasks.ReadCalendarTask;
@@ -9,6 +11,12 @@ import com.unit5app.utils.MethodHolder;
 import com.unit5app.utils.Time;
 import com.unit5app.utils.Utils;
 
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -25,6 +33,8 @@ public class Unit5Calendar{
 
     private RSSReader[] rssReaders;
     private ReadAllFeedTask newsTask;
+    private File newsFile;
+    private final String NEWS_FILE_NAME = "articles.txt";
 
     private ReadCalendarTask calendarTask;
 
@@ -39,7 +49,7 @@ public class Unit5Calendar{
      * creates a new Calendar from the Main calendar url: <a href="{@value #CALENDAR_URL}">See Calendar Url</a>
      * @param numDays the number of days to extend from the current day.
      */
-    public Unit5Calendar(int numDays) {
+    public Unit5Calendar(File filesDir, int numDays) {
         dates = new CalendarDate[numDays];
         String currentDate = Time.getCurrentDate(Time.FORMAT_BASIC_DATE);
         int currentDateNum = Time.getDateAsNumber(currentDate);
@@ -53,6 +63,7 @@ public class Unit5Calendar{
                 previousDate = currentDate;
             }
         }
+        newsFile = new File(filesDir, NEWS_FILE_NAME);
         if(Utils.hadInternetOnLastCheck) {
             loadCalendar();
         }
@@ -94,13 +105,15 @@ public class Unit5Calendar{
      * <br><b>Make Sure to always setNewsRssReaders() in the calendar before calling loadNews()!</b></br>
      */
     public void loadNews() {
-        if(rssReaders != null) {
+        if(newsFile.exists()) {
+            loadFromNewsFromFile();
+        } else if(rssReaders != null) {
             startedLoadingNews = true;
             newsTask = new ReadAllFeedTask();
             new Thread(new Runnable() {
                 @Override
                 public void run() {
-                    if (Utils.hadInternetOnLastCheck) {
+                    if (Utils.hadInternetOnLastCheck) { //will be used when fetching files to compare with old file for an update.
                         if (rssReaders.length > 0) {
                             newsTask.setReaders(rssReaders);
                             newsTask.execute();
@@ -109,6 +122,97 @@ public class Unit5Calendar{
                 }
             }).start();
         }
+    }
+
+    private List<Article> newsArticles = new ArrayList<>();
+    private final String START_ARTICLE = "START_ARTICLE", END_ARTICLES = "END_ARTICLES", NEXT = "@NXT@";
+
+    private void saveNews(Context context) {
+        try {
+            if (!newsFile.exists()) newsFile.createNewFile();
+
+            BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(context.openFileOutput(NEWS_FILE_NAME, Context.MODE_PRIVATE)));
+
+            for(Article article : newsArticles) {
+                writer.write(START_ARTICLE);
+                writer.newLine();
+                if(article.hasPubDate()) {
+                    writer.write("pubDate:" + article.getPubDate());
+                    writer.write(NEXT);
+                    writer.newLine();
+                }
+                writer.write("title:" + article.getTitle());
+                writer.write(NEXT);
+                writer.newLine();
+                writer.write("desc:" + article.getDescription());
+                writer.write(NEXT);
+                writer.newLine();
+            }
+            writer.write(END_ARTICLES);
+        } catch (IOException e) {
+            Log.d("Unit5Calendar", e.getMessage(), e);
+        }
+    }
+
+    private void loadFromNewsFromFile() {
+        startedLoadingNews = true;
+        try {
+            BufferedReader reader = new BufferedReader(new FileReader(newsFile));
+            String currentLine = null;
+            while((currentLine = reader.readLine()) != null) {
+                if(currentLine.equals(START_ARTICLE)) {
+                    newsArticles.add(readArticle(currentLine, reader));
+                }
+            }
+        } catch(IOException e) {
+            Log.d("Unit5Calendar", e.getMessage(), e);
+        }
+    }
+
+    private Article readArticle(String currentLine, BufferedReader reader) throws IOException{
+        Article article = new Article();
+        while((currentLine = reader.readLine()) != null && !currentLine.equals(END_ARTICLES) && !currentLine.equals(START_ARTICLE)) {
+            int firstCol = currentLine.indexOf(':') + 1; //we want the text after the first colon, so we add 1.
+            if(currentLine.startsWith("pubDate")) {
+                article.setPubDate(readPubDate(currentLine, reader, firstCol));
+            } else if(currentLine.startsWith("title")) {
+                article.setTitle(readTitle(currentLine, reader, firstCol));
+            } else if(currentLine.startsWith("desc")) {
+                article.setDescription(readDescription(currentLine, reader, firstCol));
+            }
+        }
+        return article;
+    }
+
+    private String readPubDate(String currentLine, BufferedReader reader, int colPos) throws IOException{
+        String pubDate = currentLine.substring(colPos);
+        while((currentLine = reader.readLine()) != null && !currentLine.equals(NEXT)) {
+            pubDate += System.getProperty("line.separator") + currentLine;
+        }
+        return pubDate;
+    }
+
+    private String readTitle(String currentLine, BufferedReader reader, int colPos) throws IOException {
+        String title = currentLine.substring(colPos);
+        while((currentLine = reader.readLine()) != null && !currentLine.equals(NEXT)) {
+            title += System.getProperty("line.separator") + currentLine;
+        }
+        return title;
+    }
+
+    private String readDescription(String currentLine, BufferedReader reader, int colPos) throws IOException {
+        String description = currentLine.substring(colPos);
+        while((currentLine = reader.readLine()) != null && !currentLine.equals(NEXT)) {
+            description += System.getProperty("line.separator") + currentLine;
+        }
+        return description;
+    }
+
+    /**
+     * updates the news and the news file..
+     */
+    private void updateNews() {
+
     }
 
     /**
