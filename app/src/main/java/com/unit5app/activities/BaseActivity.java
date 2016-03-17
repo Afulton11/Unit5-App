@@ -43,7 +43,6 @@ public class BaseActivity extends AppCompatActivity  implements NavigationView.O
         DrawerLayout fullView = (DrawerLayout) getLayoutInflater().inflate(R.layout.activity_base, null);
         FrameLayout activityContainer = (FrameLayout) fullView.findViewById(R.id.activity_content);
         getLayoutInflater().inflate(layoutResID, activityContainer, true);
-
         super.setContentView(fullView);
         getActionBarToolbar();
         setupNavDrawer();
