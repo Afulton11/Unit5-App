@@ -53,7 +53,7 @@ public abstract class Utils {
                 if (Time.getDateAsNumber(article1.getPubDate()) > Time.getDateAsNumber(article0.getPubDate()))
                     return +1; //moves article0 down in the index array
             } else if(!article0.hasPubDate()){
-                return +1;
+                return -1;
             }
             return 0; //keeps articles at the same position in the index array.
         }

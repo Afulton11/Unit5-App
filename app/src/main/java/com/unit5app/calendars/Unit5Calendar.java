@@ -146,6 +146,7 @@ public class Unit5Calendar{
             protected void onPostExecute(Void aVoid) {
                 super.onPostExecute(aVoid);
                 removeBlankArticles();
+                Collections.sort(newsArticles, Utils.articlePubDateSorter);
                 newsReady = true;
                 saveNews(context);
             }
@@ -210,12 +211,13 @@ public class Unit5Calendar{
                 if(currentLine != null) {
                     String[] split = currentLine.split("-");
                     if (split.length > 1) {
-                        for (int i = 0; i < Integer.parseInt(split[1]); i++) {
-                            reader.readLine(); //skip the "START_ARTICLE"
+                        for (int i = 0; i < Integer.parseInt(split[1]); i++) {//TODO figure out why all lines, after i = 18, are null.
+                            currentLine = reader.readLine();
                             Article a = readArticle(reader);
                             if(a.isArticleFull()) articles.add(a);
+                            Log.d("q32", "" + i + "line: " + currentLine);
                         }
-                    } else { Log.d("Calendar223", "length not greater than 1!"); updateNews(context); } //if we didn't find the number of articles, the file must be corrupt. Update the file.
+                    } else { updateNews(context); } //if we didn't find the number of articles, the file must be corrupt. Update the file.
                 } else updateNews(context);
             } catch (IOException e) {
                 Log.d("Unit5Calendar", e.getMessage(), e);
