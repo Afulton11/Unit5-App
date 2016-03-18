@@ -3,10 +3,10 @@ package com.unit5app.tasks;
 import android.os.AsyncTask;
 import android.text.Html;
 import android.util.Log;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 import com.unit5app.Article;
+import com.unit5app.activities.MainActivity;
 import com.unit5app.activities.RssActivity;
 import com.unit5app.com.unit5app.parsers.CalendarRssReader;
 import com.unit5app.com.unit5app.parsers.RSSReader;
@@ -26,9 +26,6 @@ public class ReadAllFeedTask extends AsyncTask<Void, Void, Void> {
 
     private List<RSSReader> all_readers_executing;
     private List<Article> articles;
-    private List<String> all_titles; //holds a list of all the html parsed and correctly punctuated titles to be used in the listView.
-
-    private String[] loading = {"loading..."};
 
     private RSSReader[] readers;
     private ListView list;
@@ -39,14 +36,12 @@ public class ReadAllFeedTask extends AsyncTask<Void, Void, Void> {
         this.list = list;
         this.readers = readers;
         articles = new ArrayList<>();
-        all_titles = new ArrayList<>();
         all_readers_executing = new ArrayList<>();
         methodRequests = new ArrayList<>();
     }
 
     public ReadAllFeedTask() {
         articles = new ArrayList<>();
-        all_titles = new ArrayList<>();
         all_readers_executing = new ArrayList<>();
         methodRequests = new ArrayList<>();
     }
@@ -55,11 +50,7 @@ public class ReadAllFeedTask extends AsyncTask<Void, Void, Void> {
     protected void onPostExecute(Void aVoid) {
         super.onPostExecute(aVoid);
         if (Utils.getCurrentActivity().getClass() == RssActivity.class) {
-            all_titles.clear();
-            for (Article a : articles) {
-                all_titles.add(Utils.toTitleCase(Html.fromHtml(a.getTitle()).toString()));
-            }
-            RssActivity.setListToNewsArticles();
+            MainActivity.mainCalendar.setNewsArticles(articles);
         }
 
         if(methodRequests != null && methodRequests.size() > 0) {
@@ -95,10 +86,6 @@ public class ReadAllFeedTask extends AsyncTask<Void, Void, Void> {
     @Override
     protected void onPreExecute() {
         super.onPreExecute();
-        if(list != null) {
-            ArrayAdapter<String> adapter = new ArrayAdapter<>(list.getContext(), android.R.layout.simple_list_item_1, loading);
-            list.setAdapter(adapter);
-        }
         Collections.addAll(all_readers_executing, readers);
     }
 

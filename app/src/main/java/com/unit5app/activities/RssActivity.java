@@ -1,6 +1,7 @@
 package com.unit5app.activities;
 
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.Html;
 import android.util.Log;
@@ -11,8 +12,7 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import com.unit5app.R;
-import com.unit5app.com.unit5app.parsers.RSSReader;
-import com.unit5app.com.unit5app.parsers.WestNewsReader;
+import com.unit5app.calendars.Unit5Calendar;
 import com.unit5app.utils.Utils;
 
 /**
@@ -23,37 +23,41 @@ import com.unit5app.utils.Utils;
 public class RssActivity  extends BaseActivity {
 
     private static final String TAG = "unit5ActivityRSS";
-    private static ArrayAdapter<String> adapter;
-    private static ListView list;
-    private static String[] titleList;
-    private RSSReader rssReader;
-    private WestNewsReader westNews;
-    private String[] loading = {"loading..."};
+    private ArrayAdapter<String> adapter;
+    private ListView list;
+    private String[] titleList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.rss_layout);
-
         list = (ListView) findViewById(android.R.id.list);
-
-        MainActivity.mainCalendar.getNewsTask().setList(list);
+        if(MainActivity.mainCalendar == null) MainActivity.mainCalendar = new Unit5Calendar(60);
         if(savedInstanceState != null) {
+            titleList = savedInstanceState.getStringArray("key");
             adapter = new ArrayAdapter<>(list.getContext(), android.R.layout.simple_list_item_1, titleList);
             adapter.notifyDataSetChanged();
             list.setAdapter(adapter);
         } else if(!MainActivity.mainCalendar.newsLoaded()) {
             if(!MainActivity.mainCalendar.newsStartedLoading()) {
                 if (Utils.isInternetConnected(getApplicationContext())) {
-                    Runnable listRunnable = new Runnable() {
+                    new AsyncTask<Void, Void, Void>() {
                         @Override
-                        public void run() {
+                        protected void onPreExecute() {
+                            super.onPreExecute();
                             setListViewLoading();
-
-                            MainActivity.mainCalendar.loadNews();
+                            MainActivity.mainCalendar.loadNews(getApplicationContext());
                         }
-                    };
-                    list.post(listRunnable);
+                        @Override
+                        protected Void doInBackground(Void... params) {
+                            return null;
+                        }
+                        @Override
+                        protected void onPostExecute(Void aVoid) {
+                            super.onPostExecute(aVoid);
+                            setListViewComplete();
+                        }
+                    }.execute();
                 } else {
                     String[] no_internet = {"<b>Unable to Load News</b>, User is <b>not conected to the internet</b>.",
                             "Please <b>retry</b> once you are <b>reconnected to the internet</b>."};
@@ -68,8 +72,25 @@ public class RssActivity  extends BaseActivity {
                 setListViewLoading();
             }
         } else {
-            setListToNewsArticles();
+            setListViewComplete();
         }
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle savedInstanceState) {
+        savedInstanceState.putStringArray("key", titleList);
+        super.onSaveInstanceState(savedInstanceState);
+    }
+
+    public void setListViewComplete() {
+        String[] article_titles = MainActivity.mainCalendar.getNewsTitles();
+        setContentView(R.layout.rss_layout);
+        Log.d(TAG, "length: " + article_titles.length);
+        list = (ListView) findViewById(android.R.id.list);
+        adapter = new ArrayAdapter<>(list.getContext(), android.R.layout.simple_list_item_1, article_titles);
+        adapter.notifyDataSetChanged();
+        list.setAdapter(adapter);
+        titleList = article_titles;
 
         /**
          * what to do for each click on an item in the listview.
@@ -81,7 +102,7 @@ public class RssActivity  extends BaseActivity {
                     Toast.makeText(getApplicationContext(), "Still loading...", Toast.LENGTH_SHORT);
                 } else {
                     try {
-                        ArticleActivity.setArticle(MainActivity.mainCalendar.getNewsTask().getNewsArticleAt(position));
+                        ArticleActivity.setArticle(MainActivity.mainCalendar.getNewsArticles()[position]);
                     } catch (ArrayIndexOutOfBoundsException e) {
                         Log.d(TAG, "Index out of bounds for articles[position]!");
                     }
@@ -91,37 +112,8 @@ public class RssActivity  extends BaseActivity {
         });
     }
 
-    @Override
-    public void onSaveInstanceState(Bundle savedInstanceState) {
-        savedInstanceState.putStringArray("key", titleList);
-        super.onSaveInstanceState(savedInstanceState);
-    }
-
-    public static void setListToNewsArticles() {
-        String[] article_titles = MainActivity.mainCalendar.getNewsTask().getNewsArticleTitlesForList();
-        list.setAdapter(null);
-        adapter = new ArrayAdapter<>(list.getContext(), android.R.layout.simple_list_item_1, article_titles);
-        adapter.notifyDataSetChanged();
-        list.setAdapter(adapter);
-        titleList = article_titles;
-    }
-
     public void setListViewLoading() {
-        list.setAdapter(null);
-        adapter = new ArrayAdapter<>(list.getContext(), android.R.layout.simple_list_item_1, loading);
-        adapter.notifyDataSetChanged();
-        list.setAdapter(adapter);
-    }
-
-    /**
-     * Saves all the news articles in a file called articles.txt
-     * Format: TItlE\tTitleTextHere
-     *          BoDY\tBodyTextHere
-     */
-    public static void saveArticles() {
-        for(int i = 0; i < titleList.length; i++) {
-
-        }
+        setContentView(R.layout.view_loading);
     }
 
     @Override

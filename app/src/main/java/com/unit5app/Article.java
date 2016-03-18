@@ -2,7 +2,6 @@ package com.unit5app;
 
 import android.os.Parcel;
 import android.os.Parcelable;
-import android.util.Log;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -98,7 +97,6 @@ public class Article implements Parcelable{
                     format = new SimpleDateFormat("E MMM dd hh:mm:ss z yyyy");
                 }
                 Date date = null;
-                Log.d("PubDate", "Before: " + pubDate);
                 try {
                     date = format.parse(pubDate);
                 } catch (ParseException e) {
