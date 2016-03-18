@@ -76,7 +76,7 @@ public class MainActivity extends BaseActivity {
         testCalendarReading.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startActivity(new Intent(MainActivity.this, UpcomingEventsActivity.class));
+                startActivity(new Intent(MainActivity.this, UpcomingEventCalendarActivity.class));
             }
         });
 
@@ -85,7 +85,7 @@ public class MainActivity extends BaseActivity {
             @Override
             public void onClick(View view) {
 
-                startActivity(new Intent(MainActivity.this, RssActivity.class));
+                startActivity(new Intent(MainActivity.this, WestNewsActivity.class));
             }
         });
 
