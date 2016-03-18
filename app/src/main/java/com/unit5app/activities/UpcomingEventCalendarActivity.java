@@ -13,7 +13,7 @@ import com.unit5app.utils.Utils;
  * @author Andrew
  * @version 2/19/16
  */
-public class UpcomingEventsActivity extends BaseActivity {
+public class UpcomingEventCalendarActivity extends BaseActivity {
 
     private TextView textView_calendarEvents;
 
