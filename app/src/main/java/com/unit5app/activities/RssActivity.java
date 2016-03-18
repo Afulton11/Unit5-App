@@ -120,13 +120,11 @@ public class RssActivity  extends BaseActivity {
     public void onPause() {
         super.onPause();
         Utils.universalOnPause(getApplicationContext());
-        MainActivity.mainCalendar.saveNews(getApplicationContext());
     }
 
     @Override
     public void onResume() {
         super.onResume();
         Utils.universalOnResume(getApplicationContext());
-        MainActivity.mainCalendar.saveNews(getApplicationContext());
     }
 }

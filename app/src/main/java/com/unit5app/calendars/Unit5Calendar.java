@@ -116,14 +116,14 @@ public class Unit5Calendar{
         if(newsFile.exists()) {
             newsArticles = loadNewsFromFile(context);
         } else if(rssReaders != null) {
-            updateNews();
+            updateNews(context);
         }
     }
 
     /**
      * updates the news and the news file..
      */
-    private void updateNews() {
+    private void updateNews(final Context context) {
         startedLoadingNews = true;
         newsReady = false;
         new AsyncTask<Void, Void, Void>() {
@@ -145,6 +145,7 @@ public class Unit5Calendar{
             protected void onPostExecute(Void aVoid) {
                 super.onPostExecute(aVoid);
                 newsReady = true;
+                saveNews(context);
             }
         }.execute();
     }
@@ -153,6 +154,7 @@ public class Unit5Calendar{
     private final String START_ARTICLE = "START_ARTICLE", END_ARTICLES = "END_ARTICLES", NEXT = "@NXT@";
 
     public void saveNews(Context context) {
+        Log.d("Unit5Calendar", "Saving News.. We need to not let the user exterminate the app while saving.."); //TODO: figure out how to not let the app be closed while saving.
         try {
             if(newsFile == null) newsFile = new File(context.getFilesDir(), NEWS_FILE_NAME);
             if (!newsFile.exists()) newsFile.createNewFile();
@@ -182,6 +184,7 @@ public class Unit5Calendar{
         } catch (IOException e) {
             Log.d("Unit5Calendar", e.getMessage(), e);
         }
+        Log.d("Unit5Calendar", "Done saving News, user can now safely exterminate app.");
     }
 
     private List<Article> loadNewsFromFile(Context context) {
