@@ -123,7 +123,7 @@ public class Unit5Calendar{
     /**
      * updates the news and the news file..
      */
-    private void updateNews(final Context context) {
+    private void updateNews(final Context context) { //http://www.androidhive.info/2015/05/android-swipe-down-to-refresh-listview-tutorial/
         startedLoadingNews = true;
         newsReady = false;
         new AsyncTask<Void, Void, Void>() {
