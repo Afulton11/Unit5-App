@@ -21,7 +21,7 @@ import com.unit5app.utils.Utils;
  * The Activity that reads a rss feed and loads it onto the listView.
  * The items in the list view can then be clicked on to go to an Article Activity.
  */
-public class RssActivity  extends BaseActivity {
+public class WestNewsActivity  extends BaseActivity {
 
     private static final String TAG = "unit5ActivityRSS";
     private ArrayAdapter<String> adapter;
