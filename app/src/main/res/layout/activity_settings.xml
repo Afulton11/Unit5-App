@@ -21,7 +21,15 @@
         <Button
             style="@style/SettingsCheckBox"
             android:text="Clear Settings File"
-            android:id="@+id/settings_debug_clearSettingsFile"  />
+            android:id="@+id/settings_debug_clearSettingsFile" />
+
+        <View
+            style="@style/HorizontalDividerSoft"/>
+
+        <Button
+            style="@style/SettingsCheckBox"
+            android:text="Delete News File"
+            android:id="@+id/settings_debug_deleteNewsFile" />
 
         <View
             style="@style/HorizontalDividerSoft"/>

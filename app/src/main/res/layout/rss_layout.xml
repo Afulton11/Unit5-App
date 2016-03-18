@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<android.support.v4.widget.SwipeRefreshLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#ffffff">
+    android:background="#ffffff"
+    android:id="@+id/news_swipe_refresh">
 
     <ListView
         android:layout_width="match_parent"
@@ -12,4 +13,4 @@
         android:layout_gravity="center_horizontal"
         android:background="#ffffff"/>
 
-</LinearLayout>
+</android.support.v4.widget.SwipeRefreshLayout>

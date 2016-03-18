@@ -37,7 +37,7 @@ public class Unit5Calendar{
     private RSSReader[] rssReaders;
     private ReadAllFeedTask newsTask;
     private File newsFile;
-    private final String NEWS_FILE_NAME = "articles.txt";
+    public static final String NEWS_FILE_NAME = "articles.txt";
     private boolean newsReady;
 
     private ReadCalendarTask calendarTask;
@@ -123,7 +123,7 @@ public class Unit5Calendar{
     /**
      * updates the news and the news file..
      */
-    private void updateNews(final Context context) { //http://www.androidhive.info/2015/05/android-swipe-down-to-refresh-listview-tutorial/
+    public void updateNews(final Context context) {
         startedLoadingNews = true;
         newsReady = false;
         new AsyncTask<Void, Void, Void>() {
@@ -132,6 +132,7 @@ public class Unit5Calendar{
                 super.onPreExecute();
                 if (Utils.hadInternetOnLastCheck) { //will be used when fetching files to compare with old file for an update.
                     if (rssReaders.length > 0) {
+                        ReadAllFeedTask newsTask = new ReadAllFeedTask();
                         newsTask.setReaders(rssReaders);
                         newsTask.execute();
                     }
@@ -144,6 +145,7 @@ public class Unit5Calendar{
             @Override
             protected void onPostExecute(Void aVoid) {
                 super.onPostExecute(aVoid);
+                removeBlankArticles();
                 newsReady = true;
                 saveNews(context);
             }
@@ -162,7 +164,8 @@ public class Unit5Calendar{
             BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(context.openFileOutput(NEWS_FILE_NAME, Context.MODE_PRIVATE)));
 
             Collections.sort(newsArticles, Utils.articlePubDateSorter);
-            writer.write("Num Articles:" + newsArticles.size());
+            writer.write("size-" + newsArticles.size());
+            Log.d("NewsSave", "size-" + newsArticles.size());
             writer.newLine();
             for(Article article : newsArticles) {
                 writer.write(START_ARTICLE);
@@ -204,10 +207,16 @@ public class Unit5Calendar{
             try {
                 BufferedReader reader = new BufferedReader(new FileReader(newsFile));
                 String currentLine = reader.readLine();
-                for(int i = 0; i < Integer.parseInt(currentLine.split(":")[1]); i++) {
-                    currentLine = reader.readLine(); //skip the "START_ARTICLE"
-                    articles.add(readArticle(reader));
-                }
+                if(currentLine != null) {
+                    String[] split = currentLine.split("-");
+                    if (split.length > 1) {
+                        for (int i = 0; i < Integer.parseInt(split[1]); i++) {
+                            reader.readLine(); //skip the "START_ARTICLE"
+                            Article a = readArticle(reader);
+                            if(a.isArticleFull()) articles.add(a);
+                        }
+                    } else { Log.d("Calendar223", "length not greater than 1!"); updateNews(context); } //if we didn't find the number of articles, the file must be corrupt. Update the file.
+                } else updateNews(context);
             } catch (IOException e) {
                 Log.d("Unit5Calendar", e.getMessage(), e);
             }
@@ -261,6 +270,12 @@ public class Unit5Calendar{
             description += currentLine;
         }
         return description;
+    }
+
+    private void removeBlankArticles() {
+        for(int i = 0; i < newsArticles.size(); i++) {
+            if(!newsArticles.get(i).isArticleFull()) newsArticles.remove(i);
+        }
     }
 
     /**

@@ -3,6 +3,7 @@ package com.unit5app.activities;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.text.Html;
 import android.util.Log;
 import android.view.View;
@@ -35,9 +36,11 @@ public class RssActivity  extends BaseActivity {
         if(MainActivity.mainCalendar == null) MainActivity.mainCalendar = new Unit5Calendar(60);
         if(savedInstanceState != null) {
             titleList = savedInstanceState.getStringArray("key");
-            adapter = new ArrayAdapter<>(list.getContext(), android.R.layout.simple_list_item_1, titleList);
-            adapter.notifyDataSetChanged();
-            list.setAdapter(adapter);
+            if(titleList != null) {
+                adapter = new ArrayAdapter<>(list.getContext(), android.R.layout.simple_list_item_1, titleList);
+                adapter.notifyDataSetChanged();
+                list.setAdapter(adapter);
+            }
         } else if(!MainActivity.mainCalendar.newsLoaded()) {
             if(!MainActivity.mainCalendar.newsStartedLoading()) {
                 if (Utils.isInternetConnected(getApplicationContext())) {
@@ -85,6 +88,7 @@ public class RssActivity  extends BaseActivity {
     public void setListViewComplete() {
         String[] article_titles = MainActivity.mainCalendar.getNewsTitles();
         setContentView(R.layout.rss_layout);
+        final SwipeRefreshLayout swipeRefresh = (SwipeRefreshLayout) findViewById(R.id.news_swipe_refresh);
         Log.d(TAG, "length: " + article_titles.length);
         list = (ListView) findViewById(android.R.id.list);
         adapter = new ArrayAdapter<>(list.getContext(), android.R.layout.simple_list_item_1, article_titles);
@@ -108,6 +112,37 @@ public class RssActivity  extends BaseActivity {
                     }
                     startActivity(new Intent(RssActivity.this, ArticleActivity.class));
                 }
+            }
+        });
+
+        swipeRefresh.setDistanceToTriggerSync(100);
+        swipeRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                new AsyncTask<Void, Void, Void>() {
+                    @Override
+                    protected void onPreExecute() {
+                        MainActivity.mainCalendar.updateNews(getApplicationContext());
+                    }
+
+                    @Override
+                    protected Void doInBackground(Void... params) {
+                        return null;
+                    }
+
+
+                    @Override
+                    protected void onPostExecute(Void aVoid) {
+                        super.onPostExecute(aVoid);
+                        String[] article_titles = MainActivity.mainCalendar.getNewsTitles();
+                        list.setAdapter(null);
+                        adapter = new ArrayAdapter<>(list.getContext(), android.R.layout.simple_list_item_1, article_titles);
+                        adapter.notifyDataSetChanged();
+                        list.setAdapter(adapter);
+                        Toast.makeText(getApplicationContext(), "Done refreshing news content!", Toast.LENGTH_LONG);
+                        swipeRefresh.setRefreshing(false);
+                    }
+                }.execute();
             }
         });
     }

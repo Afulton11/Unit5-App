@@ -1,6 +1,6 @@
 package com.unit5app.activities;
 
-import android.os.*;
+import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -9,8 +9,11 @@ import android.widget.Toast;
 
 import com.unit5app.R;
 import com.unit5app.Settings;
+import com.unit5app.calendars.Unit5Calendar;
 import com.unit5app.notifications.MyNotificationHandler;
 import com.unit5app.utils.Utils;
+
+import java.io.File;
 
 public class SettingsActivity extends BaseActivity {
 
@@ -27,6 +30,21 @@ public class SettingsActivity extends BaseActivity {
             @Override
             public void onClick(View v) {
                 Settings.clearSave(getApplicationContext());
+            }
+        });
+
+        Button debug_deleteNewsFile = (Button) findViewById(R.id.settings_debug_deleteNewsFile);
+
+        debug_deleteNewsFile.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                File file = new File(getApplicationContext().getFilesDir(), Unit5Calendar.NEWS_FILE_NAME);
+                if(file.exists())
+                    if(file.delete())
+                        Toast.makeText(getApplicationContext(), "Successfully Deleted News File!", Toast.LENGTH_LONG);
+                    else
+                        Toast.makeText(getApplicationContext(), "Unable to Delete News File!", Toast.LENGTH_LONG);
+
             }
         });
           /*
