@@ -162,25 +162,35 @@ public class Unit5Calendar{
             BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(context.openFileOutput(NEWS_FILE_NAME, Context.MODE_PRIVATE)));
 
             Collections.sort(newsArticles, Utils.articlePubDateSorter);
+            int i = 0;
             for(Article article : newsArticles) {
+                i++;
                 writer.write(START_ARTICLE);
                 writer.newLine();
                 if(article.hasPubDate()) {
                     writer.write("pubDate:" + article.getPubDate());
+                    Log.d("NewsSave", "pubDate:" + article.getPubDate());
                     writer.newLine();
                     writer.write(NEXT);
+                    Log.d("NewsSave", NEXT);
                     writer.newLine();
                 }
                 writer.write("title:" + article.getTitle());
+                Log.d("NewsSave", "title:" + article.getTitle());
                 writer.newLine();
                 writer.write(NEXT);
+                Log.d("NewsSave", NEXT);
                 writer.newLine();
                 writer.write("desc:" + article.getDescription());
+                Log.d("NewsSave", "desc:" + article.getDescription());
                 writer.newLine();
                 writer.write(NEXT);
+                Log.d("NewsSave", NEXT);
                 writer.newLine();
             }
             writer.write(END_ARTICLES);
+            Log.d("NewsSave", END_ARTICLES);
+            Log.d("NewsSave", "Total saved Articles: " + i);
         } catch (IOException e) {
             Log.d("Unit5Calendar", e.getMessage(), e);
         }
@@ -230,7 +240,7 @@ public class Unit5Calendar{
         String pubDate = currentLine.substring(colPos);
         Log.d("q32", currentLine);
         while((currentLine = reader.readLine()) != null && !currentLine.equals(NEXT)) {
-            pubDate += System.getProperty("line.separator") + currentLine;
+            pubDate += currentLine;
         }
         return pubDate;
     }
@@ -240,7 +250,7 @@ public class Unit5Calendar{
         Log.d("q32", currentLine);
 
         while((currentLine = reader.readLine()) != null && !currentLine.equals(NEXT)) {
-            title += System.getProperty("line.separator") + currentLine;
+            title += currentLine;
             Log.d("Calendar23", currentLine);
         }
         return title;
@@ -250,8 +260,8 @@ public class Unit5Calendar{
         String description = currentLine.substring(colPos);
         Log.d("q32", currentLine);
 
-        while((currentLine = reader.readLine()) != null && !currentLine.equals(NEXT)) {
-            description += System.getProperty("line.separator") + currentLine;
+        while((currentLine = reader.readLine()) != null && !currentLine.equals(NEXT) && !currentLine.equals(START_ARTICLE) && !currentLine.equals(END_ARTICLES)) {
+            description += currentLine;
         }
         return description;
     }
