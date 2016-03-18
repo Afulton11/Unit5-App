@@ -24,7 +24,9 @@
         </activity>
         <activity
             android:name=".activities.WestNewsActivity"
-            android:label="@string/RSSActivity" />
+            android:label="@string/RSSActivity"
+            android:configChanges="orientation"
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".activities.ArticleActivity"
             android:label="@string/Article" />

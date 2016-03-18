@@ -47,10 +47,14 @@ public abstract class Utils {
     public static Comparator<Article> articlePubDateSorter = new Comparator<Article>() {
         @Override
         public int compare(Article article0, Article article1) {
-            if (Time.getDateAsNumber(article1.getPubDate()) < Time.getDateAsNumber(article0.getPubDate()))
-                return -1; //moves article0 up in the index array
-            if (Time.getDateAsNumber(article1.getPubDate()) > Time.getDateAsNumber(article0.getPubDate()))
-                return +1; //moves article0 down in the index array
+            if(article0.hasPubDate() && article1.hasPubDate()) {
+                if (Time.getDateAsNumber(article1.getPubDate()) < Time.getDateAsNumber(article0.getPubDate()))
+                    return -1; //moves article0 up in the index array
+                if (Time.getDateAsNumber(article1.getPubDate()) > Time.getDateAsNumber(article0.getPubDate()))
+                    return +1; //moves article0 down in the index array
+            } else if(!article0.hasPubDate()){
+                return +1;
+            }
             return 0; //keeps articles at the same position in the index array.
         }
     };
@@ -201,10 +205,6 @@ public abstract class Utils {
             if (c == ' ') {
                 spaceFound = true;
             } else if (spaceFound) {
-                if (c == ' ') {
-                    spaceFound = false;
-                    continue;
-                }
                 c = Character.toUpperCase(c);
                 spaceFound = false;
             }
