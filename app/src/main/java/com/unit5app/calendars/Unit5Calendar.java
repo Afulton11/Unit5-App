@@ -162,9 +162,9 @@ public class Unit5Calendar{
             BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(context.openFileOutput(NEWS_FILE_NAME, Context.MODE_PRIVATE)));
 
             Collections.sort(newsArticles, Utils.articlePubDateSorter);
-            int i = 0;
+            writer.write("Num Articles:" + newsArticles.size());
+            writer.newLine();
             for(Article article : newsArticles) {
-                i++;
                 writer.write(START_ARTICLE);
                 writer.newLine();
                 if(article.hasPubDate()) {
@@ -190,7 +190,6 @@ public class Unit5Calendar{
             }
             writer.write(END_ARTICLES);
             Log.d("NewsSave", END_ARTICLES);
-            Log.d("NewsSave", "Total saved Articles: " + i);
         } catch (IOException e) {
             Log.d("Unit5Calendar", e.getMessage(), e);
         }
@@ -204,12 +203,10 @@ public class Unit5Calendar{
         if(newsFile.exists()) {
             try {
                 BufferedReader reader = new BufferedReader(new FileReader(newsFile));
-                String currentLine;
-                while ((currentLine = reader.readLine()) != null) {
-                    if (currentLine.equals(START_ARTICLE)) {
-                        Log.d("q32", currentLine);
-                        articles.add(readArticle(reader));
-                    }
+                String currentLine = reader.readLine();
+                for(int i = 0; i < Integer.parseInt(currentLine.split(":")[1]); i++) {
+                    currentLine = reader.readLine(); //skip the "START_ARTICLE"
+                    articles.add(readArticle(reader));
                 }
             } catch (IOException e) {
                 Log.d("Unit5Calendar", e.getMessage(), e);
