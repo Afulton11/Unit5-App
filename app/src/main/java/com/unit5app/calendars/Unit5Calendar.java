@@ -1,10 +1,13 @@
 package com.unit5app.calendars;
 
 import android.content.Context;
+import android.os.AsyncTask;
+import android.text.Html;
 import android.util.Log;
 
 import com.unit5app.Article;
 import com.unit5app.com.unit5app.parsers.RSSReader;
+import com.unit5app.com.unit5app.parsers.WestNewsReader;
 import com.unit5app.tasks.ReadAllFeedTask;
 import com.unit5app.tasks.ReadCalendarTask;
 import com.unit5app.utils.MethodHolder;
@@ -35,6 +38,7 @@ public class Unit5Calendar{
     private ReadAllFeedTask newsTask;
     private File newsFile;
     private final String NEWS_FILE_NAME = "articles.txt";
+    private boolean newsReady;
 
     private ReadCalendarTask calendarTask;
 
@@ -49,7 +53,11 @@ public class Unit5Calendar{
      * creates a new Calendar from the Main calendar url: <a href="{@value #CALENDAR_URL}">See Calendar Url</a>
      * @param numDays the number of days to extend from the current day.
      */
-    public Unit5Calendar(File filesDir, int numDays) {
+    public Unit5Calendar(int numDays) {
+        WestNewsReader westNews = new WestNewsReader("http://www.unit5.org/site/RSS.aspx?DomainID=30&ModuleInstanceID=1852&PageID=53");
+        RSSReader unit5News = new RSSReader("http://www.unit5.org/site/RSS.aspx?DomainID=4&ModuleInstanceID=4&PageID=1");
+        setNewsRssReaders(westNews, unit5News);
+        newsTask = new ReadAllFeedTask();
         dates = new CalendarDate[numDays];
         String currentDate = Time.getCurrentDate(Time.FORMAT_BASIC_DATE);
         int currentDateNum = Time.getDateAsNumber(currentDate);
@@ -63,7 +71,6 @@ public class Unit5Calendar{
                 previousDate = currentDate;
             }
         }
-        newsFile = new File(filesDir, NEWS_FILE_NAME);
         if(Utils.hadInternetOnLastCheck) {
             loadCalendar();
         }
@@ -104,47 +111,70 @@ public class Unit5Calendar{
      * loads the news if there was internet on the last time we checked for internet.
      * <br><b>Make Sure to always setNewsRssReaders() in the calendar before calling loadNews()!</b></br>
      */
-    public void loadNews() {
+    public void loadNews(final Context context) {
+        if(newsFile == null) newsFile = new File(context.getFilesDir(), NEWS_FILE_NAME);
         if(newsFile.exists()) {
-            loadFromNewsFromFile();
+            newsArticles = loadNewsFromFile(context);
         } else if(rssReaders != null) {
-            startedLoadingNews = true;
-            newsTask = new ReadAllFeedTask();
-            new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    if (Utils.hadInternetOnLastCheck) { //will be used when fetching files to compare with old file for an update.
-                        if (rssReaders.length > 0) {
-                            newsTask.setReaders(rssReaders);
-                            newsTask.execute();
-                        }
-                    }
-                }
-            }).start();
+            updateNews();
         }
     }
 
-    private List<Article> newsArticles = new ArrayList<>();
+    /**
+     * updates the news and the news file..
+     */
+    private void updateNews() {
+        startedLoadingNews = true;
+        newsReady = false;
+        new AsyncTask<Void, Void, Void>() {
+            @Override
+            protected void onPreExecute() {
+                super.onPreExecute();
+                if (Utils.hadInternetOnLastCheck) { //will be used when fetching files to compare with old file for an update.
+                    if (rssReaders.length > 0) {
+                        newsTask.setReaders(rssReaders);
+                        newsTask.execute();
+                    }
+                }
+            }
+            @Override
+            protected Void doInBackground(Void... params) {
+                return null;
+            }
+            @Override
+            protected void onPostExecute(Void aVoid) {
+                super.onPostExecute(aVoid);
+                newsReady = true;
+            }
+        }.execute();
+    }
+
+    private static List<Article> newsArticles = new ArrayList<>();
     private final String START_ARTICLE = "START_ARTICLE", END_ARTICLES = "END_ARTICLES", NEXT = "@NXT@";
 
-    private void saveNews(Context context) {
+    public void saveNews(Context context) {
         try {
+            if(newsFile == null) newsFile = new File(context.getFilesDir(), NEWS_FILE_NAME);
             if (!newsFile.exists()) newsFile.createNewFile();
 
             BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(context.openFileOutput(NEWS_FILE_NAME, Context.MODE_PRIVATE)));
 
+            Collections.sort(newsArticles, Utils.articlePubDateSorter);
             for(Article article : newsArticles) {
                 writer.write(START_ARTICLE);
                 writer.newLine();
                 if(article.hasPubDate()) {
                     writer.write("pubDate:" + article.getPubDate());
+                    writer.newLine();
                     writer.write(NEXT);
                     writer.newLine();
                 }
                 writer.write("title:" + article.getTitle());
+                writer.newLine();
                 writer.write(NEXT);
                 writer.newLine();
                 writer.write("desc:" + article.getDescription());
+                writer.newLine();
                 writer.write(NEXT);
                 writer.newLine();
             }
@@ -154,23 +184,32 @@ public class Unit5Calendar{
         }
     }
 
-    private void loadFromNewsFromFile() {
+    private List<Article> loadNewsFromFile(Context context) {
         startedLoadingNews = true;
-        try {
-            BufferedReader reader = new BufferedReader(new FileReader(newsFile));
-            String currentLine = null;
-            while((currentLine = reader.readLine()) != null) {
-                if(currentLine.equals(START_ARTICLE)) {
-                    newsArticles.add(readArticle(currentLine, reader));
+        List<Article> articles = new ArrayList<>();
+        if(newsFile == null) newsFile = new File(context.getFilesDir(), NEWS_FILE_NAME);
+        if(newsFile.exists()) {
+            try {
+                BufferedReader reader = new BufferedReader(new FileReader(newsFile));
+                String currentLine;
+                while ((currentLine = reader.readLine()) != null) {
+                    if (currentLine.equals(START_ARTICLE)) {
+                        Log.d("q32", currentLine);
+                        articles.add(readArticle(reader));
+                    }
                 }
+            } catch (IOException e) {
+                Log.d("Unit5Calendar", e.getMessage(), e);
             }
-        } catch(IOException e) {
-            Log.d("Unit5Calendar", e.getMessage(), e);
+            Collections.sort(newsArticles, Utils.articlePubDateSorter);
+            newsReady = true;
         }
+        return articles;
     }
 
-    private Article readArticle(String currentLine, BufferedReader reader) throws IOException{
+    private Article readArticle(BufferedReader reader) throws IOException{
         Article article = new Article();
+        String currentLine;
         while((currentLine = reader.readLine()) != null && !currentLine.equals(END_ARTICLES) && !currentLine.equals(START_ARTICLE)) {
             int firstCol = currentLine.indexOf(':') + 1; //we want the text after the first colon, so we add 1.
             if(currentLine.startsWith("pubDate")) {
@@ -186,6 +225,7 @@ public class Unit5Calendar{
 
     private String readPubDate(String currentLine, BufferedReader reader, int colPos) throws IOException{
         String pubDate = currentLine.substring(colPos);
+        Log.d("q32", currentLine);
         while((currentLine = reader.readLine()) != null && !currentLine.equals(NEXT)) {
             pubDate += System.getProperty("line.separator") + currentLine;
         }
@@ -194,25 +234,23 @@ public class Unit5Calendar{
 
     private String readTitle(String currentLine, BufferedReader reader, int colPos) throws IOException {
         String title = currentLine.substring(colPos);
+        Log.d("q32", currentLine);
+
         while((currentLine = reader.readLine()) != null && !currentLine.equals(NEXT)) {
             title += System.getProperty("line.separator") + currentLine;
+            Log.d("Calendar23", currentLine);
         }
         return title;
     }
 
     private String readDescription(String currentLine, BufferedReader reader, int colPos) throws IOException {
         String description = currentLine.substring(colPos);
+        Log.d("q32", currentLine);
+
         while((currentLine = reader.readLine()) != null && !currentLine.equals(NEXT)) {
             description += System.getProperty("line.separator") + currentLine;
         }
         return description;
-    }
-
-    /**
-     * updates the news and the news file..
-     */
-    private void updateNews() {
-
     }
 
     /**
@@ -281,10 +319,6 @@ public class Unit5Calendar{
         }
     }
 
-    public void loadLunchMenu(String lunchMenuPdfUrl) {
-
-    }
-
     /**
      * This would combine all of today's info onto one date (events, lunch meals, breakfast meals, announcements, and anything else. Perhaps we should make an Overall 'CalendarDate' class or something).
      */
@@ -301,11 +335,8 @@ public class Unit5Calendar{
      */
     public CalendarEvent[] getEventsForDate(String date) {
         List<CalendarEvent> events = new ArrayList<>();
-        Log.d("Handler2", "Current Date:" + date);
         for(CalendarEvent event : calendarEvents) {
-            Log.d("Handler2", "Event Date: " + event.getDate());
             if(Time.isDateEqualToDate(date, event.getDate())) {
-                Log.d("Handler2", "Adding event!");
                 events.add(event);
             }
         }
@@ -327,11 +358,32 @@ public class Unit5Calendar{
     }
 
     public boolean newsLoaded() {
-        return (newsTask != null && newsTask.isLoaded());
+        return newsReady;
     }
 
     public boolean newsStartedLoading() {
         return startedLoadingNews;
+    }
+
+    public static void setNewsArticles(List<Article> articles) {
+        newsArticles = articles;
+        Collections.sort(newsArticles, Utils.articlePubDateSorter);
+    }
+
+    public Article[] getNewsArticles() {
+        Article[] articles = new Article[newsArticles.size()];
+        for(int i = 0; i < articles.length; i++) {
+            articles[i] = newsArticles.get(i);
+        }
+        return articles;
+    }
+
+    public String[] getNewsTitles() {
+        String[] titles = new String[newsArticles.size()];
+        for(int i = 0; i < newsArticles.size(); i++) {
+            titles[i] = Utils.toTitleCase(Html.fromHtml(newsArticles.get(i).getTitle()).toString());
+        }
+        return titles;
     }
 
     /**
