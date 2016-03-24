@@ -7,8 +7,7 @@ import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.util.Log;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -31,10 +30,10 @@ public class MainActivity extends BaseActivity {
     private static String TAG = "MainActivity";
 
     // Element declaration (Ignore that these objects and methods "aren't used", they are.)
-    @Bind(R.id.btn_testLunch)           protected Button testLunch;
-    @Bind(R.id.btn_testSpecials)        protected Button testSpecials;
-    @Bind(R.id.btn_testWestNews)        protected Button testWestNews;
-    @Bind(R.id.btn_testCalendarReading) protected Button testCalendarReading;
+    @Bind(R.id.btn_testLunch)           protected ImageButton testLunch;
+    @Bind(R.id.btn_testSpecials)        protected ImageButton testSpecials;
+    @Bind(R.id.btn_testWestNews)        protected ImageButton testWestNews;
+    @Bind(R.id.btn_testCalendarReading) protected ImageButton testCalendarReading;
     @Bind(R.id.btn_testSkyward)         protected FloatingActionButton testSkyward;
 
     @Bind(R.id.clock_end_of_hour)       protected TextView endOfHourTime;

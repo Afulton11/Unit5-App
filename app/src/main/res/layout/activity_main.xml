@@ -4,10 +4,195 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:scrollbars="vertical"
-    tools:context=".activities.MainActivity">
+    android:background="#e8e8e8">
+    <LinearLayout
 
-    <!--TODO: change this icon to skyward icon-->
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scrollbars="vertical"
+        tools:context=".activities.MainActivity">
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:id="@+id/first_row_linear"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:layout_marginLeft="8dp"
+            android:layout_marginRight="8dp"
+            android:background="#e8e8e8">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1">
+
+                <ImageButton
+                    android:id="@+id/btn_testLunch"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
+                    android:src="@mipmap/lunch_icon"
+                    android:baselineAlignBottom="false"
+                    android:clickable="false"
+                    android:cropToPadding="false"
+                    android:focusable="false"
+                    android:adjustViewBounds="false"
+                    android:maxHeight="192dp"
+                    android:maxWidth="192dp"
+                    android:minHeight="72dp"
+                    android:minWidth="72dp"
+                    android:longClickable="false"
+                    android:elevation="10dp"
+                    android:layout_marginRight="8dp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/btn_testLunch"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginTop="8dp"
+                    android:textAlignment="center"
+                    android:text="Lunch Menu"
+                    android:id="@+id/textView"
+                    android:autoLink="web"
+                    android:maxWidth="96dp"
+                    android:minWidth="36dp" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1">
+                <ImageButton
+                    android:id="@+id/btn_testSpecials"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
+                    android:src="@mipmap/specials_icon"
+                    android:text="Specials Menu"
+                    android:textSize="16sp"
+                    android:maxHeight="192dp"
+                    android:maxWidth="192dp"
+                    android:minHeight="72dp"
+                    android:minWidth="72dp"
+                    android:elevation="10dp"
+                    android:contextClickable="false"
+                    android:adjustViewBounds="false"
+                    android:layout_marginLeft="8dp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/btn_testSpecials"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginTop="8dp"
+                    android:layout_centerInParent="true"
+                    android:textAlignment="center"
+                    android:text="Specials Menu"
+                    android:id="@+id/textView2"
+                    android:maxWidth="96dp"
+                    android:minWidth="36dp"/>
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1">
+                <ImageButton
+                    android:id="@+id/btn_testWestNews"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="8dp"
+                    android:layout_centerHorizontal="true"
+                    android:src="@mipmap/ic_library_books_48dp"
+                    android:text="Recent News"
+                    android:textSize="16sp"
+                    android:elevation="10dp"
+                    android:layout_marginLeft="8dp"
+                    android:maxHeight="192dp"
+                    android:maxWidth="192dp"
+                    android:minHeight="72dp"
+                    android:minWidth="72dp"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/btn_testWestNews"
+                    android:layout_centerInParent="true"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginTop="8dp"
+                    android:textAlignment="center"
+                    android:text="Recent News"
+                    android:id="@+id/textView3"
+                    android:maxWidth="96dp"
+                    android:minWidth="36dp"/>
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1">
+                <ImageButton
+                    android:id="@+id/btn_testCalendarReading"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="8dp"
+                    android:layout_marginRight="16dp"
+                    android:layout_centerHorizontal="true"
+                    android:src="@mipmap/ic_event_note_48dp"
+                    android:text="@string/UpcomingEventsActivity"
+                    android:textSize="16sp"
+                    android:elevation="10dp"
+                    android:elegantTextHeight="true"
+                    android:maxHeight="192dp"
+                    android:minHeight="72dp"
+                    android:maxWidth="192dp"
+                    android:minWidth="72dp"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/btn_testCalendarReading"
+                    android:layout_centerInParent="true"
+                    android:layout_marginTop="8dp"
+                    android:layout_centerHorizontal="true"
+                    android:textAlignment="center"
+                    android:text="Upcoming Events"
+                    android:id="@+id/textView4"
+                    android:maxWidth="96dp"
+                    android:minWidth="36dp"/>
+            </RelativeLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:id="@+id/second_row_linear"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="#e8e8e8">
+
+
+
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/clock_end_of_hour"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginTop="16dp"
+            android:text="Loading Data..."
+            android:textSize="52sp"
+            android:textStyle="bold"
+            android:textAlignment="center"
+            android:elevation="1dp" />
+
+    </LinearLayout>
+
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/btn_testSkyward"
         android:layout_width="wrap_content"
@@ -17,59 +202,5 @@
         android:background="@android:color/transparent"
         android:scaleType="center"
         android:src="@drawable/skyward_logo_56" />
-
-    <Button
-        android:id="@+id/btn_testLunch"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="16dp"
-        android:layout_marginRight="16dp"
-        android:layout_marginTop="32dp"
-        android:text="Lunch Menu"
-        android:textSize="16sp" />
-
-    <Button
-        android:id="@+id/btn_testSpecials"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="top|end"
-        android:layout_marginLeft="16dp"
-        android:layout_marginRight="16dp"
-        android:layout_marginTop="32dp"
-        android:text="Specials Menu"
-        android:textSize="16sp" />
-
-    <Button
-        android:id="@+id/btn_testWestNews"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="16dp"
-        android:layout_marginRight="16dp"
-        android:layout_marginTop="80dp"
-        android:text="Recent News"
-        android:textSize="16sp" />
-
-    <Button
-        android:id="@+id/btn_testCalendarReading"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="16dp"
-        android:layout_marginRight="16dp"
-        android:layout_marginTop="128dp"
-        android:text="@string/UpcomingEventsActivity"
-        android:textSize="16sp" />
-
-    <TextView
-        android:id="@+id/clock_end_of_hour"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp"
-        android:layout_marginTop="176dp"
-        android:text="Loading Data..."
-        android:textSize="52sp"
-        android:textStyle="bold"
-        android:textAlignment="center"/>
 
 </android.support.design.widget.CoordinatorLayout>
