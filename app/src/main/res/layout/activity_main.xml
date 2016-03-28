@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#e8e8e8">
+    android:background="#ffffff">
     <LinearLayout
 
         android:orientation="vertical"
@@ -21,7 +21,7 @@
             android:layout_marginTop="16dp"
             android:layout_marginLeft="8dp"
             android:layout_marginRight="8dp"
-            android:background="#e8e8e8">
+            android:background="#ffffff">
 
             <RelativeLayout
                 android:layout_width="match_parent"
@@ -201,6 +201,6 @@
         android:layout_margin="@dimen/fab_margin"
         android:background="@android:color/transparent"
         android:scaleType="center"
-        android:src="@drawable/skyward_logo_56" />
+        android:src="@drawable/skyward_logo_56" />>
 
 </android.support.design.widget.CoordinatorLayout>
