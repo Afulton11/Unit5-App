@@ -191,16 +191,23 @@
             android:textAlignment="center"
             android:elevation="1dp" />
 
-    </LinearLayout>
+        <ImageButton
+            android:id="@+id/btn_testSkyward"
+            android:layout_width="98dp"
+            android:layout_height="match_parent"
+            android:maxHeight="192dp"
+            android:minHeight="72dp"
+            android:maxWidth="192dp"
+            android:minWidth="72dp"
+            android:layout_margin="@dimen/fab_margin"
+            android:background="@android:color/transparent"
+            android:scaleType="fitCenter"
+            android:src="@drawable/skyward_logo"
+            android:layout_gravity="end|bottom" />
 
-    <android.support.design.widget.FloatingActionButton
-        android:id="@+id/btn_testSkyward"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom|end"
-        android:layout_margin="@dimen/fab_margin"
-        android:background="@android:color/transparent"
-        android:scaleType="center"
-        android:src="@drawable/skyward_logo_56" />>
+    </LinearLayout><![CDATA[
 
+    >
+
+]]>
 </android.support.design.widget.CoordinatorLayout>

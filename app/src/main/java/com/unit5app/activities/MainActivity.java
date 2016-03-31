@@ -34,7 +34,7 @@ public class MainActivity extends BaseActivity {
     @Bind(R.id.btn_testSpecials)        protected ImageButton testSpecials;
     @Bind(R.id.btn_testWestNews)        protected ImageButton testWestNews;
     @Bind(R.id.btn_testCalendarReading) protected ImageButton testCalendarReading;
-    @Bind(R.id.btn_testSkyward)         protected FloatingActionButton testSkyward;
+    @Bind(R.id.btn_testSkyward)         protected ImageButton testSkyward;
 
     @Bind(R.id.clock_end_of_hour)       protected TextView endOfHourTime;
 
