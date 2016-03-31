@@ -164,50 +164,50 @@
                     android:maxWidth="96dp"
                     android:minWidth="36dp"/>
             </RelativeLayout>
-        </LinearLayout>
+            </LinearLayout>
+                <TextView
+                    android:id="@+id/clock_end_of_hour"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp"
+                    android:layout_marginTop="16dp"
+                    android:text="Loading Data..."
+                    android:textSize="52sp"
+                    android:textStyle="bold"
+                    android:textAlignment="center"
+                    android:elevation="1dp" />
 
         <LinearLayout
             android:orientation="horizontal"
-            android:id="@+id/second_row_linear"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="#e8e8e8">
-
-
-
+            android:layout_height="wrap_content">
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="0.5"
+                ></RelativeLayout>
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_gravity="end|bottom">
+                    <ImageButton
+                        android:id="@+id/btn_testSkyward"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:maxHeight="192dp"
+                        android:minHeight="72dp"
+                        android:maxWidth="192dp"
+                        android:minWidth="72dp"
+                        android:scaleType="fitEnd"
+                        android:layout_margin="@dimen/fab_margin"
+                        android:background="#00ffffff"
+                        android:src="@drawable/skyward_logo"
+                        />
+            </RelativeLayout>
+            </LinearLayout>
         </LinearLayout>
 
-        <TextView
-            android:id="@+id/clock_end_of_hour"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"
-            android:layout_marginTop="16dp"
-            android:text="Loading Data..."
-            android:textSize="52sp"
-            android:textStyle="bold"
-            android:textAlignment="center"
-            android:elevation="1dp" />
-
-        <ImageButton
-            android:id="@+id/btn_testSkyward"
-            android:layout_width="98dp"
-            android:layout_height="match_parent"
-            android:maxHeight="192dp"
-            android:minHeight="72dp"
-            android:maxWidth="192dp"
-            android:minWidth="72dp"
-            android:layout_margin="@dimen/fab_margin"
-            android:background="@android:color/transparent"
-            android:scaleType="fitCenter"
-            android:src="@drawable/skyward_logo"
-            android:layout_gravity="end|bottom" />
-
-    </LinearLayout><![CDATA[
-
-    >
-
-]]>
 </android.support.design.widget.CoordinatorLayout>
