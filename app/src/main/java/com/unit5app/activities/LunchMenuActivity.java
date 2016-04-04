@@ -34,8 +34,6 @@ public class LunchMenuActivity extends BaseActivity {
                 "Domain/55/2016%20" +  month.toString().split(" ")[1] +"%20Sr%20High%20Lunch.pdf";
         String fileName = Time.getCurrentDate(Time.FORMAT_BASIC_DATE).split("/")[0] + "_menu.pdf";
 
-        Log.d("FILE URL ", fileUrl);
-        Log.d("FILE NAME ", fileName);
         new DownloadPdfTask(this).execute(fileUrl, fileName);
     }
 }
