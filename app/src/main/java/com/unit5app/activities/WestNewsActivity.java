@@ -13,6 +13,7 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import com.unit5app.R;
+import com.unit5app.Settings;
 import com.unit5app.calendars.Unit5Calendar;
 import com.unit5app.utils.Utils;
 
@@ -106,7 +107,11 @@ public class WestNewsActivity extends BaseActivity {
                     Toast.makeText(getApplicationContext(), "Still loading...", Toast.LENGTH_SHORT);
                 } else {
                     try {
-                        ArticleActivity.setArticle(MainActivity.mainCalendar.getNewsArticles()[position]);
+                        if(!Settings.isScrollWithTitle()) {
+                            ArticleActivity.setArticle(MainActivity.mainCalendar.getNewsArticles()[position]);
+                        } else {
+
+                        }
                     } catch (ArrayIndexOutOfBoundsException e) {
                         Log.d(TAG, "Index out of bounds for articles[position]!");
                     }

@@ -6,7 +6,8 @@
     android:layout_height="match_parent"
     android:background="#ffffff"
     android:scrollbars="vertical"
-    android:id="@+id/home_main_linear_layout">
+    android:id="@+id/home_main_linear_layout"
+    android:fitsSystemWindows="true">
     <LinearLayout
 
         android:orientation="vertical"

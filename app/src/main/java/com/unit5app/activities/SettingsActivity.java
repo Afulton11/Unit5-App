@@ -102,10 +102,6 @@ public class SettingsActivity extends BaseActivity {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 Settings.setArticleSettingsBoolean(0, isChecked);
                 Settings.save(getApplicationContext());
-                //we need to exit immediately so that the file doesn't get overriding when exiting out manually.
-                android.os.Process.killProcess(android.os.Process.myPid());
-                System.exit(1);
-
             }
         });
 

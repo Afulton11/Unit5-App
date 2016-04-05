@@ -46,10 +46,13 @@ public class ArticleActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.article_layout);
         if(Settings.getArticleSettingsBoolean(Settings.ID_ARTICLE_SETTING_SCROLL_WITH_TITLE)) {
+            setContentView(R.layout.full_article_scroll_layout);
             ScrollView view = (ScrollView) findViewById(R.id.article_scrollView);
             view.setVerticalScrollBarEnabled(false);
+            view.setFitsSystemWindows(true);
+        }else {
+            setContentView(R.layout.article_layout);
         }
         Heading = (TextView) findViewById(R.id.article_title);
         Body = (TextView) findViewById(R.id.article_body);
