@@ -214,7 +214,7 @@ public class Unit5Calendar{
                         for (int i = 0; i < Integer.parseInt(split[1]); i++) {//TODO figure out why all lines, after i = 18, are null.
                             currentLine = reader.readLine();
                             Article a = readArticle(reader);
-                            if(a.isArticleFull()) articles.add(a);
+                            articles.add(a);
                             Log.d("q32", "" + i + "line: " + currentLine);
                         }
                     } else { updateNews(context); } //if we didn't find the number of articles, the file must be corrupt. Update the file.

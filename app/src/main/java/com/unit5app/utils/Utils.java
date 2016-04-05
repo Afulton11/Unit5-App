@@ -178,7 +178,7 @@ public abstract class Utils {
 
     /**
      * Returns true if the user is connected to the internet in some way.
-     * @param context - context of an Acivity
+     * @param context - context of an Activity
      * @return
      *
      *      Author: Silvio Delgado from StackOverFlow at <a href="http://stackoverflow.com/questions/28168867/check-internet-status-from-the-main-activity">link</a>
