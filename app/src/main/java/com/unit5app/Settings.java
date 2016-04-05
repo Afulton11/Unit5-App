@@ -68,6 +68,7 @@ public class Settings {
      *      <br>CalEvent\tfalse</br>
      */
     public static void load(Context context) {
+        article_settings[ID_ARTICLE_SETTING_SCROLL_WITH_TITLE] = true;
         if(context != null) {
             try {
                 Log.d(TAG, "Loading Settings...");

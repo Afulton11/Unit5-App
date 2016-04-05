@@ -49,7 +49,6 @@ public class ArticleActivity extends BaseActivity {
         if(Settings.getArticleSettingsBoolean(Settings.ID_ARTICLE_SETTING_SCROLL_WITH_TITLE)) {
             setContentView(R.layout.full_article_scroll_layout);
             ScrollView view = (ScrollView) findViewById(R.id.article_scrollView);
-            view.setVerticalScrollBarEnabled(false);
             view.setFitsSystemWindows(true);
         }else {
             setContentView(R.layout.article_layout);
