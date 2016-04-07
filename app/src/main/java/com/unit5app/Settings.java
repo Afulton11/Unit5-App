@@ -15,6 +15,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.util.ArrayList;
+import java.util.EmptyStackException;
 import java.util.List;
 
 /**
@@ -115,22 +116,16 @@ public class Settings {
     }
 
     public static void clearSave(Context context) {
-        try {
-            Log.d(TAG, "Clearing Settings.txt...");
-            File file = new File(context.getFilesDir(), FILE_NAME);
-            if (!file.exists()) file.createNewFile();
-
-            OutputStreamWriter out = new OutputStreamWriter(context.openFileOutput(FILE_NAME, Context.MODE_PRIVATE));
-            BufferedWriter writer = new BufferedWriter(out);
-
-            writer.write("");
-            writer.flush();
-            writer.close();
-            Log.d(TAG, "Cleared Settings.txt!");
-        } catch (FileNotFoundException e) {
-            Log.d(TAG, e.getMessage(), e);
-        } catch (IOException ioe) {
-            Log.d(TAG, ioe.getMessage(), ioe);
+        Log.d(TAG, "Clearing Settings.txt...");
+        File file = new File(context.getFilesDir(), FILE_NAME);
+        if(file.exists()) {
+            if (file.delete()) {
+                Log.d(TAG, "Successfully Cleared Settings file!");
+                Log.d(TAG, "Throwing an exception to close application!");
+                throw new EmptyStackException(); //easier than writing all he code to reset the settings to default. Since this is only a debug method.
+            } else {
+                Log.e(TAG, "ERROR: Unable to clear settings file!");
+            }
         }
     }
 
