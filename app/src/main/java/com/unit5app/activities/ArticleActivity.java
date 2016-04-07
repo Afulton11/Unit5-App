@@ -6,9 +6,7 @@ import android.os.Bundle;
 import android.text.Html;
 import android.text.Spanned;
 import android.text.method.LinkMovementMethod;
-import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
-import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.unit5app.Article;
@@ -48,16 +46,14 @@ public class ArticleActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         if(Settings.getArticleSettingsBoolean(Settings.ID_ARTICLE_SETTING_SCROLL_WITH_TITLE)) {
             setContentView(R.layout.full_article_scroll_layout);
-            ScrollView view = (ScrollView) findViewById(R.id.article_scrollView);
-            view.setFitsSystemWindows(true);
-        }else {
+        } else {
             setContentView(R.layout.article_layout);
         }
         Heading = (TextView) findViewById(R.id.article_title);
         Body = (TextView) findViewById(R.id.article_body);
-
         Heading.setText(Utils.toTitleCase(Html.fromHtml(article.getTitle()).toString()));
-        if(!Settings.getArticleSettingsBoolean(Settings.ID_ARTICLE_SETTING_SCROLL_WITH_TITLE)) Heading.setMovementMethod(new ScrollingMovementMethod());
+
+//        if(!Settings.getArticleSettingsBoolean(Settings.ID_ARTICLE_SETTING_SCROLL_WITH_TITLE)) Heading.setMovementMethod(new ScrollingMovementMethod());
         //we need a new task/thread because android doesn't allow connecting to a network on the main thread.
         new AsyncTask<Object, Void, Void>() {
             Spanned resultBody;
@@ -66,15 +62,17 @@ public class ArticleActivity extends BaseActivity {
             @Override
             protected void onPostExecute(Void aVoid) {
                 super.onPostExecute(aVoid);
-                Body.setText(resultBody);
-                Body.setMovementMethod(LinkMovementMethod.getInstance());
-                if(!Settings.getArticleSettingsBoolean(Settings.ID_ARTICLE_SETTING_SCROLL_WITH_TITLE)) {
-                    Body.setHorizontalScrollBarEnabled(true);
-                    Body.setVerticalScrollBarEnabled(true);
+                if(resultBody != null) {
+                    Body.setText(resultBody);
+                    Body.setMovementMethod(LinkMovementMethod.getInstance());
+                    if (!Settings.getArticleSettingsBoolean(Settings.ID_ARTICLE_SETTING_SCROLL_WITH_TITLE)) {
+                        Body.setHorizontalScrollBarEnabled(true);
+                        Body.setVerticalScrollBarEnabled(true);
+                    }
+                    Body.setClickable(true);
+                    Body.setLinksClickable(true);
+                    Body.setTextIsSelectable(true);
                 }
-                Body.setClickable(true);
-                Body.setLinksClickable(true);
-                Body.setTextIsSelectable(true);
 
             }
             @Override
@@ -99,7 +97,7 @@ public class ArticleActivity extends BaseActivity {
                         try {
                             InputStream input = (InputStream) new URL("http://www.unit5.org" + source).getContent();
                             image = Drawable.createFromStream(input, sourceName);
-                            image.setBounds(0, 0, image.getIntrinsicWidth() * 4, image.getIntrinsicHeight() * 4); //TODO: figure out why the image loads so small when not muliplied by 4?
+                            image.setBounds(0, 0, image.getIntrinsicWidth() * 4, image.getIntrinsicHeight() * 4);
                         } catch (MalformedURLException e) {
                             if (e.getMessage() != null) Log.e(TAG, e.getMessage(), e);
                             else

@@ -87,6 +87,7 @@ public class WestNewsActivity extends BaseActivity {
     }
 
     public void setListViewComplete() {
+
         String[] article_titles = MainActivity.mainCalendar.getNewsTitles();
         setContentView(R.layout.rss_layout);
         final SwipeRefreshLayout swipeRefresh = (SwipeRefreshLayout) findViewById(R.id.news_swipe_refresh);
@@ -110,7 +111,7 @@ public class WestNewsActivity extends BaseActivity {
                         if(!Settings.isScrollWithTitle()) {
                             ArticleActivity.setArticle(MainActivity.mainCalendar.getNewsArticles()[position]);
                         } else {
-
+                            ArticleActivity.setArticle(MainActivity.mainCalendar.getNewsArticles()[position]);
                         }
                     } catch (ArrayIndexOutOfBoundsException e) {
                         Log.d(TAG, "Index out of bounds for articles[position]!");
