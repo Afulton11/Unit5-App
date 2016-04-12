@@ -14,13 +14,7 @@ import java.util.Date;
  * Activity to display a PDF with the current lunch menu.
  */
 public class LunchMenuActivity extends BaseActivity {
-    /* TODO: Generate the URL with JSoup so that it's not hardcoded */
-    /* NOTE: If U5's naming scheme is consistent, next month's menu should be '2016 Apr Sr...' */
     private static final String TAG = "LunchMenuPDFReader";
-//    private static String fileUrl = "http://www.unit5.org/cms/lib03/IL01905100/Centricity/" +
-//            "Domain/55/2016%20" + Time.getCurrentDate("M") +"%20Sr%20High%20Lunch.pdf";
-//    private static final String fileName = "03_menu.pdf"; // I'm thinking name convention should be
-                                                          // mm_menu.pdf where mm is the month
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

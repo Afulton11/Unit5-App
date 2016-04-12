@@ -14,8 +14,6 @@ import java.util.Date;
  * Activity to display a PDF with the current lunch menu.
  */
 public class SpecialsMenuActivity extends BaseActivity {
-    /* TODO: Generate the URL with JSoup so that it's not hardcoded */
-    /* NOTE: If U5's naming scheme is consistent, next month's menu should be '2016 Apr Sr...' */
     private static final String TAG = "SpecialsMenuPDFReader";
 
     @Override
