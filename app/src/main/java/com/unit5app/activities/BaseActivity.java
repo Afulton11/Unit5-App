@@ -143,7 +143,12 @@ public class BaseActivity extends AppCompatActivity  implements NavigationView.O
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
-        } else {
+        } else if(Utils.getCurrentActivity().getClass().getName().equals(SettingsActivity.class.getName()) ||
+                Utils.getCurrentActivity().getClass().getName().equals(WestNewsActivity.class.getName())) {
+            super.onBackPressed();
+            startActivity(new Intent(this, MainActivity.class));
+            finish();
+        }  else {
             super.onBackPressed();
         }
     }
@@ -174,4 +179,5 @@ public class BaseActivity extends AppCompatActivity  implements NavigationView.O
             finish();
         }
     }
+
 }
