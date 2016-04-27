@@ -39,8 +39,8 @@ public class ReadCalendarTask extends AsyncTask<Void, Void, Void> {
             CalendarEvent event = reader.getCalendarEvents().get(i);
             html_styling_string += ("<br><b>&#8226;" + event.getDate() +
                     "</b></br><br>&nbsp;&nbsp;&nbsp;&nbsp;Title: " + event.getTitle() +
-                    "</br><br>&nbsp;&nbsp;&nbsp;&nbsp;Time Occuring: "+ event.getTimeOccurring() +
-                    "</br><br>&nbsp;&nbsp;&nbsp;&nbsp;Type (debug): " + event.getType() + "</br><br></br>");
+                    "</br><br>&nbsp;&nbsp;&nbsp;&nbsp;Time Occuring: "+ event.getTimeOccurring()/* +
+                    "</br><br>&nbsp;&nbsp;&nbsp;&nbsp;Type (debug): " + event.getType() + "</br><br></br>"*/);
         }
         UpcomingEventCalendarActivity.calendarEventsString = Html.fromHtml(html_styling_string);
         loaded = true;
