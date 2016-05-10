@@ -24,9 +24,11 @@ public class LunchMenuActivity extends BaseActivity {
         Date month = new Date();
         format.format(month);
         Log.d(TAG, "Layout set. Starting PDF download....");
+        //http://www.unit5.org/cms/lib03/IL01905100/Centricity/Domain/55/2016%20May%20Sr%20High%20Lunch%20NCWHS.pdf
         String fileUrl = "http://www.unit5.org/cms/lib03/IL01905100/Centricity/" +
-                "Domain/55/2016%20" +  month.toString().split(" ")[1] +"%20Sr%20High%20Lunch.pdf";
+                "Domain/55/2016%20" +  month.toString().split(" ")[1] +"%20Sr%20High%20Lunch%20NCWHS.pdff";
         String fileName = Time.getCurrentDate(Time.FORMAT_BASIC_DATE).split("/")[0] + "_menu.pdf";
+        Log.d(TAG, month.toString().split(" ")[1]);
 
         new DownloadPdfTask(this).execute(fileUrl, fileName);
     }

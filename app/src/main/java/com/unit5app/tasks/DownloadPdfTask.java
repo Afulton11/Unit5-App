@@ -31,11 +31,15 @@ public class DownloadPdfTask extends DownloadFileTask {
 
         PDFView pdfView = (PDFView) activity.findViewById(R.id.pdfview);
         if(result != null) {
-            pdfView.fromFile(result)
-                    .defaultPage(1)
-                    .showMinimap(false)
-                    .enableSwipe(false)
-                    .load();
+            try {
+                pdfView.fromFile(result)
+                        .defaultPage(1)
+                        .showMinimap(false)
+                        .enableSwipe(false)
+                        .load();
+            } catch (RuntimeException e) {
+                Log.d(TAG, "PDF is Corrupted! - DownloadPdfTask.java");
+            }
         }
     }
 }
